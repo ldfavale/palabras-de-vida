@@ -35,7 +35,7 @@ window.addEventListener("scroll", checkScrollPosition);
               <li className='hover:underline'><a href="#biblias">Biblias</a></li>
               <li className='hover:underline'><a href="#libros">Libros</a></li>
               <img src={logo} className='h-20 w-20' alt="Logo" />
-              <li className='hover:underline'><a href="#algo_mas">Algo mas</a></li>
+              <li className='hover:underline'><a href="#regalos">Regalos</a></li>
               <li className='hover:underline'><a href="#actividades">Actividades</a></li>
               <li className='hover:underline '><a href="#contacto">Contacto</a></li>
            </ul>
