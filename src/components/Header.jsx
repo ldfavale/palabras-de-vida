@@ -4,7 +4,8 @@ import logo from '../assets/images/pdv_icon_big.png'
  function Header() {
 
    const [menuButtonClicked, setMenuButtonClicked] = useState(false);
-   const [switchingBg, setSwitchingBg] = useState({backgroundColor:'rgba(255,255,255,0.7)'});
+   const [switchingBg, setSwitchingBg] = useState({});
+   const [switchingSize, setSwitchingSize] = useState({height: "80px",width: "80px"});
 
     // Function to check scroll position and handle it
 const checkScrollPosition =  () => {
@@ -14,8 +15,11 @@ const checkScrollPosition =  () => {
   // Do something based on the scroll position
   if (scrollY > 65) {
     // The user has scrolled down
-    // setSwitchingBg({backgroundColor:'rgba(0,0,0,0.9)'})
+    setSwitchingBg({height:'70px'})
+    setSwitchingSize({height: "50px",width: "50px"})
   } else {
+    setSwitchingBg({height:'104px'})
+    setSwitchingSize({height: "80px",width: "80px"})
     // setSwitchingBg({backgroundColor:'transparent'})
     // The user is at the top of the page
     console.log("User is at the top.");
@@ -27,20 +31,20 @@ window.addEventListener("scroll", checkScrollPosition);
 
 
     return (
-      <div id='header' className=' flex flex-col fixed z-20  w-full [box-shadow:0px_0px_8px_rgba(0,0,0,.6)] ' >
+      <div id='header' className=' flex flex-col fixed z-20  w-full bg-white [box-shadow:0_8px_6px_-6px_rgba(0,0,0,0.15)] ' >
         <div className={"  flex justify-between md:justify-center px-8 py-3 transition-all"} style={switchingBg}>
           <nav className=' justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gilroy font-medium  '>
             <li className='hover:underline'><a href="#quienes_somos">Quienes Somos</a></li>
               <li className='hover:underline'><a href="#biblias">Biblias</a></li>
               <li className='hover:underline'><a href="#libros">Libros</a></li>
-              <img src={logo} className='h-20 w-20' alt="Logo" />
+              <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
               <li className='hover:underline'><a href="#regalos">Regalos</a></li>
               <li className='hover:underline'><a href="#actividades">Actividades</a></li>
               <li className='hover:underline '><a href="#contacto">Contacto</a></li>
            </ul>
           </nav>
-          <img src={logo} className='h-14 w-14 md:hidden' alt="Logo" />
+          <img src={logo} className='h-14 w-14 md:hidden' alt="Logo" style={switchingSize}/>
 
           <button onClick={()=>{
             let scrollY = window.scrollY;
