@@ -4,7 +4,7 @@ import logo from '../assets/images/pdv_icon_big.png'
  function Header() {
 
    const [menuButtonClicked, setMenuButtonClicked] = useState(false);
-   const [switchingBg, setSwitchingBg] = useState({backgroundColor:'white'});
+   const [switchingBg, setSwitchingBg] = useState({backgroundColor:'rgba(255,255,255,0.7)'});
 
     // Function to check scroll position and handle it
 const checkScrollPosition =  () => {
@@ -27,10 +27,10 @@ window.addEventListener("scroll", checkScrollPosition);
 
 
     return (
-      <div id='header' className=' flex flex-col fixed z-20  w-full'>
+      <div id='header' className=' flex flex-col fixed z-20  w-full [box-shadow:0px_0px_8px_rgba(0,0,0,.6)] ' >
         <div className={"  flex justify-between md:justify-center px-8 py-3 transition-all"} style={switchingBg}>
           <nav className=' justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
-            <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center  '>
+            <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gilroy font-medium  '>
             <li className='hover:underline'><a href="#quienes_somos">Quienes Somos</a></li>
               <li className='hover:underline'><a href="#biblias">Biblias</a></li>
               <li className='hover:underline'><a href="#libros">Libros</a></li>

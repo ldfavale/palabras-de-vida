@@ -11,6 +11,7 @@ export default {
         now: ["now"],
         italiana: ["italiana"],
         gayathri: ["gayathri"],
+        gilroy: ["gilroy"],
       },
     },
   },

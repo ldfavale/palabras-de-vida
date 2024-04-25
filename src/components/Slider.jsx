@@ -11,14 +11,14 @@ import slide2 from '../assets/images/slide2.png'
 
 function Slider() {
   return (
-    <div id='countdown'>
+    <div id='countdown' className='md:px-20 pt-[80px] md:pt-[105px] '>
 
       <HeroSlider
-
-      style={{minHeight: "650px"}}
+      style={{paddingTop: "450px"}}
+      height="87vh"
       autoplay
       accessibility={{
-        shouldDisplayButtons: false
+        shouldDisplayButtons: true
       }}
       controller={{
         initialSlide: 1,
