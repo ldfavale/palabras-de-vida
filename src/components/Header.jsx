@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import logo from '../assets/images/pdv_icon_big.png'
+import logo from '../assets/images/icon.png'
+import { Link } from 'react-router-dom';
 
  function Header() {
 
@@ -29,19 +30,45 @@ const checkScrollPosition =  () => {
 
 window.addEventListener("scroll", checkScrollPosition);
 
-
+// Botones:  Tienda Actividades Blog algomas Historia  Contacto
+//  TODO: Cambiar Col
+//  TODO: Pagina Tienda 
     return (
       <div id='header' className=' flex flex-col fixed z-20  w-full bg-white [box-shadow:0_8px_6px_-6px_rgba(0,0,0,0.15)] ' >
         <div className={"  flex justify-between md:justify-center px-8 py-3 transition-all"} style={switchingBg}>
           <nav className=' justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
-            <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gilroy font-medium  '>
-            <li className='hover:underline'><a href="#quienes_somos">Quienes Somos</a></li>
-              <li className='hover:underline'><a href="#biblias">Biblias</a></li>
-              <li className='hover:underline'><a href="#libros">Libros</a></li>
+            <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
+            <li className='hover:underline'>
+              <Link to="/tienda">
+                Tienda
+              </Link>
+            </li>
+              <li className='hover:underline'>
+              <Link to="/actividades">
+                Actividades
+              </Link></li>
+              <li className='hover:underline'>
+                <Link to="/blog">
+                Blog
+                </Link>
+              </li>
+              <Link to="/">
               <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
-              <li className='hover:underline'><a href="#regalos">Regalos</a></li>
-              <li className='hover:underline'><a href="#actividades">Actividades</a></li>
-              <li className='hover:underline '><a href="#contacto">Contacto</a></li>
+                </Link>
+              <li className='hover:underline'>
+              <Link to="/algomas">
+              Algomas
+              </Link></li>
+              <li className='hover:underline'>
+              <Link to="/historia">
+              Historia
+              </Link>
+              </li>
+              <li className='hover:underline '>
+              <Link to="/contacto">
+                Contacto
+              </Link>
+              </li>
            </ul>
           </nav>
           <img src={logo} className='h-14 w-14 md:hidden' alt="Logo" style={switchingSize}/>
@@ -67,11 +94,34 @@ window.addEventListener("scroll", checkScrollPosition);
       { menuButtonClicked &&
         <nav className='font-gayathri   text-md bg-white  md:hidden '>
           <ul className='flex flex-col text-center items-center justify-center [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center '>
-          <li className='hover:underline'><a href="#biblias">Biblias</a></li>
-              <li className='hover:underline'><a href="#libros">Libros</a></li>
-              <li className='hover:underline'><a href="#algo_mas">Algo mas</a></li>
-              <li className='hover:underline'><a href="#actividades">Actividades</a></li>
-              <li className='hover:underline '><a href="#contacto">Contacto</a></li>
+          <li className='hover:underline'>
+              <Link to="/tienda">
+                Tienda
+              </Link>
+            </li>
+              <li className='hover:underline'>
+              <Link to="/actividades">
+                Actividades
+              </Link></li>
+              <li className='hover:underline'>
+                <Link to="/blog">
+                Blog
+                </Link>
+              </li>
+              <li className='hover:underline'>
+              <Link to="/algomas">
+              Algomas
+              </Link></li>
+              <li className='hover:underline'>
+              <Link to="/historia">
+              Historia
+              </Link>
+              </li>
+              <li className='hover:underline '>
+              <Link to="/contacto">
+                Contacto
+              </Link>
+              </li>
             </ul>
         </nav>
         }
