@@ -12,6 +12,7 @@ export default {
         italiana: ["italiana"],
         gayathri: ["gayathri"],
         gilroy: ["gilroy"],
+        graphik: ["graphik"],
       },
     },
   },
