@@ -32,10 +32,10 @@ function Slider() {
           {/* <div className='h-10 '></div> */}
 
           {/* <span className='line-subtitle line-subtitle-slider font-gayathri  text-white  text-sm  lg:text-[1.125rem]  mb-4 tracking-widest'>For ever</span> */}
-
+          
           {/* Main Title */}
           {/* <h1 className=' font-italiana text-[3rem] mb-8 mt-4 md:text-6xl lg:text-[5rem]  md:mb-10  text-white text-center '> Jerusalem</h1> */}
-
+          
           {/* Sub Title */}
           {/* <span className='line-subtitle line-subtitle-slider font-gayathri  text-white   text-sm  lg:text-[1.125rem]  mb-12 tracking-widest'>The City of the Great King </span> */}
 
