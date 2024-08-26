@@ -12,9 +12,10 @@ import { Link } from 'react-router-dom';
 const checkScrollPosition =  () => {
   // Get the current scroll position
   let scrollY = window.scrollY;
+  let screenWidth = screen.width;
 
   // Do something based on the scroll position
-  if (scrollY > 65) {
+  if (scrollY > 65 || screenWidth < 640) {
     // The user has scrolled down
     setSwitchingBg({height:'70px'})
     setSwitchingSize({height: "50px",width: "50px"})
@@ -35,7 +36,7 @@ window.addEventListener("scroll", checkScrollPosition);
 //  TODO: Pagina Tienda 
     return (
       <div id='header' className=' flex flex-col fixed z-20  w-full bg-white [box-shadow:0_8px_6px_-6px_rgba(0,0,0,0.15)] ' >
-        <div className={"  flex justify-between md:justify-center px-8 py-3 transition-all"} style={switchingBg}>
+        <div className={"  flex justify-between items-center md:justify-center px-8 py-3 transition-all"} style={switchingBg}>
           <nav className=' justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
             <li className='hover:underline'>
@@ -71,7 +72,7 @@ window.addEventListener("scroll", checkScrollPosition);
               </li>
            </ul>
           </nav>
-          <img src={logo} className='h-14 w-14 md:hidden' alt="Logo" style={switchingSize}/>
+          <img src={logo} className='h-14 w-14 md:hidden' alt="Logo" />
 
           <button onClick={()=>{
             let scrollY = window.scrollY;
