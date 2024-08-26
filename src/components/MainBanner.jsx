@@ -8,11 +8,11 @@ function MainBanner() {
       <img src={mainIcon} alt="mainIcon" className='w-[80%]  md:w-[40%] max-w-[400px]'/>
           <div className=' flex items-center'>
             <h1 className=' font-gilroy  text-5xl  md:text-5xl lg:text-6xl xl:text-6xl  text-[#a28c85] font-bold text-center md:text-right '>
-            Señor,<br/>
+            Señor,<br />
             ¿a quién iremos? <br/>
             Tú tienes <br/>
-            <span className='text-[#edcf70]'>
-             palabras de vida 
+            <span className='text-primary_light'>
+             palabras <br className='md:hidden'/> de vida 
             </span>
             <br/>
             eterna
