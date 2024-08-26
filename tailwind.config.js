@@ -14,6 +14,15 @@ export default {
         gilroy: ["gilroy"],
         graphik: ["graphik"],
       },
+      colors: {
+        primary: '#FDCA40',
+        primary_light: '#EDCF70',
+        error: '#ED4956',
+        white: '#fff',
+        black: '#444E5E',
+        grey: '#666666',
+        lightgrey: '#A9B1BE'
+      },
     },
   },
   plugins: [
