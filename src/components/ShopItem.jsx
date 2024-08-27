@@ -2,7 +2,7 @@ import React from 'react'
 
 function ShopItem({product}) {
   return (
-    <div className=" max-w-md sm:hover:[box-shadow:3px_6px_6px_3px_rgba(0,0,0,0.15)] m-3  sm:w-1/3">
+    <div className=" max-w-md sm:hover:[box-shadow:3px_6px_6px_3px_rgba(0,0,0,0.15)] m-3 sm:w-[45%] md:w-[30%] xl:w-[22%]">
         <div className="flex flex-col">
             <div className=' flex sm:h-[231px] bg-lightgrey items-center justify-center'>
                 <img src={product.image} alt="product" className="w-full "/>
