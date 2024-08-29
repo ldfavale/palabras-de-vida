@@ -2,7 +2,7 @@ import React from 'react'
 
 function ShopItem({product}) {
   return (
-    <div className=" max-w-md sm:hover:[box-shadow:3px_6px_6px_3px_rgba(0,0,0,0.15)] m-3 sm:w-[45%] md:w-[30%] xl:w-[22%]">
+    <div className=" max-w-md sm:hover:[box-shadow:0_0_12px_rgba(0,0,0,.15)] sm:m-3 sm:w-[45%] md:w-[30%] xl:w-[22%]">
         <div className="flex flex-col">
             <div className=' flex sm:h-[231px] bg-lightgrey items-center justify-center'>
                 <img src={product.image} alt="product" className="w-full "/>
@@ -19,11 +19,11 @@ function ShopItem({product}) {
             <p className="font-graphik font-medium text-black mb-2">{product.title}</p>
             <div className="flex flex-row  justify-between w-full mb-1 [&>span]:text-lightgrey [&>span]:font-thin  [&>span]:text-xs">
                 <span>{product.category}</span>
-                <span>{product.codigo}</span>
+                <span>COD: {product.code}</span>
             </div>
-            <div className="font-medium text-primary mb-1">{product.price}</div>
+            <div className="font-medium text-primary mb-1">UYU {product.price}</div>
             <p className="font-graphik font- text-xs text-black mb-2">
-            {product.description}
+             {product.description}
             </p>
         </div>
   </div>
