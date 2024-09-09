@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+      display: none;
+  }
+ /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+}
+}
+
 @font-face {
   font-family: "aphrodite";
   src: url("./assets/fonts/aphrodite-slim-text.otf");
@@ -117,6 +129,12 @@
   font-family: "graphik";
   src: url("./assets/fonts/Graphik/GraphikBold.otf");
   font-weight:bold;
+  font-style:normal;
+}
+@font-face {
+  font-family: "graphik";
+  src: url("./assets/fonts/Graphik/GraphikSemibold.otf"); 
+  font-weight:600;
   font-style:normal;
 }
 

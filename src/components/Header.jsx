@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import logo from '../assets/images/icon.png'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import TabMenu from './TabMenu';
 
  function Header() {
 
    const [menuButtonClicked, setMenuButtonClicked] = useState(false);
    const [switchingBg, setSwitchingBg] = useState({});
    const [switchingSize, setSwitchingSize] = useState({height: "80px",width: "80px"});
+   const location = useLocation();
+   const isShoppingPage = ['/tienda'].includes(location.pathname);
 
     // Function to check scroll position and handle it
 const checkScrollPosition =  () => {
@@ -38,7 +41,7 @@ const dismissMenu = () => {
 }
     return (
       <div id='header' className=' flex flex-col fixed z-20  w-full bg-white [box-shadow:0_8px_6px_-6px_rgba(0,0,0,0.15)] ' >
-        <div className={"  flex justify-between items-center md:justify-center px-8 py-3 transition-all"} style={switchingBg}>
+        <div className={"  flex justify-between items-center md:justify-center px-4 sm:px-6 md:px-8 py-3 transition-all"} style={switchingBg}>
           <nav className='DESKTOP-MENU justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
             <li className='hover:underline'>
@@ -76,7 +79,7 @@ const dismissMenu = () => {
           </nav>
           <img src={logo} className='h-12 w-12 md:hidden' alt="Logo" />
 
-          <button onClick={() => setMenuButtonClicked((prev) => !prev)} className='p-[0.6rem]  md:hidden transition-all '>
+          <button onClick={() => setMenuButtonClicked((prev) => !prev)} className='p-[0.6rem] pr-1 sm:pr-2 md:hidden transition-all '>
             <svg className="w-5 h-4 text-black   " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
               <path stroke="currentColor"  strokeWidth="1.7" d="M1 1h15M1 7h15M1 13h15"/>
             </svg>
@@ -85,7 +88,7 @@ const dismissMenu = () => {
         </div>
 
         <nav>
-        <section className="MOBILE-MENU flex md:hidden">
+        <section className="MOBILE-MENU flex md:hidden ">
           <div className={menuButtonClicked ? "showMenuNav" : "hideMenuNav"}>
             <div
               className="absolute top-0 right-0 px-8 py-8"
@@ -138,6 +141,17 @@ const dismissMenu = () => {
           </div>
         </section>
       </nav>
+      {isShoppingPage && 
+        <div className='flex flex-row items-center'>
+        <div className='p-3'>
+        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+          </svg>
+        </div>
+          <TabMenu/>
+        </div>
+      }
+     
       <style>{`
       .hideMenuNav {
         display: none;
@@ -150,49 +164,13 @@ const dismissMenu = () => {
         top: 0;
         left: 0;
         background: white;
-        z-index: 10;
+        z-index: 20;
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
         align-items: center;
       }
     `}</style>
-
-      {/* { menuButtonClicked &&
-        <nav className='font-gayathri   text-md bg-white  md:hidden '>
-          <ul className='flex flex-col text-center items-center justify-center [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center '>
-          <li className='hover:underline'>
-              <Link to="/tienda">
-                Tienda
-              </Link>
-            </li>
-              <li className='hover:underline'>
-              <Link to="/actividades">
-                Actividades
-              </Link></li>
-              <li className='hover:underline'>
-                <Link to="/blog">
-                Blog
-                </Link>
-              </li>
-              <li className='hover:underline'>
-              <Link to="/algomas">
-              Algomas
-              </Link></li>
-              <li className='hover:underline'>
-              <Link to="/historia">
-              Historia
-              </Link>
-              </li>
-              <li className='hover:underline '>
-              <Link to="/contacto">
-                Contacto
-              </Link>
-              </li>
-            </ul>
-        </nav>
-        } */}
-
       </div>
     )
 
