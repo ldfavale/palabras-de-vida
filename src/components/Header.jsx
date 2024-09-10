@@ -54,33 +54,34 @@ const onClickSearchButton = () => {
           <nav className='DESKTOP-MENU justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
             <li className='hover:underline'>
-              <Link to="/tienda">
+              <Link to="#">
+              Inicio
+              </Link></li>
+            <li className='hover:underline'>
+              <Link to="#">
                 Tienda
               </Link>
             </li>
               <li className='hover:underline'>
-              <Link to="/actividades">
+              <Link to="#">
                 Actividades
               </Link></li>
-              <li className='hover:underline'>
-                <Link to="/blog">
+              
+              <Link to="#">
+              <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
+                </Link>
+                <li className='hover:underline'>
+                <Link to="#">
                 Blog
                 </Link>
               </li>
-              <Link to="/">
-              <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
-                </Link>
               <li className='hover:underline'>
-              <Link to="/algomas">
-              Algomas
-              </Link></li>
-              <li className='hover:underline'>
-              <Link to="/historia">
+              <Link to="#">
               Historia
               </Link>
               </li>
               <li className='hover:underline '>
-              <Link to="/contacto">
+              <Link to="#">
                 Contacto
               </Link>
               </li>
@@ -122,27 +123,27 @@ const onClickSearchButton = () => {
               Inicio
               </Link></li>
               <li className='hover:underline'>
-              <Link to="/tienda" onClick={dismissMenu}>
+              <Link to="#" onClick={dismissMenu}>
                 Tienda
               </Link>
             </li>
               <li className='hover:underline'>
-              <Link to="/actividades" onClick={dismissMenu}>
+              <Link to="#" onClick={dismissMenu}>
                 Actividades
               </Link></li>
               <li className='hover:underline'>
-                <Link to="/blog" onClick={dismissMenu}>
+                <Link to="#" onClick={dismissMenu}>
                 Blog
                 </Link>
               </li>
              
               <li className='hover:underline'>
-              <Link to="/historia" onClick={dismissMenu}>
+              <Link to="#" onClick={dismissMenu}>
               Historia
               </Link>
               </li>
               <li className='hover:underline '>
-              <Link to="/contacto" onClick={dismissMenu}>
+              <Link to="#" onClick={dismissMenu}>
                 Contacto
               </Link>
               </li>
