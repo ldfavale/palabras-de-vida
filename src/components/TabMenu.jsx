@@ -11,6 +11,11 @@ export default function TabMenu() {
   const [activeTab, setActiveTab] = React.useState("html");
   const data = [
     {
+      label: "Todo",
+      value: "todo",
+      
+    },
+    {
       label: "Biblias",
       value: "html",
     },
@@ -33,11 +38,7 @@ export default function TabMenu() {
       value: "svelte",
       
     },
-    {
-      label: "Hola",
-      value: "hola",
-      
-    },
+    
   ];
   return (
     <Tabs value={activeTab} className="z-10 " >

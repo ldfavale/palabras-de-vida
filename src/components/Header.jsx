@@ -8,6 +8,7 @@ import TabMenu from './TabMenu';
    const [menuButtonClicked, setMenuButtonClicked] = useState(false);
    const [switchingBg, setSwitchingBg] = useState({});
    const [switchingSize, setSwitchingSize] = useState({height: "80px",width: "80px"});
+   const [searchFieldShown, setSearchFieldShown] = useState(false);
    const location = useLocation();
    const isShoppingPage = ['/tienda'].includes(location.pathname);
 
@@ -23,7 +24,11 @@ const checkScrollPosition =  () => {
     setSwitchingBg({height:'70px'})
     setSwitchingSize({height: "50px",width: "50px"})
   } else {
-    setSwitchingBg({height:'104px'})
+    if(isShoppingPage){
+      setSwitchingBg({height:'104px'})
+    }else{
+      setSwitchingBg({height:'104px'})
+    }
     setSwitchingSize({height: "80px",width: "80px"})
     // setSwitchingBg({backgroundColor:'transparent'})
     // The user is at the top of the page
@@ -39,9 +44,13 @@ window.addEventListener("scroll", checkScrollPosition);
 const dismissMenu = () => {
   setMenuButtonClicked(false)
 }
+
+const onClickSearchButton = () => {
+  setSearchFieldShown((v)=> !v);
+}
     return (
       <div id='header' className=' flex flex-col fixed z-20  w-full bg-white [box-shadow:0_8px_6px_-6px_rgba(0,0,0,0.15)] ' >
-        <div className={"  flex justify-between items-center md:justify-center px-4 sm:px-6 md:px-8 py-3 transition-all"} style={switchingBg}>
+        <div className={`flex justify-between items-center md:justify-center px-4 sm:px-6 md:px-8 py-3 transition-all`} style={switchingBg}>
           <nav className='DESKTOP-MENU justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
             <li className='hover:underline'>
@@ -142,13 +151,24 @@ const dismissMenu = () => {
         </section>
       </nav>
       {isShoppingPage && 
-        <div className='flex flex-row items-center'>
-        <div className='p-3'>
-        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+        <div className='flex flex-row items-center  lg:hidden'>
+        <div className='p-3' onClick={onClickSearchButton}>
+        {!searchFieldShown && 
+            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+            </svg>
+        }
+        {searchFieldShown && 
+          <svg class="w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
           </svg>
+
+        }
         </div>
-          <TabMenu/>
+        {searchFieldShown && 
+          <input name="search" className=' font-  text-gray-500  ' placeholder='Busca artículos aqui...'/>
+        }
+        {!searchFieldShown &&  <TabMenu/>}
         </div>
       }
      
