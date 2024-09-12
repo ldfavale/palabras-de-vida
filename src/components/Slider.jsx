@@ -2,9 +2,12 @@
 
 import '../App'
 import HeroSlider, { Overlay, Slide, Nav } from "hero-slider";
-import slide1 from '../assets/images/bible_wide.png'
-import slide3 from '../assets/images/slide2.jpg'
+import slide1 from '../assets/images/wall_wide.jpeg'
+import slide3 from '../assets/images/table_wide.jpeg'
 import slide2 from '../assets/images/bible_wide_3.jpg'
+import slide6 from '../assets/images/wall2_wide.jpeg'
+import slide4 from '../assets/images/books2_wide.jpeg'
+import slide5 from '../assets/images/booksforkids_wide.jpeg'
 
 
 
@@ -57,6 +60,21 @@ function Slider() {
       <Slide
         background={{
           backgroundImageSrc: slide3
+        }}
+      />
+      <Slide
+        background={{
+          backgroundImageSrc: slide4
+        }}
+      />
+      <Slide
+        background={{
+          backgroundImageSrc: slide5
+        }}
+      />
+      <Slide
+        background={{
+          backgroundImageSrc: slide6
         }}
       />
 
