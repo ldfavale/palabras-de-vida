@@ -5,7 +5,7 @@ import logo from '../assets/images/icon.png'
 function Footer() {
   return (
     <footer id='footer' className="bg-[#282828]  bg-[#2a323f] text-white flex flex-col md:flex-row" >
-      <div className=' flex flex-row p-10   space-x-4 justify-center  items-center w-1/2'>
+      <div className=' flex flex-col lg:flex-row p-10  space-y-6 lg:space-y-0 space-x-4 justify-center  items-center w-full md:w-1/2'>
           
           <img src={logo} className='h-36 w-36' alt="Logo"  />
           <p className=' font-gayathri text-[#C4C4C4] '> 
@@ -13,12 +13,12 @@ function Footer() {
         
       </div> 
       
-      <div className=' flex flex-col p-10  justify-center   w-1/3 '>
+      <div className=' flex flex-col p-10  justify-center   w-full md:w-1/3 '>
           <h3 className='text-3xl mb-6 font-graphik'>Siguenos</h3>
           <p className=' font-gayathri text-[#C4C4C4] mb-6'> 
            Siguenos en nuestras redes sociales o comunicate a travez de nuestro whatsapp.
           </p>
-          <div className='  text-[#C4C4C4] flex  flex-row justify-between w-48 items-center '>
+          <div className='  text-[#C4C4C4] flex  flex-row justify-between  w-48 items-center '>
             {/* <svg className="w-5 h-5 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
               <path d="M13.795 10.533 20.68 2h-3.073l-5.255 6.517L7.69 2H1l7.806 10.91L1.47 22h3.074l5.705-7.07L15.31 22H22l-8.205-11.467Zm-2.38 2.95L9.97 11.464 4.36 3.627h2.31l4.528 6.317 1.443 2.02 6.018 8.409h-2.31l-4.934-6.89Z"/>
             </svg>  */}
@@ -41,7 +41,7 @@ function Footer() {
             </a>
           </div>
       </div> 
-      <div className=' flex flex-col p-10  justify-center   '>
+      <div className=' flex flex-col p-10  justify-center  w-full md:w-1/3  '>
           <h3 className='text-3xl mb-6 font-graphik'>Contacto</h3>
           {/* <p className=' font-gayathri text-[#C4C4C4] mb-8'> 
           Ponte en Contacto con nosotros! Siguenos en nuestras redes sociales o comunicate a travez de nuestro whatsapp.
