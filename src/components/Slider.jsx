@@ -2,10 +2,13 @@
 
 import '../App'
 import HeroSlider, { Overlay, Slide, Nav } from "hero-slider";
-import slide1 from '../assets/images/wall.jpeg'
-import slide3 from '../assets/images/gift_plant.jpg'
+import slide1 from '../assets/images/1.png'
+import slide2 from '../assets/images/2.png'
+import slide3 from '../assets/images/3.png'
+import slide5 from '../assets/images/gift_plant.jpg'
 import slide4 from '../assets/images/sofi2.jpg'
 import slide6 from '../assets/images/wall_new.jpg'
+import slide7 from '../assets/images/wall.jpeg'
 
 
 
@@ -43,13 +46,9 @@ function Slider() {
         </div>
       </Overlay>
 
-     
-      <Slide
-        background={{
-          backgroundImageSrc: slide4
-        }}
-      />
 
+      
+     
       <Slide
         background={{
           backgroundImageSrc: slide1
@@ -58,7 +57,27 @@ function Slider() {
 
       <Slide
         background={{
+          backgroundImageSrc: slide2
+        }}
+      />
+      <Slide
+        background={{
           backgroundImageSrc: slide3
+        }}
+      />
+       <Slide
+        background={{
+          backgroundImageSrc: slide7
+        }}
+      />
+      <Slide
+        background={{
+          backgroundImageSrc: slide4
+        }}
+      />
+      <Slide
+        background={{
+          backgroundImageSrc: slide5
         }}
       />
       <Slide
@@ -66,6 +85,8 @@ function Slider() {
           backgroundImageSrc: slide6
         }}
       />
+
+     
 
       <Nav  />
     </HeroSlider>
