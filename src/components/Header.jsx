@@ -77,11 +77,11 @@ const onClickSearchButton = () => {
               </li>
               <li className='hover:underline'>
               <Link to="#">
-              Historia
+              Sobre nosotros
               </Link>
               </li>
               <li className='hover:underline '>
-              <Link to="#">
+              <Link to="#footer">
                 Contacto
               </Link>
               </li>
@@ -139,11 +139,11 @@ const onClickSearchButton = () => {
              
               <li className='hover:underline'>
               <Link to="#" onClick={dismissMenu}>
-              Historia
+              Sobre nosotros
               </Link>
               </li>
               <li className='hover:underline '>
-              <Link to="#" onClick={dismissMenu}>
+              <Link to="#footer" onClick={dismissMenu}>
                 Contacto
               </Link>
               </li>
