@@ -37,8 +37,7 @@ function Slider() {
           import('../assets/images/slider/desktop/4.png'),
           import('../assets/images/slider/desktop/5.png'),
           import('../assets/images/slider/desktop/6.png'),
-          import('../assets/images/slider/desktop/7.png'),
-          import('../assets/images/slider/desktop/8.jpg')
+          import('../assets/images/slider/desktop/7.png')
         ]);
         setImages(desktopImages.map(img => img.default));
       } else {
@@ -50,8 +49,7 @@ function Slider() {
           import('../assets/images/slider/mobile/4.png'),
           import('../assets/images/slider/mobile/5.png'),
           import('../assets/images/slider/mobile/6.png'),
-          import('../assets/images/slider/mobile/7.png'),
-          import('../assets/images/slider/mobile/8.png')
+          import('../assets/images/slider/mobile/7.png')
         ]);
         setImages(mobileImages.map(img => img.default));
       }
@@ -66,7 +64,7 @@ function Slider() {
 
       <HeroSlider
       style={{paddingTop: "450px"}}
-      height="97vh"
+      height="87vh"
       autoplay
       accessibility={{
         shouldDisplayButtons: true
@@ -133,11 +131,7 @@ function Slider() {
           backgroundImageSrc: images[6]
         }}
       />
-      <Slide
-        background={{
-          backgroundImageSrc: images[7]
-        }}
-      />
+      
    
      
       <Nav  />
