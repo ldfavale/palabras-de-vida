@@ -2,23 +2,71 @@
 
 import '../App'
 import HeroSlider, { Overlay, Slide, Nav } from "hero-slider";
-import slide1 from '../assets/images/1.png'
-import slide2 from '../assets/images/2.png'
-import slide3 from '../assets/images/3.png'
-import slide5 from '../assets/images/gift_plant.jpg'
-import slide4 from '../assets/images/sofi2.jpg'
-import slide6 from '../assets/images/wall_new.jpg'
-import slide7 from '../assets/images/wall.jpeg'
+import React, { useState, useEffect } from 'react';
 
+
+const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(window.matchMedia(query).matches);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    const listener = () => setMatches(media.matches);
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
+  }, [matches, query]);
+
+  return matches;
+};
 
 
 function Slider() {
+
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const loadImages = async () => {
+      if (window.innerWidth >= 768) {
+        // Load desktop images
+        const desktopImages = await Promise.all([
+          import('../assets/images/slider/desktop/1.png'),
+          import('../assets/images/slider/desktop/2.png'),
+          import('../assets/images/slider/desktop/3.png'),
+          import('../assets/images/slider/desktop/4.png'),
+          import('../assets/images/slider/desktop/5.png'),
+          import('../assets/images/slider/desktop/6.png'),
+          import('../assets/images/slider/desktop/7.png'),
+          import('../assets/images/slider/desktop/8.jpg')
+        ]);
+        setImages(desktopImages.map(img => img.default));
+      } else {
+        // Load mobile images
+        const mobileImages = await Promise.all([
+          import('../assets/images/slider/mobile/1.png'),
+          import('../assets/images/slider/mobile/2.png'),
+          import('../assets/images/slider/mobile/3.png'),
+          import('../assets/images/slider/mobile/4.png'),
+          import('../assets/images/slider/mobile/5.png'),
+          import('../assets/images/slider/mobile/6.png'),
+          import('../assets/images/slider/mobile/7.png'),
+          import('../assets/images/slider/mobile/8.png')
+        ]);
+        setImages(mobileImages.map(img => img.default));
+      }
+    };
+
+    loadImages();
+  }, []);
+  
+
   return (
     <div id='countdown' className='md:px-16 pt-[80px] md:pt-[105px] '>
 
       <HeroSlider
       style={{paddingTop: "450px"}}
-      height="87vh"
+      height="97vh"
       autoplay
       accessibility={{
         shouldDisplayButtons: true
@@ -51,43 +99,47 @@ function Slider() {
      
       <Slide
         background={{
-          backgroundImageSrc: slide1
+          backgroundImageSrc: images[0]
         }}
       />
 
       <Slide
         background={{
-          backgroundImageSrc: slide2
+          backgroundImageSrc: images[1]
         }}
       />
       <Slide
         background={{
-          backgroundImageSrc: slide3
+          backgroundImageSrc: images[2]
         }}
       />
        <Slide
         background={{
-          backgroundImageSrc: slide7
+          backgroundImageSrc: images[3]
         }}
       />
       <Slide
         background={{
-          backgroundImageSrc: slide4
+          backgroundImageSrc: images[4]
         }}
       />
       <Slide
         background={{
-          backgroundImageSrc: slide5
+          backgroundImageSrc: images[5]
         }}
       />
       <Slide
         background={{
-          backgroundImageSrc: slide6
+          backgroundImageSrc: images[6]
         }}
       />
-
+      <Slide
+        background={{
+          backgroundImageSrc: images[7]
+        }}
+      />
+   
      
-
       <Nav  />
     </HeroSlider>
     </div>
