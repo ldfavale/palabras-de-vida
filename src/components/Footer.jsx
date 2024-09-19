@@ -9,7 +9,7 @@ function Footer() {
           
           <img src={logo} className='h-36 w-36' alt="Logo"  />
           <p className=' font-gayathri text-[#C4C4C4] '> 
-          Nuestra misión es edificar y servir a la iglesia y a nuestra comunidad con la propagación de la Palabra de Dios, de libros y materiales de bendición. </p>
+          Nuestra misión es edificar y servir a la iglesia y a nuestra comunidad con la propagación de la Palabra de Dios para que todos vengan al conocimiento de Cristo. 1 Timoteo 2:4-6</p>
         
       </div> 
       
