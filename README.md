@@ -1,3 +1,3 @@
-# Sitio web de libreria Crisitana Palabras de Vida
+# Web site for a christian bookshop Palabras de Vida
 
 http://www.casapalabrasdevida.com
