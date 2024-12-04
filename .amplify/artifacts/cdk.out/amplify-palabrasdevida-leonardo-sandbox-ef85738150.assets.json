@@ -1,0 +1,19 @@
+{
+  "version": "38.0.1",
+  "files": {
+    "2422619d82cc0634c86c9894c1feca76002babf2bc0c2732057bcd3144f8cd3d": {
+      "source": {
+        "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "2422619d82cc0634c86c9894c1feca76002babf2bc0c2732057bcd3144f8cd3d.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
