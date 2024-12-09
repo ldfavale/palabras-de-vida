@@ -6,10 +6,11 @@ import {
   RouterProvider,
   Outlet
 } from "react-router-dom";
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './layout/Header';
+import Footer from './layout/Footer';
 import ShoppingPage from './pages/ShoppingPage';
 import App from './App' 
+import { ThemeProvider } from '@material-tailwind/react';
 
 
 const Layout = () => {
@@ -42,6 +43,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-        <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>,
 )

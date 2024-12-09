@@ -1,8 +1,14 @@
+import flowbitePlugin from 'flowbite/plugin';
+import typographyPlugin from '@tailwindcss/typography';
 /** @type {import('tailwindcss').Config} */
-export default {
+import withMT from "@material-tailwind/react/utils/withMT";
+
+export default withMT({
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
-    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'
+    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
+    "node_modules/@material-tailwind/react/components/**/*.{js,ts,jsx,tsx}",
+    "node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -26,7 +32,7 @@ export default {
     },
   },
   plugins: [
-    require('flowbite/plugin'),
-    require('@tailwindcss/typography'),
+    flowbitePlugin,
+    typographyPlugin,
 ]
-}
+});

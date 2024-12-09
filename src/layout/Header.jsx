@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import logo from '../assets/images/icon.png'
 import { Link, useLocation } from 'react-router-dom';
-import TabMenu from './TabMenu';
+import TabMenu from '../components/TabMenu';
 
  function Header() {
 
