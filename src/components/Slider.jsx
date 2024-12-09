@@ -41,14 +41,14 @@ function Slider() {
   
 
   return (
-    <div className='md:px-16 pt-[80px] md:pt-[105px] '>
+    <div className=' md:px-28 pt-[80px] md:pt-[105px] '>
       <Carousel className="md:rounded-xl">
       {
         images.map((i)=>{
           return <img
             src={i}
             alt="image 1"
-            className="h-full w-full object-cover"
+            className="  h-full md:h-[75vh] w-full object-cover"
           />
         })
       }
