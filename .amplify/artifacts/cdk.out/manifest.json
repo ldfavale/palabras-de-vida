@@ -22,7 +22,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/2422619d82cc0634c86c9894c1feca76002babf2bc0c2732057bcd3144f8cd3d.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/668a750ad8aa48ab63677d3a0f3f6bb9c6aa7ae85ae5df21e09a8f8d9bca9215.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -63,6 +63,1106 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "region"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifyAuth/UserPool/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyAuthUserPool4BA7F805"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifyAuth/UserPoolAppClient/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyAuthUserPoolAppClient2626C6F8"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifyAuth/IdentityPool": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyAuthIdentityPool3FDE84CC"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifyAuth/authenticatedUserRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyAuthauthenticatedUserRoleD8DA3689"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifyAuth/unauthenticatedUserRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyAuthunauthenticatedUserRole2B524D9E"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifyAuth/IdentityPoolRoleAttachment": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyAuthIdentityPoolRoleAttachment045F17C8"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthUserPoolD4711918Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthUserPoolD4711918Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthUserPoolAppClient0584CE19Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthUserPoolAppClient0584CE19Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthIdentityPoolA16A0037Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthIdentityPoolA16A0037Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthauthenticatedUserRole4D65D066Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthauthenticatedUserRole4D65D066Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth/amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthunauthenticatedUserRoleDED06C45Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthunauthenticatedUserRoleDED06C45Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/auth.NestedStack/auth.NestedStackResource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "auth179371D7"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/userPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "userPoolId"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/webClientId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "webClientId"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/identityPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "identityPoolId"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/authRegion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authRegion"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/allowUnauthenticatedIdentities": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "allowUnauthenticatedIdentities"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/signupAttributes": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "signupAttributes"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/usernameAttributes": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "usernameAttributes"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/verificationMechanisms": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "verificationMechanisms"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/passwordPolicyMinLength": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "passwordPolicyMinLength"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/passwordPolicyRequirements": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "passwordPolicyRequirements"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/mfaConfiguration": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mfaConfiguration"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/mfaTypes": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mfaTypes"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/socialProviders": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "socialProviders"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/oauthCognitoDomain": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "oauthCognitoDomain"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/oauthScope": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "oauthScope"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/oauthRedirectSignIn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "oauthRedirectSignIn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/oauthRedirectSignOut": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "oauthRedirectSignOut"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/oauthResponseType": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "oauthResponseType"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/oauthClientId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "oauthClientId"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/groups": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "groups"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/GraphQLAPI/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataGraphQLAPI42A6FA33"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/GraphQLAPI/TransformerSchema": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataGraphQLAPITransformerSchemaFF50A789"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/GraphQLAPI/NONE_DS": [
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "NONE_DS"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/GraphQLAPI/NONE_DS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataGraphQLAPINONEDS684BF699"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "NONE_DS"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/AmplifyManagedTableIsCompleteRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AmplifyManagedTableIsCompleteRoleF825222C"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/AmplifyManagedTableOnEventRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AmplifyManagedTableOnEventRoleB4E71DEA"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/AmplifyManagedTableOnEventRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AmplifyManagedTableOnEventRoleDefaultPolicyF6DABCB6"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/TableManagerCustomProvider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TableManagerCustomProviderframeworkonEvent1DFC2ECC"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/TableManagerCustomProvider/framework-isComplete/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TableManagerCustomProviderframeworkisComplete2E51021B"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/AmplifyTableWaiterStateMachine/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AmplifyTableWaiterStateMachineRole470BE899"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/AmplifyTableWaiterStateMachine/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AmplifyTableWaiterStateMachineRoleDefaultPolicy89F3836A"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/AmplifyTableWaiterStateMachine/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AmplifyTableWaiterStateMachine060600BC"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/reference-to-amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPI638A26ACApiId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPI638A26ACApiId"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager/amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyTableManagerTableManagerCustomProviderframeworkonEvent5667E448Arn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyTableManagerTableManagerCustomProviderframeworkonEvent5667E448Arn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyTableManager.NestedStack/AmplifyTableManager.NestedStackResource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataAmplifyTableManagerNestedStackAmplifyTableManagerNestedStackResource86290833"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/DynamoDBModelTableReadIOPS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBModelTableReadIOPS"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/DynamoDBModelTableWriteIOPS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBModelTableWriteIOPS"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/DynamoDBBillingMode": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBBillingMode"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/DynamoDBEnablePointInTimeRecovery": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBEnablePointInTimeRecovery"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/DynamoDBEnableServerSideEncryption": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBEnableServerSideEncryption"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/HasEnvironmentParameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HasEnvironmentParameter"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ShouldUseServerSideEncryption": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ShouldUseServerSideEncryption"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ShouldUsePayPerRequestBilling": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ShouldUsePayPerRequestBilling"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ShouldUsePointInTimeRecovery": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ShouldUsePointInTimeRecovery"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ProductTable": [
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Product"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ProductTable/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProductTable"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Product"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/CustomTableProductTable": [
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Product"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/GetAttProductTableStreamArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetAttProductTableStreamArn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/GetAttProductTableName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetAttProductTableName"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ProductIAMRole": [
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "ProductIAMRole"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ProductIAMRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProductIAMRole3DD24A40"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "ProductIAMRole"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ProductDataSource": [
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "ProductTable"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/ProductDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProductDataSource"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "ProductTable"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/QuerygetProductauth0Function/QuerygetProductauth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuerygetProductauth0FunctionQuerygetProductauth0FunctionAppSyncFunction11A92755"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "QuerygetProductauth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/QuerygetProductpostAuth0Function/QuerygetProductpostAuth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuerygetProductpostAuth0FunctionQuerygetProductpostAuth0FunctionAppSyncFunction4933AC3A"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "QuerygetProductpostAuth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/QueryGetProductDataResolverFn/QueryGetProductDataResolverFn.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QueryGetProductDataResolverFnQueryGetProductDataResolverFnAppSyncFunction059C4D73"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "QueryGetProductDataResolverFn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/queryGetProductResolver": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetProductResolver"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Query.getProduct"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/QuerylistProductsauth0Function/QuerylistProductsauth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuerylistProductsauth0FunctionQuerylistProductsauth0FunctionAppSyncFunction621FD020"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "QuerylistProductsauth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/QuerylistProductspostAuth0Function/QuerylistProductspostAuth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuerylistProductspostAuth0FunctionQuerylistProductspostAuth0FunctionAppSyncFunction08A78B52"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "QuerylistProductspostAuth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/QueryListProductsDataResolverFn/QueryListProductsDataResolverFn.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QueryListProductsDataResolverFnQueryListProductsDataResolverFnAppSyncFunction14032624"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "QueryListProductsDataResolverFn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/queryListProductsResolver": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ListProductResolver"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Query.listProducts"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationcreateProductinit0Function/MutationcreateProductinit0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationcreateProductinit0FunctionMutationcreateProductinit0FunctionAppSyncFunction23EC383F"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationcreateProductinit0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationcreateProductauth0Function/MutationcreateProductauth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationcreateProductauth0FunctionMutationcreateProductauth0FunctionAppSyncFunctionD9DCDF6C"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationcreateProductauth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationcreateProductpostAuth0Function/MutationcreateProductpostAuth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationcreateProductpostAuth0FunctionMutationcreateProductpostAuth0FunctionAppSyncFunctionE9D0520F"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationcreateProductpostAuth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationCreateProductDataResolverFn/MutationCreateProductDataResolverFn.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationCreateProductDataResolverFnMutationCreateProductDataResolverFnAppSyncFunctionBCF75A20"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationCreateProductDataResolverFn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/mutationCreateProductResolver": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreateProductResolver"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Mutation.createProduct"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationupdateProductinit0Function/MutationupdateProductinit0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationupdateProductinit0FunctionMutationupdateProductinit0FunctionAppSyncFunctionE6639374"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationupdateProductinit0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationupdateProductauth0Function/MutationupdateProductauth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationupdateProductauth0FunctionMutationupdateProductauth0FunctionAppSyncFunction608283E8"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationupdateProductauth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationupdateProductpostAuth0Function/MutationupdateProductpostAuth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationupdateProductpostAuth0FunctionMutationupdateProductpostAuth0FunctionAppSyncFunction9B03782C"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationupdateProductpostAuth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationUpdateProductDataResolverFn/MutationUpdateProductDataResolverFn.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationUpdateProductDataResolverFnMutationUpdateProductDataResolverFnAppSyncFunction51653259"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationUpdateProductDataResolverFn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/mutationUpdateProductResolver": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UpdateProductResolver"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Mutation.updateProduct"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationdeleteProductauth0Function/MutationdeleteProductauth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationdeleteProductauth0FunctionMutationdeleteProductauth0FunctionAppSyncFunction2D3EC535"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationdeleteProductauth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationdeleteProductpostAuth0Function/MutationdeleteProductpostAuth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationdeleteProductpostAuth0FunctionMutationdeleteProductpostAuth0FunctionAppSyncFunction3865138D"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationdeleteProductpostAuth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/MutationDeleteProductDataResolverFn/MutationDeleteProductDataResolverFn.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MutationDeleteProductDataResolverFnMutationDeleteProductDataResolverFnAppSyncFunction06F6C758"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "MutationDeleteProductDataResolverFn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/mutationDeleteProductResolver": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeleteProductResolver"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Mutation.deleteProduct"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptiononCreateProductauth0Function/SubscriptiononCreateProductauth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononCreateProductauth0FunctionSubscriptiononCreateProductauth0FunctionAppSyncFunction5B0C8398"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptiononCreateProductauth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptiononCreateProductpostAuth0Function/SubscriptiononCreateProductpostAuth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononCreateProductpostAuth0FunctionSubscriptiononCreateProductpostAuth0FunctionAppSyncFunction5CA0C71B"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptiononCreateProductpostAuth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptionOnCreateProductDataResolverFn/SubscriptionOnCreateProductDataResolverFn.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptionOnCreateProductDataResolverFnSubscriptionOnCreateProductDataResolverFnAppSyncFunction5EA5372E"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptionOnCreateProductDataResolverFn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/subscriptionOnCreateProductResolver": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononCreateProductResolver"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Subscription.onCreateProduct"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptiononUpdateProductauth0Function/SubscriptiononUpdateProductauth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononUpdateProductauth0FunctionSubscriptiononUpdateProductauth0FunctionAppSyncFunction9C339378"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptiononUpdateProductauth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptiononUpdateProductpostAuth0Function/SubscriptiononUpdateProductpostAuth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononUpdateProductpostAuth0FunctionSubscriptiononUpdateProductpostAuth0FunctionAppSyncFunction328BB63E"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptiononUpdateProductpostAuth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptionOnUpdateProductDataResolverFn/SubscriptionOnUpdateProductDataResolverFn.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptionOnUpdateProductDataResolverFnSubscriptionOnUpdateProductDataResolverFnAppSyncFunction33B56D28"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptionOnUpdateProductDataResolverFn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/subscriptionOnUpdateProductResolver": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononUpdateProductResolver"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Subscription.onUpdateProduct"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptiononDeleteProductauth0Function/SubscriptiononDeleteProductauth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononDeleteProductauth0FunctionSubscriptiononDeleteProductauth0FunctionAppSyncFunction3CDB90A3"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptiononDeleteProductauth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptiononDeleteProductpostAuth0Function/SubscriptiononDeleteProductpostAuth0Function.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononDeleteProductpostAuth0FunctionSubscriptiononDeleteProductpostAuth0FunctionAppSyncFunctionB9DA21B4"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptiononDeleteProductpostAuth0Function"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/SubscriptionOnDeleteProductDataResolverFn/SubscriptionOnDeleteProductDataResolverFn.AppSyncFunction": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptionOnDeleteProductDataResolverFnSubscriptionOnDeleteProductDataResolverFnAppSyncFunctionA173C409"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "SubscriptionOnDeleteProductDataResolverFn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/subscriptionOnDeleteProductResolver": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubscriptiononDeleteProductResolver"
+          },
+          {
+            "type": "graphqltransformer:resourceName",
+            "data": "Subscription.onDeleteProduct"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/reference-to-amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyTableManagerNestedStackAmplifyTableManagerNestedStackResource50EB587EOutputs.amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyTableManagerTableManagerCustomProviderframeworkonEvent5667E448Arn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyTableManagerNestedStackAmplifyTableManagerNestedStackResource50EB587EOutputsamplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyTableManagerTableA6600200"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/reference-to-amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPI638A26ACApiId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPI638A26ACApiId"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/reference-to-amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPINONEDS51308BA1Name": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPINONEDS51308BA1Name"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/reference-to-amplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputs.amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthauthenticatedUserRole4D65D066Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthauthenticatedUserRole4D65D066Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/reference-to-amplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputs.amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthunauthenticatedUserRoleDED06C45Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthunauthenticatedUserRoleDED06C45Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product/reference-to-amplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputs.amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthIdentityPoolA16A0037Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthIdentityPoolA16A0037Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/Product.NestedStack/Product.NestedStackResource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataProductNestedStackProductNestedStackResource648F4D75"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AuthRolePolicy01/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataAuthRolePolicy01567A5654"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/UnauthRolePolicy01/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataUnauthRolePolicy01355B9DCF"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9CCB4ACA"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataAmplifyCodegenAssetsAmplifyCodegenAssetsBucketPolicyF1C1C548"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataAmplifyCodegenAssetsAmplifyCodegenAssetsBucketAutoDeleteObjectsCustomResource437F26F5"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyCodegenAssets/AmplifyCodegenAssetsDeployment/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentAwsCliLayerE322F905"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyCodegenAssets/AmplifyCodegenAssetsDeployment/CustomResource-1536MiB/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentCustomResource1536MiB21775929"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/DynamoDBModelTableReadIOPS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBModelTableReadIOPS"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/DynamoDBModelTableWriteIOPS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBModelTableWriteIOPS"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/DynamoDBBillingMode": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBBillingMode"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/DynamoDBEnablePointInTimeRecovery": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBEnablePointInTimeRecovery"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/DynamoDBEnableServerSideEncryption": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBEnableServerSideEncryption"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-singleton",
+            "data": true
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-runtime-family",
+            "data": 2
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-singleton",
+            "data": true
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-runtime-family",
+            "data": 2
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleDefaultPolicyFF1C635B"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBC5D8AB21"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/modelIntrospectionSchemaBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "modelIntrospectionSchemaBucketF566B665"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/modelIntrospectionSchemaBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "modelIntrospectionSchemaBucketPolicy4DAB0D15"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/modelIntrospectionSchemaBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "modelIntrospectionSchemaBucketAutoDeleteObjectsCustomResourceFE57309F"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/modelIntrospectionSchemaBucketDeployment/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "modelIntrospectionSchemaBucketDeploymentAwsCliLayer13C432F7"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/modelIntrospectionSchemaBucketDeployment/CustomResource-1536MiB/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "modelIntrospectionSchemaBucketDeploymentCustomResource1536MiB104B97EC"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/AMPLIFY_DATA_GRAPHQL_ENDPOINTParameter/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AMPLIFYDATAGRAPHQLENDPOINTParameter1C2CBB16"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/AMPLIFY_DATA_MODEL_INTROSPECTION_SCHEMA_BUCKET_NAMEParameter/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AMPLIFYDATAMODELINTROSPECTIONSCHEMABUCKETNAMEParameter47BF4F44"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/AMPLIFY_DATA_MODEL_INTROSPECTION_SCHEMA_KEYParameter/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AMPLIFYDATAMODELINTROSPECTIONSCHEMAKEYParameterB6AEAE8A"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/reference-to-amplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputs.amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthUserPoolD4711918Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthUserPoolD4711918Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/reference-to-amplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputs.amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthauthenticatedUserRole4D65D066Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthauthenticatedUserRole4D65D066Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/reference-to-amplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputs.amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthunauthenticatedUserRoleDED06C45Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthunauthenticatedUserRoleDED06C45Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/reference-to-amplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputs.amplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthIdentityPoolA16A0037Ref": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthIdentityPoolA16A0037Ref"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPI638A26ACApiId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPI638A26ACApiId"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPI638A26ACGraphQLUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPI638A26ACGraphQLUrl"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentCustomResource1536MiBBBE000BFDestinationBucketArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentCustomResource1536MiBBBE000BFDestinationBucketArn"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data.NestedStack/data.NestedStackResource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "data7552DF31"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/awsAppsyncApiId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "awsAppsyncApiId"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/awsAppsyncApiEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "awsAppsyncApiEndpoint"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/awsAppsyncAuthenticationType": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "awsAppsyncAuthenticationType"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/awsAppsyncRegion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "awsAppsyncRegion"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/amplifyApiModelSchemaS3Uri": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyApiModelSchemaS3Uri"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/awsAppsyncAdditionalAuthenticationTypes": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "awsAppsyncAdditionalAuthenticationTypes"
           }
         ],
         "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/CDKMetadata/Default": [
