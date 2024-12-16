@@ -17,27 +17,27 @@ const schema = a.schema({
       code: a.string(),
       price: a.string()
     })
-    .authorization((allow) => [allow.guest()])
-    // .authorization(allow => [allow.publicApiKey()])
+    // .authorization((allow) => [allow.guest()])
+    .authorization(allow => [allow.publicApiKey()])
 });
 export type Schema = ClientSchema<typeof schema>;
 
 // defines the data resource to be deployed
-export const data = defineData({
-  schema,
-  authorizationModes: {
-    defaultAuthorizationMode: 'iam',
-  },
-});
-
-
 // export const data = defineData({
 //   schema,
 //   authorizationModes: {
-//     defaultAuthorizationMode: 'apiKey',
-//     apiKeyAuthorizationMode: { expiresInDays: 30 }
-//   }
+//     defaultAuthorizationMode: 'iam',
+//   },
 // });
+
+
+export const data = defineData({
+  schema,
+  authorizationModes: {
+    defaultAuthorizationMode: 'apiKey',
+    apiKeyAuthorizationMode: { expiresInDays: 30 }
+  }
+});
 
 /*== STEP 2 ===============================================================
 Go to your frontend source code. From your client-side code, generate a

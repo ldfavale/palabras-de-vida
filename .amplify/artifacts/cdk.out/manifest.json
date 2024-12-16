@@ -22,7 +22,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/668a750ad8aa48ab63677d3a0f3f6bb9c6aa7ae85ae5df21e09a8f8d9bca9215.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/68bde79e43b5b4faaf83cd67d0fec579bbcdbfac5b01d16e5ce507a47a033fbd.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -279,6 +279,12 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "amplifyDataGraphQLAPITransformerSchemaFF50A789"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/GraphQLAPI/DefaultApiKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifyDataGraphQLAPIDefaultApiKey1C8ED374"
           }
         ],
         "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/GraphQLAPI/NONE_DS": [
@@ -889,18 +895,6 @@
             "data": "amplifyDataProductNestedStackProductNestedStackResource648F4D75"
           }
         ],
-        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AuthRolePolicy01/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "amplifyDataAuthRolePolicy01567A5654"
-          }
-        ],
-        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/UnauthRolePolicy01/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "amplifyDataUnauthRolePolicy01355B9DCF"
-          }
-        ],
         "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -1123,6 +1117,12 @@
             "data": "amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentCustomResource1536MiBBBE000BFDestinationBucketArn"
           }
         ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPIDefaultApiKeyB12870A2ApiKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPIDefaultApiKeyB12870A2ApiKey"
+          }
+        ],
         "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/data.NestedStack/data.NestedStackResource": [
           {
             "type": "aws:cdk:logicalId",
@@ -1157,6 +1157,12 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "amplifyApiModelSchemaS3Uri"
+          }
+        ],
+        "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/awsAppsyncApiKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "awsAppsyncApiKey"
           }
         ],
         "/amplify-palabrasdevida-leonardo-sandbox-ef85738150/awsAppsyncAdditionalAuthenticationTypes": [

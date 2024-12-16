@@ -728,9 +728,12 @@
                                   },
                                   "defaultAction": "ALLOW"
                                 }
+                              },
+                              {
+                                "authenticationType": "AWS_IAM"
                               }
                             ],
-                            "authenticationType": "AWS_IAM",
+                            "authenticationType": "API_KEY",
                             "name": "amplifyData",
                             "tags": [
                               {
@@ -766,12 +769,32 @@
                               ]
                             },
                             "definitionS3Location": {
-                              "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/9a049b6403cf136c8d0bb3c8a25948e1783efd2fb514a52c1f35b29b7cd1aafd.graphql"
+                              "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/179ca53cdf038629820684768c24283864488261f8bb7fef9fd857010b2662d3.graphql"
                             }
                           }
                         },
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.aws_appsync.CfnGraphQLSchema",
+                          "version": "2.173.1"
+                        }
+                      },
+                      "DefaultApiKey": {
+                        "id": "DefaultApiKey",
+                        "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/GraphQLAPI/DefaultApiKey",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AppSync::ApiKey",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Fn::GetAtt": [
+                                "amplifyDataGraphQLAPI42A6FA33",
+                                "ApiId"
+                              ]
+                            },
+                            "expires": 1736963182
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_appsync.CfnApiKey",
                           "version": "2.173.1"
                         }
                       },
@@ -1907,7 +1930,7 @@
                                 "functionVersion": "2018-05-29",
                                 "name": "QuerygetProductauth0Function",
                                 "requestMappingTemplateS3Location": {
-                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e7b2a5c2142d48e60eebe8e4beed7cc465c87e36229199889878edae668ef132.vtl"
+                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/0224a3e5097427da3f4460b5d6d2b86ad4195c9cb8da7bc13e7187eead1c3ae3.vtl"
                                 },
                                 "responseMappingTemplate": "$util.toJson({})"
                               }
@@ -2222,7 +2245,7 @@
                                 "functionVersion": "2018-05-29",
                                 "name": "QuerylistProductsauth0Function",
                                 "requestMappingTemplateS3Location": {
-                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e7b2a5c2142d48e60eebe8e4beed7cc465c87e36229199889878edae668ef132.vtl"
+                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/0224a3e5097427da3f4460b5d6d2b86ad4195c9cb8da7bc13e7187eead1c3ae3.vtl"
                                 },
                                 "responseMappingTemplate": "$util.toJson({})"
                               }
@@ -2598,7 +2621,7 @@
                                 "functionVersion": "2018-05-29",
                                 "name": "MutationcreateProductauth0Function",
                                 "requestMappingTemplateS3Location": {
-                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/687e5bb5b18cd04d8e695d1f85ad9d43df05210383aba8097d72910c47b3e7e1.vtl"
+                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/d637c1fb7301003b8a5ada269338cf2e8df6cc0dc412ef13acc6158d680b6d3e.vtl"
                                 },
                                 "responseMappingTemplate": "$util.toJson({})"
                               }
@@ -3012,7 +3035,7 @@
                                   "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1f5fed297da9c32ae3af922bf3a38ccf23b956078887d16891ec06c20c64722c.vtl"
                                 },
                                 "responseMappingTemplateS3Location": {
-                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/035bca645c95ac13c5dbae712a5a00df2f0b40b2772e5077b865722057d0b2b7.vtl"
+                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/89f92efd98b1034df0e2497fe31a97de6975de554b8a22e0677d05d6efcafa59.vtl"
                                 }
                               }
                             },
@@ -3364,7 +3387,7 @@
                                   "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1f5fed297da9c32ae3af922bf3a38ccf23b956078887d16891ec06c20c64722c.vtl"
                                 },
                                 "responseMappingTemplateS3Location": {
-                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/04afff6c870576131ba15da50cb5c3c0278fbab9d12c4fd63520a49832c46482.vtl"
+                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e3416b4d47414f29c21e59a70e83bddb959ef0625854ed7fb0ca376573e99069.vtl"
                                 }
                               }
                             },
@@ -3678,7 +3701,7 @@
                                 "functionVersion": "2018-05-29",
                                 "name": "SubscriptiononCreateProductauth0Function",
                                 "requestMappingTemplateS3Location": {
-                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/d01a85a7e1c50273d7078990da300e811095a7671cd5d0d3ac8d475cc4c8b124.vtl"
+                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e6da5a6e993df8b5fdc91086b71eb53e72a3a97c98836ef9c9257776f36c452b.vtl"
                                 },
                                 "responseMappingTemplate": "$util.toJson({})"
                               }
@@ -3963,7 +3986,7 @@
                                 "functionVersion": "2018-05-29",
                                 "name": "SubscriptiononUpdateProductauth0Function",
                                 "requestMappingTemplateS3Location": {
-                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/d01a85a7e1c50273d7078990da300e811095a7671cd5d0d3ac8d475cc4c8b124.vtl"
+                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e6da5a6e993df8b5fdc91086b71eb53e72a3a97c98836ef9c9257776f36c452b.vtl"
                                 },
                                 "responseMappingTemplate": "$util.toJson({})"
                               }
@@ -4248,7 +4271,7 @@
                                 "functionVersion": "2018-05-29",
                                 "name": "SubscriptiononDeleteProductauth0Function",
                                 "requestMappingTemplateS3Location": {
-                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/d01a85a7e1c50273d7078990da300e811095a7671cd5d0d3ac8d475cc4c8b124.vtl"
+                                  "Fn::Sub": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e6da5a6e993df8b5fdc91086b71eb53e72a3a97c98836ef9c9257776f36c452b.vtl"
                                 },
                                 "responseMappingTemplate": "$util.toJson({})"
                               }
@@ -4652,7 +4675,7 @@
                                   {
                                     "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                                   },
-                                  "/d74a117eb3c2cfe2f18f445c8f40818da9edad46e59698efcfc12e951a52308f.json"
+                                  "/1dcbc8560bd7eb56702e7c4bd31456caf702336cae1800f78403478122ddfbcc.json"
                                 ]
                               ]
                             }
@@ -4667,388 +4690,6 @@
                     "constructInfo": {
                       "fqn": "constructs.Construct",
                       "version": "10.4.2"
-                    }
-                  },
-                  "auth-role-name": {
-                    "id": "auth-role-name",
-                    "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/auth-role-name",
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.Resource",
-                      "version": "2.173.1"
-                    }
-                  },
-                  "AuthRolePolicy01": {
-                    "id": "AuthRolePolicy01",
-                    "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AuthRolePolicy01",
-                    "children": {
-                      "ImportedAuthRolePolicy01": {
-                        "id": "ImportedAuthRolePolicy01",
-                        "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AuthRolePolicy01/ImportedAuthRolePolicy01",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.Resource",
-                          "version": "2.173.1"
-                        }
-                      },
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/AuthRolePolicy01/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::IAM::ManagedPolicy",
-                          "aws:cdk:cloudformation:props": {
-                            "description": "",
-                            "path": "/",
-                            "policyDocument": {
-                              "Statement": [
-                                {
-                                  "Action": "appsync:GraphQL",
-                                  "Effect": "Allow",
-                                  "Resource": [
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/*",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Product"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Query",
-                                          "fieldName": "getProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Query",
-                                          "fieldName": "listProducts"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Mutation",
-                                          "fieldName": "createProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Mutation",
-                                          "fieldName": "updateProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Mutation",
-                                          "fieldName": "deleteProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Subscription",
-                                          "fieldName": "onCreateProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Subscription",
-                                          "fieldName": "onUpdateProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Subscription",
-                                          "fieldName": "onDeleteProduct"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                }
-                              ],
-                              "Version": "2012-10-17"
-                            },
-                            "roles": [
-                              {
-                                "Ref": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthauthenticatedUserRole4D65D066Ref"
-                              }
-                            ]
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.CfnManagedPolicy",
-                          "version": "2.173.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_iam.ManagedPolicy",
-                      "version": "2.173.1"
-                    }
-                  },
-                  "unauth-role-name": {
-                    "id": "unauth-role-name",
-                    "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/unauth-role-name",
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.Resource",
-                      "version": "2.173.1"
-                    }
-                  },
-                  "UnauthRolePolicy01": {
-                    "id": "UnauthRolePolicy01",
-                    "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/UnauthRolePolicy01",
-                    "children": {
-                      "ImportedUnauthRolePolicy01": {
-                        "id": "ImportedUnauthRolePolicy01",
-                        "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/UnauthRolePolicy01/ImportedUnauthRolePolicy01",
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.Resource",
-                          "version": "2.173.1"
-                        }
-                      },
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifyData/UnauthRolePolicy01/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::IAM::ManagedPolicy",
-                          "aws:cdk:cloudformation:props": {
-                            "description": "",
-                            "path": "/",
-                            "policyDocument": {
-                              "Statement": [
-                                {
-                                  "Action": "appsync:GraphQL",
-                                  "Effect": "Allow",
-                                  "Resource": [
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/*",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Product"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Query",
-                                          "fieldName": "getProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Query",
-                                          "fieldName": "listProducts"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Mutation",
-                                          "fieldName": "createProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Mutation",
-                                          "fieldName": "updateProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Mutation",
-                                          "fieldName": "deleteProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Subscription",
-                                          "fieldName": "onCreateProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Subscription",
-                                          "fieldName": "onUpdateProduct"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "Fn::Sub": [
-                                        "arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${apiId}/types/${typeName}/fields/${fieldName}",
-                                        {
-                                          "apiId": {
-                                            "Fn::GetAtt": [
-                                              "amplifyDataGraphQLAPI42A6FA33",
-                                              "ApiId"
-                                            ]
-                                          },
-                                          "typeName": "Subscription",
-                                          "fieldName": "onDeleteProduct"
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                }
-                              ],
-                              "Version": "2012-10-17"
-                            },
-                            "roles": [
-                              {
-                                "Ref": "referencetoamplifypalabrasdevidaleonardosandboxef85738150authNestedStackauthNestedStackResource8FDC0E6AOutputsamplifypalabrasdevidaleonardosandboxef85738150authamplifyAuthunauthenticatedUserRoleDED06C45Ref"
-                              }
-                            ]
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.CfnManagedPolicy",
-                          "version": "2.173.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_iam.ManagedPolicy",
-                      "version": "2.173.1"
                     }
                   },
                   "AmplifyCodegenAssets": {
@@ -6203,6 +5844,14 @@
                   "fqn": "aws-cdk-lib.CfnOutput",
                   "version": "2.173.1"
                 }
+              },
+              "amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPIDefaultApiKeyB12870A2ApiKey": {
+                "id": "amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPIDefaultApiKeyB12870A2ApiKey",
+                "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/data/amplifypalabrasdevidaleonardosandboxef85738150dataamplifyDataGraphQLAPIDefaultApiKeyB12870A2ApiKey",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.173.1"
+                }
               }
             },
             "constructInfo": {
@@ -6272,7 +5921,7 @@
                           {
                             "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                           },
-                          "/f79d154b75790a597c57d10acd5eaf2a7467bead972fc11bb604dfd8b36bc4f6.json"
+                          "/7137357a36fa7c0a7250aceb3382679b3cb57990c14800fd3df3fa50934fed4f.json"
                         ]
                       ]
                     }
@@ -6324,6 +5973,14 @@
           "amplifyApiModelSchemaS3Uri": {
             "id": "amplifyApiModelSchemaS3Uri",
             "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/amplifyApiModelSchemaS3Uri",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.173.1"
+            }
+          },
+          "awsAppsyncApiKey": {
+            "id": "awsAppsyncApiKey",
+            "path": "amplify-palabrasdevida-leonardo-sandbox-ef85738150/awsAppsyncApiKey",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.173.1"
