@@ -2,8 +2,9 @@ import { useState } from 'react'
 import logo from '../assets/images/icon.png'
 import { Link, useLocation } from 'react-router-dom';
 import TabMenu from '../components/TabMenu';
+import { fetchProducts, createProduct } from '../services/dataService';
 
- function Header() {
+ function Header({onScrollToFooter}) {
 
    const [menuButtonClicked, setMenuButtonClicked] = useState(false);
    const [switchingBg, setSwitchingBg] = useState({});
@@ -45,6 +46,11 @@ const dismissMenu = () => {
   setMenuButtonClicked(false)
 }
 
+const onClickContactLink = () => {
+  dismissMenu()
+  onScrollToFooter()
+}
+
 const onClickSearchButton = () => {
   setSearchFieldShown((v)=> !v);
 }
@@ -54,7 +60,7 @@ const onClickSearchButton = () => {
           <nav className='DESKTOP-MENU justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
             <li className='hover:underline'>
-              <Link to="#">
+              <Link to="/">
               Inicio
               </Link></li>
             <li className='hover:underline'>
@@ -63,7 +69,7 @@ const onClickSearchButton = () => {
               </Link>
             </li>
               <li className='hover:underline'>
-              <Link to="#">
+              <Link to="#" onClick={fetchProducts}>
                 Actividades
               </Link></li>
               
@@ -71,17 +77,17 @@ const onClickSearchButton = () => {
               <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
                 </Link>
                 <li className='hover:underline'>
-                <Link to="#">
+                <Link to="#" onClick={createProduct}>
                 Blog
                 </Link>
               </li>
               <li className='hover:underline'>
-              <Link to="#">
+              <Link to="nosotros" >
               Nosotros
               </Link>
               </li>
               <li className='hover:underline '>
-              <Link to="#footer">
+              <Link to="#footer" onClick={onClickContactLink}>
                 Contacto
               </Link>
               </li>
@@ -143,7 +149,7 @@ const onClickSearchButton = () => {
               </Link>
               </li>
               <li className='hover:underline '>
-              <Link to="#footer" onClick={dismissMenu}>
+              <Link to="#footer" onClick={onClickContactLink}>
                 Contacto
               </Link>
               </li>

@@ -1,3 +1,4 @@
+
 import { a, defineAuth, defineData, type ClientSchema } from '@aws-amplify/backend';
 
 const schema = a.schema({
@@ -25,6 +26,7 @@ export const data = defineData({
   }
 });
 
+
 /**
  * Define and configure your auth resource
  * @see https://docs.amplify.aws/gen2/build-a-backend/auth
@@ -33,4 +35,4 @@ export const auth = defineAuth({
   loginWith: {
     email: true,
   },
-})
+});

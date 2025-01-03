@@ -1,4 +1,8 @@
-import React from 'react'
+import { Amplify } from 'aws-amplify';
+import outputs from '../amplify_outputs.json';
+
+Amplify.configure(outputs);
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
@@ -11,14 +15,24 @@ import Footer from './layout/Footer';
 import ShoppingPage from './pages/ShoppingPage';
 import App from './App' 
 import { ThemeProvider } from '@material-tailwind/react';
+import AboutUsPage from './pages/AboutUsPage';
 
 
 const Layout = () => {
+  const footerRef = useRef(null);
+
+  const scrollToFooter = () => {
+    footerRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
+
   return (
     <div>
-      <Header/>
+       <Header onScrollToFooter={scrollToFooter} />
       <Outlet/>
-      <Footer/>
+      <Footer ref={footerRef}/>
     </div>
   )
 }
@@ -35,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "tienda",
         element: <ShoppingPage/>,
+      },
+      {
+        path: "nosotros",
+        element: <AboutUsPage/>,
       },
     ]
   },
