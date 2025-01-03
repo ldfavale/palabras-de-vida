@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ShopItem from "../components/ShopItem";
 import { getDocs, collection } from 'firebase/firestore';
-import { db } from '../services';
+// import { db } from '../services';
 
 
 function ShoppingPage() {

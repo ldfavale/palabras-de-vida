@@ -2,6 +2,7 @@ import { useState } from 'react'
 import logo from '../assets/images/icon.png'
 import { Link, useLocation } from 'react-router-dom';
 import TabMenu from '../components/TabMenu';
+import { fetchProducts, createProduct } from '../services/dataService';
 
  function Header() {
 
@@ -71,12 +72,12 @@ const onClickSearchButton = () => {
               <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
                 </Link>
                 <li className='hover:underline'>
-                <Link to="#">
+                <Link to="#" onClick={createProduct}>
                 Blog
                 </Link>
               </li>
               <li className='hover:underline'>
-              <Link to="#">
+              <Link to="#" onClick={fetchProducts}>
               Nosotros
               </Link>
               </li>

@@ -17,8 +17,8 @@ const schema = a.schema({
       code: a.string(),
       price: a.string()
     })
-    // .authorization((allow) => [allow.guest()])
-    .authorization(allow => [allow.publicApiKey()])
+    //.authorization((allow) => [allow.guest()])
+     .authorization(allow => [allow.publicApiKey()])
 });
 export type Schema = ClientSchema<typeof schema>;
 

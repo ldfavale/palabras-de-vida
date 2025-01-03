@@ -47,6 +47,7 @@ function Slider() {
         images.map((i)=>{
           return <img
             src={i}
+            key={i}
             alt="image 1"
             className="  h-full md:h-[75vh] w-full object-cover"
           />
