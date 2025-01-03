@@ -15,6 +15,7 @@ import Footer from './layout/Footer';
 import ShoppingPage from './pages/ShoppingPage';
 import App from './App' 
 import { ThemeProvider } from '@material-tailwind/react';
+import AboutUsPage from './pages/AboutUsPage';
 
 
 const Layout = () => {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "tienda",
         element: <ShoppingPage/>,
+      },
+      {
+        path: "nosotros",
+        element: <AboutUsPage/>,
       },
     ]
   },

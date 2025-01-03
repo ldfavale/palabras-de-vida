@@ -60,7 +60,7 @@ const onClickSearchButton = () => {
           <nav className='DESKTOP-MENU justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
             <li className='hover:underline'>
-              <Link to="#">
+              <Link to="/">
               Inicio
               </Link></li>
             <li className='hover:underline'>
@@ -69,7 +69,7 @@ const onClickSearchButton = () => {
               </Link>
             </li>
               <li className='hover:underline'>
-              <Link to="#">
+              <Link to="#" onClick={fetchProducts}>
                 Actividades
               </Link></li>
               
@@ -82,7 +82,7 @@ const onClickSearchButton = () => {
                 </Link>
               </li>
               <li className='hover:underline'>
-              <Link to="#" onClick={fetchProducts}>
+              <Link to="nosotros" >
               Nosotros
               </Link>
               </li>
