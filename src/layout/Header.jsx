@@ -47,8 +47,8 @@ const dismissMenu = () => {
 }
 
 const onClickContactLink = () => {
-  onScrollToFooter()
   dismissMenu()
+  onScrollToFooter()
 }
 
 const onClickSearchButton = () => {
