@@ -2,7 +2,7 @@ import { Amplify } from 'aws-amplify';
 import outputs from '../amplify_outputs.json';
 
 Amplify.configure(outputs);
-import React from 'react'
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
@@ -18,11 +18,20 @@ import { ThemeProvider } from '@material-tailwind/react';
 
 
 const Layout = () => {
+  const footerRef = useRef(null);
+
+  const scrollToFooter = () => {
+    footerRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
+
   return (
     <div>
-      <Header/>
+       <Header onScrollToFooter={scrollToFooter} />
       <Outlet/>
-      <Footer/>
+      <Footer ref={footerRef}/>
     </div>
   )
 }

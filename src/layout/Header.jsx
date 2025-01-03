@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import TabMenu from '../components/TabMenu';
 import { fetchProducts, createProduct } from '../services/dataService';
 
- function Header() {
+ function Header({onScrollToFooter}) {
 
    const [menuButtonClicked, setMenuButtonClicked] = useState(false);
    const [switchingBg, setSwitchingBg] = useState({});
@@ -46,6 +46,11 @@ const dismissMenu = () => {
   setMenuButtonClicked(false)
 }
 
+const onClickContactLink = () => {
+  onScrollToFooter()
+  dismissMenu()
+}
+
 const onClickSearchButton = () => {
   setSearchFieldShown((v)=> !v);
 }
@@ -82,7 +87,7 @@ const onClickSearchButton = () => {
               </Link>
               </li>
               <li className='hover:underline '>
-              <Link to="#footer">
+              <Link to="#footer" onClick={onClickContactLink}>
                 Contacto
               </Link>
               </li>
@@ -144,7 +149,7 @@ const onClickSearchButton = () => {
               </Link>
               </li>
               <li className='hover:underline '>
-              <Link to="#footer" onClick={dismissMenu}>
+              <Link to="#footer" onClick={onClickContactLink}>
                 Contacto
               </Link>
               </li>
