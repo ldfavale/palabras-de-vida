@@ -144,7 +144,7 @@ const onClickSearchButton = () => {
               </li>
              
               <li className='hover:underline'>
-              <Link to="#" onClick={dismissMenu}>
+              <Link to="nosotros" onClick={dismissMenu}>
               Nosotros
               </Link>
               </li>
