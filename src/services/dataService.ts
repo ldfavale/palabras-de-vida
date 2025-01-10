@@ -8,9 +8,13 @@ const client = generateClient<Schema>()
 // Now you should be able to make CRUDL operations with the
 // Data client
 export const fetchProducts = async () => {
-  const { data: products, errors } = await client.models.Product.list();
-  console.log("products => ")
-  console.log(products)
+    try {
+      const response = await client.models.Product.list();
+      return { data: response.data };
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return { data: null, errors: error };
+    }
 };
 
 
