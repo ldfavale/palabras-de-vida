@@ -1,13 +1,19 @@
 import type { Schema } from '../../amplify/data/resource'
 import { generateClient } from 'aws-amplify/data'
+// import { type Schema } from '@/amplify/data/resource';
 
 const client = generateClient<Schema>()
 
+type Product = Schema['Product']['type'];
 
+interface FetchProductsResponse {
+  data:  Product[] | null;
+  errors?: any
+}
 
 // Now you should be able to make CRUDL operations with the
 // Data client
-export const fetchProducts = async () => {
+export const fetchProducts = async (): Promise<FetchProductsResponse> => {
     try {
       const response = await client.models.Product.list();
       return { data: response.data };
