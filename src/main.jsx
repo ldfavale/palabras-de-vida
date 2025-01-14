@@ -16,6 +16,7 @@ import ShoppingPage from './pages/ShoppingPage';
 import App from './App' 
 import { ThemeProvider } from '@material-tailwind/react';
 import AboutUsPage from './pages/AboutUsPage';
+import CreateProductPage from './pages/CreateProductPage';
 
 
 const Layout = () => {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: "nosotros",
         element: <AboutUsPage/>,
+      },
+      {
+        path: "products/new",
+        element: <CreateProductPage/>,
       },
     ]
   },

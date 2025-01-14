@@ -1,13 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "esnext",
-    "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
+    "target": "ES6",                      // Versión de JavaScript
+    "module": "ESNext",                   // Módulos modernos de JavaScript
+    "strict": true,                       // Habilita todas las comprobaciones estrictas
+    "jsx": "react-jsx",                   // Configuración de JSX para React 17+
+    "esModuleInterop": true,              // Importación de módulos ES
+    "moduleResolution": "Node",           // Resolución de módulos estilo Node.js
+    "skipLibCheck": true,                 // Evita errores de tipado en bibliotecas
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*"                            // Incluye los archivos dentro de la carpeta src
+  ],
+  "exclude": [
+    "node_modules",                       // Excluye la carpeta node_modules
+    "dist"                                // Excluye la carpeta de compilación
+  ]
 }

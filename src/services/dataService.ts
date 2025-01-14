@@ -16,6 +16,7 @@ interface FetchProductsResponse {
 export const fetchProducts = async (): Promise<FetchProductsResponse> => {
     try {
       const response = await client.models.Product.list();
+      console.log(response)
       return { data: response.data };
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -24,17 +25,22 @@ export const fetchProducts = async (): Promise<FetchProductsResponse> => {
 };
 
 
+export const createProduct = async (data: Product): Promise<void> => {
+  try {
+    const createdProduct = await client.models.Product.create({
+      title: data.title,
+      description: data.description,
+      category: data.category,
+      image: data.image,
+      code: data.code,
+      price: data.price,
+    });
 
-export const createProduct = async () => {
-    const product = await client.models.Product.create({
-      title: "Titulo 2",
-      description: "Este es otro  producto",
-      category: "Categoria 1",
-      image: "Hola soy una imagen diferente",
-      code: "749296202662",
-      price: "530"
-    })
-    console.log("createdProduct",createProduct)
+    console.log("Created Product:", createdProduct);
+  } catch (error) {
+    console.error("Error creating product:", error);
+    throw new Error("Failed to create product");
   }
+};
 
   export default fetchProducts

@@ -69,7 +69,7 @@ const onClickSearchButton = () => {
               </Link>
             </li>
               <li className='hover:underline'>
-              <Link to="#" onClick={fetchProducts}>
+              <Link to="#" >
                 Actividades
               </Link></li>
               
@@ -77,7 +77,7 @@ const onClickSearchButton = () => {
               <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
                 </Link>
                 <li className='hover:underline'>
-                <Link to="#" onClick={createProduct}>
+                <Link to="#" >
                 Blog
                 </Link>
               </li>
