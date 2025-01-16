@@ -31,7 +31,7 @@ export const createProduct = async (data: Product): Promise<void> => {
       title: data.title,
       description: data.description,
       category: data.category,
-      image: data.image,
+      images: data.images,
       code: data.code,
       price: data.price,
     });

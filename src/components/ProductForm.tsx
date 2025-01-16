@@ -4,16 +4,16 @@ import * as yup from "yup";
 import { createProduct } from "../services/dataService";
 import useCreateProduct from "../hooks/useCreateProducts";
 import type { Schema } from '../../amplify/data/resource'
+import { useState } from "react";
 type Product = Schema['Product']['type'];
 
 const productSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
   category: yup.string().required("Category is required"),
-  image: yup
-    .string()
-    .url("Image must be a valid URL")
-    .required("Image URL is required"),
+  images: yup.mixed().test("required", "You must upload at least one image", (value) => {
+    return !!value // value.length > 0;
+  }),
   code: yup.string().required("Code is required"),
   price: yup
     .string()
@@ -36,9 +36,40 @@ export default function ProductForm() {
     resolver: yupResolver(productSchema),
   });
 
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+
+
   const onSubmit: SubmitHandler<ProductForm> = (data) => {
-    console.log("Submitted Data:", data);
+    console.log("Form submitted:", data);
+
+    // const formData = new FormData();
+    // O lo que estés pasando a Array.from()
+
+
+    // if (data.images && data.images.length > 0) {
+    //   const files = Array.from(data.images as FileList); // Convierte el FileList en un Array
+    //   console.log(files); // Ahora es un arreglo
+    // } else {
+    //   console.error("No images found");
+    // }
+
+    // formData.append("title", data.title);
+    // formData.append("description", data.description);
+    // formData.append("category", data.category);
+    // formData.append("code", data.code);
+    // formData.append("price", data.price);
+
+    // Send formData to your backend
+    // console.log("formData:", formData);
     createProduct(data)
+  };
+
+  const handleImagePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const previews = Array.from(files).map((file) => URL.createObjectURL(file));
+      setPreviewImages(previews);
+    }
   };
 
   return (
@@ -131,6 +162,26 @@ export default function ProductForm() {
           )}
         </div>
 
+        <div>
+        <label>Images</label>
+        <input
+          type="file"
+          multiple
+          {...register("images")}
+          onChange={(e) => {
+            handleImagePreview(e);
+            register("images").onChange(e); // Sync with react-hook-form
+          }}
+        />
+        {errors.images && <p>{errors.images.message}</p>}
+      </div>
+
+      {/* Image previews */}
+      <div className="flex space-x-4">
+        {previewImages.map((src, index) => (
+          <img key={index} src={src} alt={`Preview ${index}`} className="w-20 h-20 object-cover" />
+        ))}
+      </div>
         {/* Submit */}
         <button
           type="submit"

@@ -13,7 +13,7 @@ const schema = a.schema({
       title: a.string(),
       description: a.string(),
       category: a.string(),
-      image: a.string(),
+      images: a.string().array(),
       code: a.string(),
       price: a.string()
     })

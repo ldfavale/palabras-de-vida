@@ -68,12 +68,13 @@
               "isRequired": false,
               "attributes": []
             },
-            "image": {
-              "name": "image",
-              "isArray": false,
+            "images": {
+              "name": "images",
+              "isArray": true,
               "type": "String",
               "isRequired": false,
-              "attributes": []
+              "attributes": [],
+              "isArrayNullable": true
             },
             "code": {
               "name": "code",
@@ -141,6 +142,17 @@
       "enums": {},
       "nonModels": {}
     }
+  },
+  "storage": {
+    "aws_region": "us-east-1",
+    "bucket_name": "amplify-palabrasdevida-le-productimagesbucketf9909-nrulcxyu1vs3",
+    "buckets": [
+      {
+        "name": "productImages",
+        "bucket_name": "amplify-palabrasdevida-le-productimagesbucketf9909-nrulcxyu1vs3",
+        "aws_region": "us-east-1"
+      }
+    ]
   },
   "version": "1.3"
 }

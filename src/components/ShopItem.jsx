@@ -4,8 +4,8 @@ function ShopItem({product}) {
   return (
     <div className=" max-w-md sm:hover:[box-shadow:0_0_12px_rgba(0,0,0,.15)] sm:m-3 sm:w-[45%] md:w-[46%] xl:w-[30%] 2xl:w-[22%] ">
         <div className="flex flex-col">
-            <div className=' flex h-[231px] bg-lightgrey items-center justify-center'>
-                <img src={product.image} alt="product" className="w-full "/>
+            <div className=' flex h-[231px]  items-center justify-center'>
+                <img src={product.image} alt="product" className="  max-h-56 bg-contain"/>
             </div>
             <div className=' -mt-6 flex items-end justify-end pr-4'>
                 <div className='rounded-full bg-primary border  border-white p-2'>
