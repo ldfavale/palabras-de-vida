@@ -145,12 +145,26 @@
   },
   "storage": {
     "aws_region": "us-east-1",
-    "bucket_name": "amplify-palabrasdevida-le-productimagesbucketf9909-nrulcxyu1vs3",
+    "bucket_name": "amplify-palabrasdevida-leon-appmediabucket0359835a-bvt8p1wx2w8d",
     "buckets": [
       {
-        "name": "productImages",
-        "bucket_name": "amplify-palabrasdevida-le-productimagesbucketf9909-nrulcxyu1vs3",
-        "aws_region": "us-east-1"
+        "name": "appMedia",
+        "bucket_name": "amplify-palabrasdevida-leon-appmediabucket0359835a-bvt8p1wx2w8d",
+        "aws_region": "us-east-1",
+        "paths": {
+          "product-images/*": {
+            "authenticated": [
+              "get",
+              "list",
+              "write"
+            ],
+            "guest": [
+              "get",
+              "list",
+              "write"
+            ]
+          }
+        }
       }
     ]
   },
