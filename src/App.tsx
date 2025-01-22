@@ -1,4 +1,4 @@
-import Slider from './components/Slider'
+import MainSlider from './components/MainSlider'
 import Categories from './components/Categories'
 import MainBanner from './components/MainBanner'
 
@@ -9,7 +9,7 @@ function App() {
   return (
     <>
     <MainBanner/>
-      <Slider />
+      <MainSlider />
       <Categories/>
      </>
   )

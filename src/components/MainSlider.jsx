@@ -1,11 +1,11 @@
 
 
-import { Carousel } from '@material-tailwind/react';
 import React, { useState, useEffect } from 'react';
+import Slider from './Slider'
 
 
 
-function Slider() {
+function MainSlider() {
 
   const [images, setImages] = useState([]);
 
@@ -41,23 +41,15 @@ function Slider() {
   
 
   return (
-    <div className=' md:px-28 pt-[80px] md:pt-[105px] '>
-      <Carousel className="md:rounded-xl">
-      {
-        images.map((i)=>{
-          return <img
-            src={i}
-            key={i}
-            alt="image 1"
-            className="  h-full md:h-[75vh] w-full object-cover"
-          />
-        })
-      }
-      
-     
-    </Carousel>
+    <div className='md:px-28 pt-[80px] md:pt-[105px]'>
+      <Slider
+        images={images}
+        carouselClassName="rounded-xl"  
+        imageClassName="h-full md:h-[75vh] w-full object-cover"                         navigation={false} 
+        navigation={true}
+      />
     </div>
   )
 }
 
-export default Slider
+export default MainSlider

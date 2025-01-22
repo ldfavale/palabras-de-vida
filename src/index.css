@@ -171,4 +171,7 @@
   margin: 0;
 }
 
-
+:root {
+  --swiper-navigation-color: white; 
+  --swiper-pagination-color: white; 
+}
