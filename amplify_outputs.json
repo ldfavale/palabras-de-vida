@@ -1,9 +1,9 @@
 {
   "auth": {
-    "user_pool_id": "us-east-1_uWfwsCLOA",
-    "aws_region": "us-east-1",
-    "user_pool_client_id": "2b7g1nqgnnhij8lm8depqmgg5o",
-    "identity_pool_id": "us-east-1:8bdeed62-c88e-47c3-a15f-73a9d744f6d8",
+    "user_pool_id": "sa-east-1_HccKyza3D",
+    "aws_region": "sa-east-1",
+    "user_pool_client_id": "13v6gam20q4a7nhrmm2n5g8qck",
+    "identity_pool_id": "sa-east-1:bdbbf0ce-bc83-42a3-bbce-8cf762ee28fa",
     "mfa_methods": [],
     "standard_required_attributes": [
       "email"
@@ -26,9 +26,9 @@
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://lm7ucnfrwzedvgad7e6zos3ibq.appsync-api.us-east-1.amazonaws.com/graphql",
-    "aws_region": "us-east-1",
-    "api_key": "da2-7s56rj5cajdbbbbtulvzpvbpde",
+    "url": "https://qbcyh2g6k5ffjhgm7op2a4gyai.appsync-api.sa-east-1.amazonaws.com/graphql",
+    "aws_region": "sa-east-1",
+    "api_key": "da2-mjv4sh5fnveapi3qoub3wbrejy",
     "default_authorization_type": "API_KEY",
     "authorization_types": [
       "AMAZON_COGNITO_USER_POOLS",
@@ -144,13 +144,13 @@
     }
   },
   "storage": {
-    "aws_region": "us-east-1",
-    "bucket_name": "amplify-palabrasdevida-leon-appmediabucket0359835a-bvt8p1wx2w8d",
+    "aws_region": "sa-east-1",
+    "bucket_name": "amplify-palabrasdevida-leon-appmediabucket0359835a-yqsdwmng63pd",
     "buckets": [
       {
         "name": "appMedia",
-        "bucket_name": "amplify-palabrasdevida-leon-appmediabucket0359835a-bvt8p1wx2w8d",
-        "aws_region": "us-east-1",
+        "bucket_name": "amplify-palabrasdevida-leon-appmediabucket0359835a-yqsdwmng63pd",
+        "aws_region": "sa-east-1",
         "paths": {
           "product-images/*": {
             "authenticated": [

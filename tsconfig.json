@@ -7,7 +7,9 @@
     "esModuleInterop": true,              // Importación de módulos ES
     "moduleResolution": "Node",           // Resolución de módulos estilo Node.js
     "skipLibCheck": true,                 // Evita errores de tipado en bibliotecas
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+   
   },
   "include": [
     "src/**/*"                            // Incluye los archivos dentro de la carpeta src

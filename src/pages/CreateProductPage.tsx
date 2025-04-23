@@ -1,4 +1,3 @@
-import useProducts from "../hooks/useProducts";
 import ProductForm from "../components/ProductForm"
 
 function CreateProductPage() {

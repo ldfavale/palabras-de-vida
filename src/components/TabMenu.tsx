@@ -42,7 +42,7 @@ export default function TabMenu() {
   ];
   return (
     <Tabs value={activeTab} className="z-10 " >
-      <TabsHeader
+      {/* <TabsHeader
         
         className="rounded-none  bg-transparent p-0 overflow-x-auto no-scrollbar font-graphik text-lightgrey  uppercase" 
         indicatorProps={{
@@ -67,7 +67,7 @@ export default function TabMenu() {
             {desc}
           </TabPanel>
         ))}
-      </TabsBody>
+      </TabsBody> */}
     </Tabs>
   );
 }
