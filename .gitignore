@@ -31,3 +31,5 @@ dist-ssr
 .amplify/artifacts/cdk.out/*
 amplify_outputs*
 amplifyconfiguration*
+amplify_outputs.json
+
