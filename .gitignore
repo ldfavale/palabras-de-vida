@@ -28,6 +28,7 @@ dist-ssr
 
 # amplify
 .amplify
+.amplify/artifacts/
 .amplify/artifacts/cdk.out/*
 amplify_outputs*
 amplifyconfiguration*
