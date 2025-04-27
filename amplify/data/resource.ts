@@ -8,19 +8,37 @@ and "delete" any "Todo" records.
 =========================================================================*/
 
 
+
 const schema = a.schema({
-  Product: a.model({
-      title: a.string(),
+  Product: a
+    .model({
+      title: a.string().required(), 
       description: a.string(),
-      category: a.string(),
-      images: a.string().array(),
+      // images: a.string().array(), // Puedes mantenerlo si son rutas relativas o IDs O usar a.url() si son URLs completas
+      images: a.url().array(),   
       code: a.string(),
-      price: a.string()
+      price: a.float(),
+      categories: a.hasMany('ProductCategory', 'productId'),
     })
-    //.authorization((allow) => [allow.guest()])
-     .authorization(allow => [allow.publicApiKey()])
+    .authorization(allow => [allow.publicApiKey()]),
+
+  Category: a
+    .model({
+      name: a.string().required(),
+      label: a.string().required(),
+      products: a.hasMany('ProductCategory', 'categoryId'),
+    })
+    .authorization(allow => [allow.publicApiKey()]),
+
+    ProductCategory: a
+    .model({
+      productId: a.id().required(),
+      categoryId: a.id().required(), 
+      product: a.belongsTo('Product', 'productId'),
+      category: a.belongsTo('Category', 'categoryId'),
+    })
+    .authorization(allow => [allow.publicApiKey()]),
 });
-export type Schema = ClientSchema<typeof schema>;
 
 // defines the data resource to be deployed
 // export const data = defineData({
@@ -38,6 +56,8 @@ export const data = defineData({
     apiKeyAuthorizationMode: { expiresInDays: 30 }
   }
 });
+
+export type Schema = ClientSchema<typeof schema>;
 
 /*== STEP 2 ===============================================================
 Go to your frontend source code. From your client-side code, generate a
