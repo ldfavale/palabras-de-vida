@@ -96,7 +96,7 @@ const Footer = React.forwardRef<HTMLElement, FooterProps>((props, ref) => {
               <svg className="w-5 h-5 text-white group-hover:text-blue-400 transition-colors duration-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m3.5 5.5 7.893 6.036a1 1 0 0 0 1.214 0L20.5 5.5M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
               </svg>
-              <p className="group-hover:text-blue-400 transition-colors duration-200">libreriapalabrasdevida7@gmail.com</p>
+              <p className="group-hover:text-blue-400 transition-colors duration-200 w-inherit break-all">libreriapalabrasdevida7@gmail.com</p>
             </a>
             {/* Dirección */}
             <a

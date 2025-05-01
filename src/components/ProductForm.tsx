@@ -1,36 +1,47 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { createProduct } from "../services/dataService";
 import useCreateProduct from "../hooks/useCreateProducts";
 import type { Schema } from '../../amplify/data/resource'
 import { useState } from "react";
-type Product = Schema['Product']['type'];
+import useGetCategories from "../hooks/useGetCategories";
+import SelectField from "./SelectField";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import InputField from "./InputField";
+import { ProductRequestData } from "../services/dataService";
+import useCreateCategory from "../hooks/useCreateCategory";
 
-const productSchema = yup.object().shape({
-  title: yup.string().required("Title is required"),
-  description: yup.string().required("Description is required"),
-  category: yup.string().required("Category is required"),
+export const productSchema = yup.object().shape({
+  title: yup.string().required("El título es obligatorio"),
+  price: yup.number().required("El precio es obligatorio").positive("El precio debe ser positivo"),
+  description: yup.string().required("La descripción es obligatoria"),
+  categories: yup.array().of(yup.string()).required("La descripción es obligatoria").min(1, "Selecciona al menos una categoría"),
+  code: yup.string().required("El código es obligatorio"),
   images: yup.mixed().test("required", "You must upload at least one image", (value) => {
     return !!value // value.length > 0;
   }),
-  code: yup.string().required("Code is required"),
-  price: yup
-    .string()
-    .matches(/^\d+(\.\d{1,2})?$/, "Price must be a valid number")
-    .required("Price is required"),
 });
 
 type ProductForm = yup.InferType<typeof productSchema>;
 
 export default function ProductForm() {
 
-  const { loading, error, success, create } = useCreateProduct();
+  const { loading, error, success, create} = useCreateProduct();
+  const { loading: loadingCategory, error: errorCategory, success: successCategory, create: createCategory } = useCreateCategory();
+  const { loading: categoriesLoading, error: categoriesError, categories } = useGetCategories();
+  const [selectedCategories, setSelectedCategories] = useState<{ value: string; label: string }[]>([]);
+  const [newCategory, setNewCategory] = useState<string>("");
 
+  const categoryOptions = categories.map((category) => ({
+    value: category.id,
+    label: category.name,
+  }));
+  
 
   const {
     register,
     handleSubmit,
+    setValue, // Importante: usar setValue para actualizar valores
     formState: { errors },
   } = useForm<ProductForm>({
     resolver: yupResolver(productSchema),
@@ -39,31 +50,36 @@ export default function ProductForm() {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
 
 
-  const onSubmit: SubmitHandler<ProductForm> = (data) => {
-    console.log("Form submitted:", data);
 
-    // const formData = new FormData();
-    // O lo que estés pasando a Array.from()
-
-
-    // if (data.images && data.images.length > 0) {
-    //   const files = Array.from(data.images as FileList); // Convierte el FileList en un Array
-    //   console.log(files); // Ahora es un arreglo
-    // } else {
-    //   console.error("No images found");
-    // }
-
-    // formData.append("title", data.title);
-    // formData.append("description", data.description);
-    // formData.append("category", data.category);
-    // formData.append("code", data.code);
-    // formData.append("price", data.price);
-
-    // Send formData to your backend
-    // console.log("formData:", formData);
-    createProduct(data)
+  const onSubmit: SubmitHandler<ProductForm> = async (data) => { // data es ProductForm
+    // 1. FILTRA CATEGORIES -> string[]
+    const categoryIds: string[] = data.categories.filter(
+      (catId): catId is string => typeof catId === 'string'
+    );
+  
+    // 2. CONVIERTE IMAGES -> File[]
+    let imageFiles: File[] = [];
+    if (data.images instanceof FileList) {
+        imageFiles = Array.from(data.images);
+    } else {
+        console.warn("No images selected or images field is not a FileList.");
+        // return; //  si son obligatorias
+    }
+  
+    // 3. CONSTRUYE EL OBJETO PARA LA API -> ProductRequestData
+    const productDataForApi: ProductRequestData = {
+      title: data.title,
+      price: data.price, 
+      description: data.description,
+      code: data.code,
+      categories: categoryIds,   
+      images: imageFiles,        
+    };
+  
+      await create(productDataForApi); 
+    
   };
-
+  
   const handleImagePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -71,99 +87,102 @@ export default function ProductForm() {
       setPreviewImages(previews);
     }
   };
-
   return (
-    <div className="min-h-screen flex  ">
+<>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full  bg-white  rounded-lg py-6 px-0 space-y-6"
+        className=" rounded-lg py-6 px-0 space-y-6"
       >
     
 
-        {/* Title */}
-        <div>
-          <label className="block text-gray-700 font-semibold font-gilroy">Título</label>
-          <input
-            {...register("title")}
-            placeholder="Enter product title"
-            className="w-full p-3 border border-gray-100 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
-          {errors.title && (
-            <span className="text-sm text-red-500">{errors.title.message}</span>
-          )}
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block text-gray-700 font-semibold font-gilroy">Descripción</label>
-          <textarea
-            {...register("description")}
-            placeholder="Enter product description"
-            className="w-full p-3 border border-gray-100 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
-          {errors.description && (
-            <span className="text-sm text-red-500">
-              {errors.description.message}
-            </span>
-          )}
-        </div>
-
-        {/* Category */}
-        <div>
-          <label className="block text-gray-700  font-semibold font-gilroy">Categoria</label>
-          <input
-            {...register("category")}
-            placeholder="Ingrese la categoría"
-            className="w-full p-3 border border-gray-100 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
-          {errors.category && (
-            <span className="text-sm text-red-500">{errors.category.message}</span>
-          )}
-        </div>
-
-        {/* Image */}
-        <div>
-          <label className="block text-gray-700 font-semibold font-gilroy">Image URL</label>
-          <input
-            {...register("image")}
-            placeholder="Enter image URL"
-            type="url"
-            className="w-full p-3 border border-gray-100 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
-          {errors.image && (
-            <span className="text-sm text-red-500">{errors.image.message}</span>
-          )}
-        </div>
-
         {/* Code */}
-        <div>
-          <label className="block text-gray-700 font-semibold font-gilroy">Code</label>
-          <input
-            {...register("code")}
-            placeholder="Enter product code"
-            className="w-full p-3 border border-gray-100 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
-          {errors.code && (
-            <span className="text-sm text-red-500">{errors.code.message}</span>
-          )}
-        </div>
+        
+        <InputField 
+          type="text" 
+          label="Código" 
+          placeholder="Ingrese el código del producto..." 
+          register={register("code")}
+          error={errors.code?.message}
+        />
+   
+
+        {/* Title */}         
+        <InputField 
+          type="text" 
+          label="Titulo" 
+          placeholder="Ingrese el titulo del producto..." 
+          register={register("title")}
+          error={errors.title?.message}
+        />
 
         {/* Price */}
-        <div>
-          <label className="block text-gray-700 font-semibold font-gilroy">Price</label>
-          <input
-            {...register("price")}
-            placeholder="Enter product price"
-            type="text"
-            className="w-full p-3 border border-gray-100 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
-          {errors.price && (
-            <span className="text-sm text-red-500">{errors.price.message}</span>
-          )}
+         
+        <InputField 
+          type="text" 
+          label="Precio" 
+          placeholder="Ingrese el precio del producto..." 
+          register={register("price")}
+          error={errors.code?.message}
+        />
+
+        {/* Description */}
+        <InputField 
+          type="textarea" 
+          label="Descripción" 
+          placeholder="Ingrese la descripción del producto..." 
+          register={register("description")}
+          error={errors.description?.message}
+        />
+
+        {/* Category Select */}
+        <SelectField
+          label="Categorias"
+          options={categoryOptions}
+          value={selectedCategories}
+          onChange={(selected) => {
+            setSelectedCategories(selected);
+            setValue("categories", selected.map((item) => item.value)); // Actualiza el valor de categories
+          }}
+          error={errors.categories?.message}
+          placeholder="Selecciona una o más categorías..."
+        />
+
+
+        {/* Nueva categoría */}
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <InputField
+              type="text"
+              label="Nueva categoría"
+              placeholder="Ingrese una nueva categoría..."
+              register={{
+                value: newCategory,
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                  setNewCategory(e.target.value),
+              }}
+              error={undefined}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={async () => {
+              if (newCategory.trim()) {
+                await createCategory({name: newCategory});
+                console.log("New category created:", newCategory);
+                setNewCategory("");
+              }
+            }}
+            className="p-[14px] mb-[2px] bg-primary text-white rounded flex self-end "
+          >
+            <PlusIcon className="w-5 h-5" />
+          </button>
         </div>
+      {errors.categories && <p>{errors.categories.message}</p>}
+
+
 
         <div>
-        <label>Images</label>
+        <label className="block text-gray-700 font-semibold font-gilroy">Imagenes</label>
         <input
           type="file"
           multiple
@@ -190,6 +209,6 @@ export default function ProductForm() {
           {loading ? "Cargando..." : "Agregar Producto"}
         </button>
       </form>
-    </div>
+    </>
   );
 }

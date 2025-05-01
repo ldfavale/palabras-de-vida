@@ -14,8 +14,7 @@ const schema = a.schema({
     .model({
       title: a.string().required(), 
       description: a.string(),
-      // images: a.string().array(), // Puedes mantenerlo si son rutas relativas o IDs O usar a.url() si son URLs completas
-      images: a.url().array(),   
+      images: a.string().array(), // Puedes mantenerlo si son rutas relativas o IDs O usar a.url() si son URLs completas
       code: a.string(),
       price: a.float(),
       categories: a.hasMany('ProductCategory', 'productId'),

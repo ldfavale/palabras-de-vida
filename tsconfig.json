@@ -13,9 +13,5 @@
   },
   "include": [
     "src/**/*"                            // Incluye los archivos dentro de la carpeta src
-  ],
-  "exclude": [
-    "node_modules",                       // Excluye la carpeta node_modules
-    "dist"                                // Excluye la carpeta de compilación
   ]
 }

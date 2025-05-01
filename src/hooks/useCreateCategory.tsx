@@ -1,26 +1,23 @@
 import { useState } from "react";
-import { createProduct, ProductRequestData } from "../services/dataService";
-import type { Schema } from '../../amplify/data/resource'
-type Product = Schema['Product']['type'];
+import { CategoryRequestData, createCategory } from "../services/dataService";
 
-interface UseCreateProductResult {
+interface UseCreateCategoryResult {
   loading: boolean;
   error: Error | null;
   success: boolean;
-  create: (data: ProductRequestData) => Promise<void>;
+  create: (data: CategoryRequestData) => Promise<void>;
 }
 
-function useCreateProduct(): UseCreateProductResult {
+function useCreateCategory(): UseCreateCategoryResult {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const create = async (data: ProductRequestData) => {
+  const create = async (data: CategoryRequestData) => {
     setLoading(true);
     setError(null);
-    setSuccess(false);
     try {
-      await createProduct(data);
+      await createCategory(data);
       setSuccess(true);
     } catch (err) {
       setError(err as Error);
@@ -32,4 +29,4 @@ function useCreateProduct(): UseCreateProductResult {
   return { loading, error, success, create };
 }
 
-export default useCreateProduct;
+export default useCreateCategory;
