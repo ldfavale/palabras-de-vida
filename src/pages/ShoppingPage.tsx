@@ -1,22 +1,43 @@
 import useGetProducts from "../hooks/useGetProducts";
 import ShopItem from "../components/ShopItem";
 import Sidebar from "../components/ShopSidebar";
+import { ProductListSkeleton } from "../components/ProductListSkeleton";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
+
 
 function ShoppingPage() {
-  const { products, loading, error } = useGetProducts();
+   const { products, loading, error } = useGetProducts();
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading products: {error.message}</div>;
+  useEffect(() => {
+    if (error?.message) {
+        toast.error(`Error: ${error.message}`);
+    }
+  }, [error]);
+
+  
 
   return (
-    <div className="flex items-center justify-center  ">
-      <div className="md:flex md:flex-row md:items-center md:justify-center md:max-w-7xl ">      
+    <div className="flex justify-center w-full  ">
+      <div className="sm:flex flex-1 sm:flex-row  justify-center w-full lg:max-w-6xl ">      
         <Sidebar/>
-        <div className="w-full lg:w-[80%] p-0 sm:p-5 pt-28 sm:pt-28 flex flex-col flex-wrap sm:flex-row items-center sm:items-center sm:justify-center lg:justify-start min-h-screen space-y-4 sm:space-y-0 " >
-          {products.map((p) => (
+        {loading && ( <ProductListSkeleton count={12} />) }
+
+        {!loading && !error && products.length === 0 && (
+             <div className="p-4 text-center text-gray-500">No se encontraron productos con esos criterios.</div>
+        )}
+        
+         
+        {!loading && !error && products.length > 0 && 
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6"> 
+          {(
+          products.map((p) => (
             <ShopItem key={p.id} product={p} />
-            ))}
-        </div>
+            ))
+          )}
+            </div>
+        }
+        {error && <div className="text-red-500 p-4">Error: {error.message}</div>}     
       </div>
     </div>
   );

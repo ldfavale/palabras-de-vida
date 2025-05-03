@@ -12,7 +12,7 @@ interface FetchCategoriesResponse {
   errors?: any
 }
 
-const selectionSet = [
+export const selectionSet = [
   'id',
   'title',
   'description',

@@ -27,6 +27,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 
 // --- COMPONENTE PROTECTEDROUTE ---
 import { ProtectedRoute } from './components/ProtectedRoute'; // Asegúrate que la ruta es correcta
+import { Toaster } from 'react-hot-toast';
 
 // Configura Amplify
 Amplify.configure(outputs);
@@ -44,6 +45,21 @@ const Layout = () => {
 
   return (
     <div>
+      <Toaster
+        position="top-right" 
+        reverseOrder={false}
+        toastOptions={{ 
+          duration: 5000, 
+          // style: { background: '#363636', color: '#fff' },
+          success: {
+            duration: 3000,
+            // theme: { primary: 'green', secondary: 'black', },
+          },
+          error: {
+            duration: 5000,
+          }
+        }}
+      />
       <Header onScrollToFooter={scrollToFooter} />
       {/* Es buena práctica envolver el Outlet en un <main> */}
       <main style={{ minHeight: 'calc(100vh - 150px)' }}> {/* Ejemplo para evitar que footer suba */}

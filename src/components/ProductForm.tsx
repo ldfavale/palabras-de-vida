@@ -2,23 +2,24 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import useCreateProduct from "../hooks/useCreateProducts";
-import type { Schema } from '../../amplify/data/resource'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useGetCategories from "../hooks/useGetCategories";
 import SelectField from "./SelectField";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import InputField from "./InputField";
 import { ProductRequestData } from "../services/dataService";
 import useCreateCategory from "../hooks/useCreateCategory";
+import LoadingIndicator  from "./LoadingIndicator";
+import toast from "react-hot-toast";
 
 export const productSchema = yup.object().shape({
   title: yup.string().required("El título es obligatorio"),
   price: yup.number().required("El precio es obligatorio").positive("El precio debe ser positivo"),
   description: yup.string().required("La descripción es obligatoria"),
-  categories: yup.array().of(yup.string()).required("La descripción es obligatoria").min(1, "Selecciona al menos una categoría"),
+  categories: yup.array().of(yup.string()).required("Selecciona al menos una categoría").min(1, "Selecciona al menos una categoría"),
   code: yup.string().required("El código es obligatorio"),
   images: yup.mixed().test("required", "You must upload at least one image", (value) => {
-    return !!value // value.length > 0;
+    return !!value 
   }),
 });
 
@@ -31,15 +32,14 @@ export default function ProductForm() {
   const { loading: categoriesLoading, error: categoriesError, categories } = useGetCategories();
   const [selectedCategories, setSelectedCategories] = useState<{ value: string; label: string }[]>([]);
   const [newCategory, setNewCategory] = useState<string>("");
-
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
   const categoryOptions = categories.map((category) => ({
     value: category.id,
     label: category.name,
   }));
-  
-
   const {
     register,
+    reset,
     handleSubmit,
     setValue, // Importante: usar setValue para actualizar valores
     formState: { errors },
@@ -47,17 +47,26 @@ export default function ProductForm() {
     resolver: yupResolver(productSchema),
   });
 
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
 
-
+  useEffect(() => {
+    if (success) {
+      toast.success('¡Producto creado exitosamente!');
+      reset(); 
+      setPreviewImages([]);
+      setSelectedCategories([]);
+    }
+    if (error?.message) {
+       toast.error(`Error: ${error.message}`);
+    }
+  }, [success, error, reset]);
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => { // data es ProductForm
-    // 1. FILTRA CATEGORIES -> string[]
+    // 1. FILTER CATEGORIES
     const categoryIds: string[] = data.categories.filter(
       (catId): catId is string => typeof catId === 'string'
     );
   
-    // 2. CONVIERTE IMAGES -> File[]
+    // 2. CONVERT IMAGES -> File[]
     let imageFiles: File[] = [];
     if (data.images instanceof FileList) {
         imageFiles = Array.from(data.images);
@@ -66,7 +75,7 @@ export default function ProductForm() {
         // return; //  si son obligatorias
     }
   
-    // 3. CONSTRUYE EL OBJETO PARA LA API -> ProductRequestData
+    // 3. BUILD THE OBJECT FOR THE API 
     const productDataForApi: ProductRequestData = {
       title: data.title,
       price: data.price, 
@@ -122,7 +131,7 @@ export default function ProductForm() {
           label="Precio" 
           placeholder="Ingrese el precio del producto..." 
           register={register("price")}
-          error={errors.code?.message}
+          error={errors.price?.message}
         />
 
         {/* Description */}
@@ -177,10 +186,7 @@ export default function ProductForm() {
             <PlusIcon className="w-5 h-5" />
           </button>
         </div>
-      {errors.categories && <p>{errors.categories.message}</p>}
-
-
-
+        
         <div>
         <label className="block text-gray-700 font-semibold font-gilroy">Imagenes</label>
         <input
@@ -204,9 +210,10 @@ export default function ProductForm() {
         {/* Submit */}
         <button
           type="submit"
-          className="w-full py-3 bg-primary_light text-white font-bold font-gilroy rounded-md hover:bg-yellow-400 transition"
+          disabled={loading}
+          className="w-full flex items-center justify-center py-3 bg-primary_light text-white font-bold font-gilroy rounded-md hover:bg-yellow-400 transition"
         >
-          {loading ? "Cargando..." : "Agregar Producto"}
+          {loading ? <LoadingIndicator/> : "Agregar Producto"}
         </button>
       </form>
     </>

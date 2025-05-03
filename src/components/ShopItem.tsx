@@ -16,7 +16,7 @@ function ShopItem({product}:ShopItemProps) {
     },[])
 
   return (
-    <div className=" bg-white w-full max-w-[22rem] sm:hover:[box-shadow:0_0_12px_rgba(0,0,0,.15)] sm:m-3 sm:w-[45%] md:w-[46%] xl:w-[30%] 2xl:w- ">
+    <div className=" bg-white w-full rounded-md overflow-hidden mx-auto  sm:hover:[box-shadow:0_0_12px_rgba(0,0,0,.15)]  ">
         <div className="flex flex-col">
             <div className=' flex h-[231px]  items-center justify-center'>
                     {product.images && <Slider
