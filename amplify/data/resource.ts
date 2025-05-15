@@ -10,7 +10,7 @@ const schema = a.schema({
       images: a.string().array(), // Puedes mantenerlo si son rutas relativas o IDs O usar a.url() si son URLs completas
       code: a.string(),
       price: a.float(),
-      // categoryIds: a.string().array(),
+      categoryIds: a.string().array(),
       categories: a.hasMany('ProductCategory', 'productId'),
     })
     .authorization(allow => [allow.publicApiKey()]),
@@ -33,18 +33,42 @@ const schema = a.schema({
     .authorization(allow => [allow.publicApiKey()]),
 
         
-    searchProducts: a
+   // --- ¡NUEVO! Define un tipo para los fragmentos de resaltado ---
+  HighlightDetail: a.customType({
+    title: a.string().array(), // Array de strings HTML resaltados
+    description: a.string().array(),
+    code: a.string().array(), // Si también resaltas el código
+    // Añade otros campos que podrías resaltar
+  }),
+
+  // --- ¡NUEVO! Define un tipo para los ítems de resultado de búsqueda ---
+  ProductSearchResultItem: a.customType({
+    // Incluye los campos del modelo Product que quieres que se devuelvan en la búsqueda
+    id: a.id().required(),
+    title: a.string().required(), // Asegúrate que los campos requeridos aquí coincidan con lo que devuelve el resolver
+    description: a.string(),
+    images: a.string().array(),
+    code: a.string(),
+    price: a.float(),
+    categoryIds: a.string().array(), // Si los devuelves desde el resolver (_source)
+    createdAt: a.datetime(), // Asumiendo que estos campos existen en _source
+    updatedAt: a.datetime(),
+    highlight: a.ref('HighlightDetail')
+   }),
+
+  searchProducts: a
     .query()
-    .returns(a.ref("Product").array())
     .arguments({
-      searchTerm: a.string(), 
-      // categoryIDs: a.string().array() // 
+      searchTerm: a.string(),
+      categoryIDs: a.string().array(), 
+      from: a.integer(),    
+      size: a.integer()
     })
+    .returns(a.ref("ProductSearchResultItem").array())
     .authorization((allow) => [allow.publicApiKey()])
     .handler(
       a.handler.custom({
-        entry: "./searchProductsResolver.js", // Asegúrate de que el nombre sea correcto
-        dataSource: "osDataSource",
+        entry: "./searchProductsResolver.js",        dataSource: "osDataSource",
       })
     ),
 });

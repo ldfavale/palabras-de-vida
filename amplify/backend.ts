@@ -149,7 +149,11 @@ const indexMapping = {
       description: {
         type: "text",
       },
-      // categoryIds: { type: "keyword" } 
+      categoryIds: { type: "keyword" },
+      price: { type: "float" },        
+      code: { type: "keyword" },
+      createdAt: { type: "date" },
+      updatedAt: { type: "date" }
     },
   },
 };

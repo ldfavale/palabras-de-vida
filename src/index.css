@@ -174,4 +174,14 @@
 :root {
   --swiper-navigation-color: white; 
   --swiper-pagination-color: white; 
+  --primary-color: #FDCA40;
+  --black-color: #444E5E
+}
+
+mark {
+  background-color: --primary-color; 
+  color: --black-color;           
+  padding: 0.1em 0.2em;
+  border-radius: 3px;
+  font-weight: bold;
 }

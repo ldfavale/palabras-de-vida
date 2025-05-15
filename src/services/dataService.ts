@@ -44,6 +44,34 @@ export interface CategoryRequestData {
 }
 
 
+type HighlightFieldSnippets = string[];
+interface ProductHighlightData {
+  title?: HighlightFieldSnippets;
+  description?: HighlightFieldSnippets;
+}
+
+// Product Search
+export type ProductFromSearch = {
+  readonly id: string;
+  readonly title: string;
+  readonly description?: string | null; 
+  readonly images?: (string | null)[] | null;
+  readonly code?: string | null;
+  readonly price?: number | null; 
+  readonly categoryIds?: (string | null)[] | null; 
+  highlight?: ProductHighlightData | null;
+  readonly createdAt?: string | null; 
+  readonly updatedAt?: string | null;
+};
+interface SearchProductsResponse {
+  data: ProductFromSearch[] | null | undefined; // Permitir undefined
+  errors?: any; // O un tipo de error más específico
+}
+interface SearchParams {
+  searchTerm?: string;
+  categoryIDs?: string[];
+}
+
 // Now you should be able to make CRUDL operations with the
 // Data client
 
@@ -52,6 +80,18 @@ export const fetchProducts = async (): Promise<FetchProductsResponse> => {
     try {
       const response = await client.models.Product.list({selectionSet});
       return { data: response.data };
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return { data: null, errors: error };
+    }
+};
+export const searchProducts = async ({searchTerm, categoryIDs}: SearchParams): Promise<SearchProductsResponse> => {
+    try {
+      const response = await client.queries.searchProducts({
+        searchTerm: searchTerm || null, 
+        // categoryIDs: categoryIDs && categoryIDs.length > 0 ? categoryIDs : null, 
+      });
+      return { data: response.data as ProductFromSearch[] | null };
     } catch (error) {
       console.error("Error fetching products:", error);
       return { data: null, errors: error };

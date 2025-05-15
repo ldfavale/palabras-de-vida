@@ -17,7 +17,8 @@ export function request(ctx) {
     queries.push({
       multi_match: {
         query: searchTerm,
-        fields: ["title", "description"] // Campos donde buscar
+        fields: ["title", "description","code"],
+        type: "phrase_prefix" 
       }
     });
   } else {
@@ -39,6 +40,19 @@ export function request(ctx) {
     size: ctx.args.size || 50,
     query: {
       bool: {}
+    },
+    highlight: { 
+      pre_tags: ["<mark>"], 
+      post_tags: ["</mark>"], 
+      fields: {
+        title: { number_of_fragments: 0 }, 
+        description: {                   
+          fragment_size: 150,          
+          number_of_fragments: 1        
+        },
+        code: { number_of_fragments: 0 } 
+      },
+      require_field_match: true 
     }
   };
 
@@ -89,6 +103,20 @@ export function response(ctx) {
     console.error('Error from OpenSearch:', ctx.error.message);
     util.error(ctx.error.message, ctx.error.type);
   }
-  // console.log('OpenSearch response:', JSON.stringify(ctx.result, null, 2));
-  return ctx.result.hits.hits.map((hit) => hit._source);
+  console.log('OpenSearch response:', JSON.stringify(ctx.result, null, 2));
+  // return ctx.result.hits.hits.map((hit) => hit._source);
+  return ctx.result.hits.hits.map((hit) => {
+    const source = hit._source; // Los datos principales del producto
+    const highlight = hit.highlight; // Los fragmentos resaltados (si los hay)
+
+    // Aseguramos que el producto tenga un ID. OpenSearch _id es un fallback si no está en _source.
+    // Es importante que tu _source (datos de DynamoDB) contenga el 'id' que usas en el frontend.
+    const id = source.id || hit._id;
+
+    return {
+      ...source, // Mantenemos todos los campos originales del producto
+      id,        // Aseguramos que el id esté presente
+      highlight  // Añadimos el objeto de resaltado
+    };
+  });
 }

@@ -1,15 +1,32 @@
 import Slider from './Slider';
-import type { Schema } from '../../amplify/data/resource'
 import { useEffect } from 'react';
-import type { ProductWithCategories } from '../services/dataService';
+import type { ProductFromSearch } from '../services/dataService';
 
 
 interface ShopItemProps {
-    product: ProductWithCategories;
+    product: ProductFromSearch;
   }
   
 function ShopItem({product}:ShopItemProps) {
     const images = product.images ? product.images.filter(Boolean) as string[] : [];
+    const displayTitle = product.highlight?.title?.length
+        ? product.highlight.title.join(' ... ') // Si hay múltiples fragmentos, únelos o toma el primero
+        : product.title;
+    const title = product.highlight?.title?.length ? (
+            <span dangerouslySetInnerHTML={{ __html: displayTitle }} />
+          ) : (
+            product.title
+          )
+
+    const displayDescription = product.highlight?.description?.length
+    ? product.highlight.description.join(' ... ') 
+    : product.description || ""; 
+
+    const description = product.highlight?.description?.length ? (
+            <span dangerouslySetInnerHTML={{ __html: displayDescription }} />
+          ) : (
+            product.description // O product.description?.substring(0, 200) + '...'
+          )
 
     useEffect(() => {
 
@@ -38,19 +55,19 @@ function ShopItem({product}:ShopItemProps) {
          {/* Product Information */}
 
         <div className=" p-4">
-            <p className="font-graphik font-medium text-black mb-2 max-h-12 overflow-hidden">{product.title}</p>
+            <p className="font-graphik font-medium text-black mb-2 max-h-12 overflow-hidden">{title}</p>
             <div className="flex flex-row  justify-between w-full mb-1 [&>span]:text-lightgrey [&>span]:font-thin  [&>span]:text-xs">
                 {
-                product.categories.map((productCategory)=> {
-                    return <span>{productCategory.category.name}</span>
-                    })
+                // product.categories.map((productCategory)=> {
+                //     return <span>{productCategory.category.name}</span>
+                //     })
                     
         }
                 <span>COD: {product.code}</span>
             </div>
             <div className="font-medium text-primary mb-1">UYU {product.price}</div>
             <p className="font-graphik text-xs text-black mb-2 max-h-24 overflow-hidden">
-             {product.description}
+             {description}
             </p>
         </div>
   </div>
