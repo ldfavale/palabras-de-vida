@@ -6,8 +6,7 @@ import { util } from '@aws-appsync/utils';
  * @returns {*} the request
  */
 export function request(ctx) {
-  // const { searchTerm, categoryIDs } = ctx.args;
-  const { searchTerm } = ctx.args; // Obtenemos los argumentos
+  const { searchTerm, categoryIds } = ctx.args;
 
   const queries = []; 
   const filters = []; 
@@ -25,14 +24,14 @@ export function request(ctx) {
     queries.push({ match_all: {} });
   }
 
-  // 2. Filtrado por categoryIDs 
-  // if (categoryIDs && categoryIDs.length > 0) {
-  //   filters.push({
-  //     terms: { 
-  //       "categoryIds": categoryIDs 
-  //     }
-  //   });
-  // }
+  // 2. Filtrado por categoryIds 
+  if (categoryIds && categoryIds.length > 0) {
+    filters.push({
+      terms: { 
+        "categoryIds.keyword": categoryIds // TODO El ".keyword" es temporal. Para quitarlo hay que reindexar opensearch https://gemini.google.com/gem/450ab04c3e9f/bfd01f8c2efa2065
+      }
+    });
+  }
 
   // Construir la query final de OpenSearch
   const requestBody = {
@@ -69,7 +68,7 @@ export function request(ctx) {
   }
 
 
-  // Solo añadir 'filter' si hay filtros (categoryIDs)
+  // Solo añadir 'filter' si hay filtros (categoryIds)
   if (filters.length > 0) {
     requestBody.query.bool.filter = filters;
   }

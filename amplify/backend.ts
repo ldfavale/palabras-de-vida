@@ -7,7 +7,10 @@ import * as opensearch from 'aws-cdk-lib/aws-opensearchservice';
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as osis from "aws-cdk-lib/aws-osis";
 import * as logs from "aws-cdk-lib/aws-logs";
-import { RemovalPolicy } from "aws-cdk-lib"; 
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'; // Importa DynamoEventSource
+import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
+import { RemovalPolicy, Duration } from "aws-cdk-lib";
 
 
 /**
@@ -19,6 +22,89 @@ const backend = defineBackend({
   storage,
   storageOpensearch
 });
+
+// --- Referencias a las Tablas ---
+const productTableResource = backend.data.resources.tables['Product'];
+const productCategoryTableResource = backend.data.resources.tables['ProductCategory'];
+
+// --- Referencias a las Tablas (accediendo directamente a los recursos CfnTable L1) ---
+const cfnProductTable = backend.data.resources.cfnResources.amplifyDynamoDbTables['Product'];
+const cfnProductCategoryTable = backend.data.resources.cfnResources.amplifyDynamoDbTables['ProductCategory'];
+
+// --- Habilitar Streams ---
+
+if (cfnProductTable) {
+  cfnProductTable.pointInTimeRecoveryEnabled = true; 
+  cfnProductTable.streamSpecification = {
+    streamViewType: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES, 
+  };
+  console.log("StreamSpecification configurada para Product table.");
+} else {
+  console.error("ERROR: No se encontró CfnTable para 'Product'. El Stream no se pudo habilitar.");
+}
+
+if (cfnProductCategoryTable) {
+  // cfnProductCategoryTable.pointInTimeRecoveryEnabled = true; 
+  cfnProductCategoryTable.streamSpecification = {
+    streamViewType: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES, 
+  };
+  console.log("StreamSpecification configurada para ProductCategory table.");
+} else {
+  console.error("ERROR: No se encontró CfnTable para 'ProductCategory'. El Stream para la Lambda de denormalización no se pudo habilitar.");
+  throw new Error("CfnTable for 'ProductCategory' not found.");
+}
+
+// --- Rol IAM para la Lambda de Denormalización ---
+const denormalizeLambdaRole = new iam.Role(backend.data.stack, 'DenormalizeLambdaRole', {
+  assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+  managedPolicies: [
+    iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+    // Esta política da más permisos de los necesarios para el stream.
+    // En producción, restringirla más.
+    iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaDynamoDBExecutionRole'),
+  ],
+  inlinePolicies: {
+    CustomDynamoDBPermissions: new iam.PolicyDocument({
+      statements: [
+        new iam.PolicyStatement({ // Permiso para consultar la tabla ProductCategory y su GSI
+          actions: ['dynamodb:Query'],
+          resources: [
+            productCategoryTableResource.tableArn,
+            `${productCategoryTableResource.tableArn}/index/*` // Permiso para todos los GSIs de la tabla
+          ],
+        }),
+        new iam.PolicyStatement({ // Permiso para actualizar la tabla Product
+          actions: ['dynamodb:UpdateItem', 'dynamodb:PutItem'],
+          resources: [productTableResource.tableArn],
+        }),
+      ],
+    }),
+  },
+});
+
+// --- Función Lambda para Denormalizar categoryIds en Product ---
+const denormalizeProductCategoriesFunction = new lambda.Function(backend.data.stack, 'DenormalizeProductCategoriesFunction', {
+  runtime: lambda.Runtime.NODEJS_18_X, 
+  handler: 'index.handler',
+  code: lambda.Code.fromAsset('amplify/functions/denormalize-product-categories'), 
+  role: denormalizeLambdaRole,
+  timeout: Duration.seconds(60), 
+  environment: {
+    PRODUCT_TABLE_NAME: productTableResource.tableName,
+    PRODUCT_CATEGORY_TABLE_NAME: productCategoryTableResource.tableName,
+    PRODUCT_CATEGORY_GSI_NAME: 'productCategoriesByProductId'                                     
+  },
+});
+
+// --- Trigger: Conectar el Stream de ProductCategory a la Lambda ---
+denormalizeProductCategoriesFunction.addEventSource(new DynamoEventSource(productCategoryTableResource, {
+  startingPosition: StartingPosition.LATEST, // Procesar solo eventos nuevos
+  batchSize: 100, // Ajusta según el volumen esperado
+  bisectBatchOnError: true, // Si un batch falla, reintentar con batches más pequeños
+  retryAttempts: 3, // Reintentos
+}));
+
+
 
 const productTable =
   backend.data.resources.cfnResources.amplifyDynamoDbTables['Product'];

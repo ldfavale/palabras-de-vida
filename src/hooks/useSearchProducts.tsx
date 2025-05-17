@@ -8,18 +8,20 @@ interface UseProductsResult {
 }
 
 export interface UseSearchProductsParams {
-  searchTerm: string
+  searchTerm: string,
+  categoryIds: string[]
 }
 
-function useSearchProducts({searchTerm}:UseSearchProductsParams): UseProductsResult {
+function useSearchProducts({searchTerm, categoryIds}:UseSearchProductsParams): UseProductsResult {
   const [products, setProducts] = useState<ProductFromSearch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const getProducts = async () => {
+      setLoading(true);
       try {
-        const { data: fetchedProducts, errors } = await searchProducts({ searchTerm, categoryIDs: []}); // Captura también los errores si los hay
+        const { data: fetchedProducts, errors } = await searchProducts({ searchTerm, categoryIds}); // Captura también los errores si los hay
 
         if (errors) {
            console.error("Error reported by fetchProducts service:", errors);
@@ -37,7 +39,7 @@ function useSearchProducts({searchTerm}:UseSearchProductsParams): UseProductsRes
     };
 
     getProducts();
-  }, [searchTerm]);
+  }, [searchTerm,categoryIds]);
 
   return { products, loading, error };
 }

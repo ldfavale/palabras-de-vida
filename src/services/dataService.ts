@@ -69,7 +69,7 @@ interface SearchProductsResponse {
 }
 interface SearchParams {
   searchTerm?: string;
-  categoryIDs?: string[];
+  categoryIds?: string[];
 }
 
 // Now you should be able to make CRUDL operations with the
@@ -85,11 +85,11 @@ export const fetchProducts = async (): Promise<FetchProductsResponse> => {
       return { data: null, errors: error };
     }
 };
-export const searchProducts = async ({searchTerm, categoryIDs}: SearchParams): Promise<SearchProductsResponse> => {
+export const searchProducts = async ({searchTerm, categoryIds}: SearchParams): Promise<SearchProductsResponse> => {
     try {
       const response = await client.queries.searchProducts({
         searchTerm: searchTerm || null, 
-        // categoryIDs: categoryIDs && categoryIDs.length > 0 ? categoryIDs : null, 
+         categoryIds: categoryIds && categoryIds.length > 0 ? categoryIds : null, 
       });
       return { data: response.data as ProductFromSearch[] | null };
     } catch (error) {
