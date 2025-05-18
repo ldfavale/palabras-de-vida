@@ -28,7 +28,7 @@ export function request(ctx) {
   if (categoryIds && categoryIds.length > 0) {
     filters.push({
       terms: { 
-        "categoryIds.keyword": categoryIds // TODO El ".keyword" es temporal. Para quitarlo hay que reindexar opensearch https://gemini.google.com/gem/450ab04c3e9f/bfd01f8c2efa2065
+        "categoryIds": categoryIds 
       }
     });
   }
