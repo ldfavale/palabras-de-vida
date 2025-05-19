@@ -1,15 +1,16 @@
-import type { Schema } from '../../amplify/data/resource'
-import { generateClient, SelectionSet } from 'aws-amplify/data'
+import type { Schema } from '../../amplify/data/resource';
+import { generateClient, SelectionSet } from 'aws-amplify/data';
 import { uploadData } from 'aws-amplify/storage';
 
-const client = generateClient<Schema>()
+const client = generateClient<Schema>();
 
+// --- Tipos Generales y para Operaciones CRUD ---
 type Category = Schema['Category']['type'];
 type Product = Schema['Product']['type'];
 
 interface FetchCategoriesResponse {
-  data:  Category[] | null;
-  errors?: any
+  data: Category[] | null;
+  errors?: any;
 }
 
 export const selectionSet = [
@@ -20,99 +21,126 @@ export const selectionSet = [
   'code',
   'price',
   'categories.category.id',
-  'categories.category.name', 
-  'categories.category.label'
+  'categories.category.name',
+  'categories.category.label',
 ] as const;
 
 export type ProductWithCategories = SelectionSet<Schema['Product']['type'], typeof selectionSet>;
+
 interface FetchProductsResponse {
-  data:  ProductWithCategories[] | null;
-  errors?: any
+  data: ProductWithCategories[] | null;
+  errors?: any;
 }
 
 export interface ProductRequestData {
   title: string;
   description: string | undefined;
   categories: string[];
-  images: File[]; // File array for images
+  images: File[];
   code: string;
   price: number;
 }
+
 export interface CategoryRequestData {
   name: string;
   label?: string;
 }
 
+// --- Tipos Específicos para Búsqueda de Productos con Resaltado y Paginación ---
 
-type HighlightFieldSnippets = string[];
+type HighlightSnippetsArray = (string | null)[];
+
 interface ProductHighlightData {
-  title?: HighlightFieldSnippets;
-  description?: HighlightFieldSnippets;
+  title?: HighlightSnippetsArray | null;
+  description?: HighlightSnippetsArray | null;
+  code?: HighlightSnippetsArray | null;
 }
 
-// Product Search
 export type ProductFromSearch = {
   readonly id: string;
   readonly title: string;
-  readonly description?: string | null; 
+  readonly description?: string | null;
   readonly images?: (string | null)[] | null;
   readonly code?: string | null;
-  readonly price?: number | null; 
-  readonly categoryIds?: (string | null)[] | null; 
+  readonly price?: number | null;
+  readonly categoryIds?: (string | null)[] | null;
   highlight?: ProductHighlightData | null;
-  readonly createdAt?: string | null; 
+  readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 };
-interface SearchProductsResponse {
-  data: ProductFromSearch[] | null | undefined; // Permitir undefined
-  errors?: any; // O un tipo de error más específico
+
+interface PaginatedProductsData {
+  items: (ProductFromSearch | null | undefined)[];
+  totalCount: number;
 }
+
+interface SearchProductsResponse {
+  data: PaginatedProductsData | null | undefined;
+  errors?: any;
+}
+
 interface SearchParams {
   searchTerm?: string;
   categoryIds?: string[];
+  sortBy?: string;
+  page?: number;
+  limit?: number;
 }
 
-// Now you should be able to make CRUDL operations with the
-// Data client
-
+// --- Funciones del Servicio ---
 
 export const fetchProducts = async (): Promise<FetchProductsResponse> => {
-    try {
-      const response = await client.models.Product.list({selectionSet});
-      return { data: response.data };
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return { data: null, errors: error };
-    }
+  try {
+    const response = await client.models.Product.list({ selectionSet });
+    return { data: response.data };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return { data: null, errors: error as any };
+  }
 };
-export const searchProducts = async ({searchTerm, categoryIds}: SearchParams): Promise<SearchProductsResponse> => {
-    try {
-      const response = await client.queries.searchProducts({
-        searchTerm: searchTerm || null, 
-         categoryIds: categoryIds && categoryIds.length > 0 ? categoryIds : null, 
-      });
-      return { data: response.data as ProductFromSearch[] | null };
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return { data: null, errors: error };
-    }
+
+export const searchProducts = async ({
+  searchTerm,
+  categoryIds,
+  sortBy,
+  page = 1,
+  limit = 12,
+}: SearchParams): Promise<SearchProductsResponse> => {
+  try {
+    const from = (page - 1) * limit;
+    const size = limit;
+
+    const gqlResponse = await client.queries.searchProducts({
+      searchTerm: searchTerm || undefined,
+      categoryIds: categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
+      sortBy: sortBy || undefined,
+      from: from,
+      size: size,
+    });
+
+    console.log("response en dataService (searchProducts)", gqlResponse);
+    return { data: gqlResponse.data ?? null, errors: gqlResponse.errors };
+  } catch (error) {
+    console.error("Error searching products:", error);
+    return { data: null, errors: error as any };
+  }
 };
 
 export const fetchCategories = async (): Promise<FetchCategoriesResponse> => {
-    try {
-      const response = await client.models.Category.list();
-      return { data: response.data };
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      return { data: null, errors: error };
-    }
+  try {
+    const response = await client.models.Category.list();
+    return { data: response.data };
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return { data: null, errors: error as any };
+  }
 };
 
-const uploadImages = async ( images: File[] ) => {
+const uploadImages = async (images: File[]) => {
   try {
     const uploadPromises = images.map((file) =>
       uploadData({
-        path: `product-images/${file.name}`,
+        path: `product-images/${Date.now()}_${file.name}`, 
         data: file,
       })
     );
@@ -120,46 +148,44 @@ const uploadImages = async ( images: File[] ) => {
     const uploadResults = await Promise.all(uploadPromises);
     const uploadedImagePaths = await Promise.all(
       uploadResults.map(async (upload) => {
-        const resolvedResult = await upload.result; // Resolve the promise
-        return resolvedResult.path; // Adjust based on the structure of the resolved result
+        const resolvedResult = await upload.result;
+        return resolvedResult.path;
       })
-      );
-      
-    return uploadedImagePaths
-     
-  }catch (error) {
+    );
+    return uploadedImagePaths;
+  } catch (error) {
     console.error("Error uploading images:", error);
+    throw error; 
   }
 };
 
 export const createProduct = async (data: ProductRequestData): Promise<void> => {
   try {
-    if (data.images) {
-      const images = [...data.images];
-      const uploadedImagesPaths = await uploadImages(images);
-      if (uploadedImagesPaths) {
-        const createdProduct = await client.models.Product.create({
-          title: data.title,
-          description: data.description,
-          images: uploadedImagesPaths,
-          code: data.code,
-          price: Number(data.price), 
-        });
+    let uploadedImagePaths: string[] | undefined = [];
+    if (data.images && data.images.length > 0) {
+      uploadedImagePaths = await uploadImages(data.images);
+    }
 
-        const productId = createdProduct.data?.id;
-        if (data.categories && productId) {
-          const categoryRelations = data.categories.map((categoryId) => ({
-            productId: productId,
-            categoryId,
-          }));
+    const createdProduct = await client.models.Product.create({
+      title: data.title,
+      description: data.description,
+      images: uploadedImagePaths,
+      code: data.code,
+      price: Number(data.price),
+    });
 
-          await Promise.all(
-            categoryRelations.map((relation) =>
-              client.models.ProductCategory.create(relation)
-            )
-          );
-        }
-      }
+    const productId = createdProduct.data?.id;
+    if (data.categories && data.categories.length > 0 && productId) {
+      const categoryRelations = data.categories.map((categoryId) => ({
+        productId: productId,
+        categoryId,
+      }));
+
+      await Promise.all(
+        categoryRelations.map((relation) =>
+          client.models.ProductCategory.create(relation)
+        )
+      );
     }
   } catch (error) {
     console.error("Error creating product:", error);
@@ -169,19 +195,17 @@ export const createProduct = async (data: ProductRequestData): Promise<void> => 
 
 export const createCategory = async (data: CategoryRequestData): Promise<void> => {
   try {
-        await client.models.Category.create({
-          name: data.name,
-          label: formatLabel(data.name),
-        });
-      }
-  catch (error) {
+    await client.models.Category.create({
+      name: data.name,
+      label: formatLabel(data.name),
+    });
+  } catch (error) {
     console.error("Error creating category:", error);
     throw new Error("Failed to create category");
   }
 };
 
 const formatLabel = (text: string): string => {
-  return text.toLowerCase().replace(/\s+/g, '-');
+  return text.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Normaliza y quita acentos
 };
 
-  export default fetchProducts

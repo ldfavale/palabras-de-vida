@@ -1,7 +1,7 @@
 import ShopItem from "../components/ShopItem";
 import Sidebar from "../components/ShopSidebar";
 import toast from "react-hot-toast";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ProductListSkeleton } from "../components/ProductListSkeleton";
 import useSearchProducts from "../hooks/useSearchProducts";
 import clsx from "clsx";
@@ -35,7 +35,8 @@ import {
   LAYOUT_STYLE_ITEMS,
   ICON_SQUARES,
   ICON_LIST_BULLET,
-} from "../constants/filters"; // Ajusta la ruta
+  LAYOUT_STYLE_ITEM_GRID,
+} from "../constants/filters"; 
 
 interface SidebarItemData {
   label: string;
@@ -50,11 +51,14 @@ interface SidebarSectionConfig {
   filterType: keyof ActiveFilters; 
 }
 
-interface ActiveFilters {
+export interface ActiveFilters {
   [FILTER_TYPE_CATEGORY]: string;
   [FILTER_TYPE_SORT]: string;
   [FILTER_TYPE_LAYOUT]: string;
 }
+
+const ITEMS_PER_PAGE = 3;
+
 
 function ShoppingPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -64,22 +68,42 @@ function ShoppingPage() {
     [FILTER_TYPE_SORT]: DEFAULT_SORT_ORDER,
     [FILTER_TYPE_LAYOUT]: DEFAULT_LAYOUT_STYLE,
   });
+  
 
   const categoryFilterForHook = useMemo(() => {
     const activeCat = activeFilters[FILTER_TYPE_CATEGORY];
     return activeCat !== DEFAULT_CATEGORY ? [activeCat] : [];
   }, [activeFilters[FILTER_TYPE_CATEGORY]]);
 
-  const { products, loading, error } = useSearchProducts({
+  const {
+    products,
+    loading,
+    error,
+    currentPage,
+    totalCount,
+    totalPages,
+    setCurrentPage,
+  } = useSearchProducts({
     searchTerm,
     categoryIds: categoryFilterForHook,
-    // sortBy: activeFilters[FILTER_TYPE_SORT], // Asumiendo que tu hook puede usar esto
+    sortBy: activeFilters[FILTER_TYPE_SORT],
+    pageSize: ITEMS_PER_PAGE,
   });
   const { categories, loading: loadingCategories, error: errorCategories } = useGetCategories();
 
   const handleSearch = useCallback((newSearchTerm: string) => {
     setSearchTerm(newSearchTerm);
   }, []);
+
+  const handlePageChange = (newPage: number) => {
+    if (!loading && newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      const productListElement = document.getElementById('product-list-container');
+      if (productListElement) {
+        productListElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   // 2. Manejador de cambios genérico para filtros
   const handleFilterChange = useCallback((filterType: keyof ActiveFilters, value: string) => {
@@ -133,7 +157,7 @@ function ShoppingPage() {
 
   return (
     <div className="flex justify-center w-full">
-      <div className="sm:flex flex-1 sm:flex-row sm:justify-center w-full lg:max-w-6xl">
+      <div className="sm:flex flex-1 sm:flex-row sm:justify-center w-full lg:max-w-6xl ">
         <Sidebar>
           <div className="p-4">
             <SearchInput
@@ -158,7 +182,7 @@ function ShoppingPage() {
                         className={clsx(
                           "flex items-center w-full text-left text-sm py-1 px-2 rounded-md",
                           isItemActive
-                            ? "bg-primary/20 text-black font-semibold"
+                            ? "bg-primary/10 text-black font-semibold"
                             : "text-gray-600 hover:bg-gray-100 hover:text-black"
                         )}
                       >
@@ -181,8 +205,8 @@ function ShoppingPage() {
         </Sidebar>
 
         {/* Sección de Productos */}
-        <main className="flex-1 p-4 md:pt-6">
-          {loading && (<ProductListSkeleton count={12} />)}
+        <main id="product-list-container" className=" flex-col p-4 md:pt-6 mt-28 flex-1">
+          {loading && (<ProductListSkeleton count={ITEMS_PER_PAGE} />)} {/* Ajusta count si es necesario */}
           {!loading && error && (
             <div className="p-4 text-center text-red-500">Error al cargar productos. Intenta de nuevo.</div>
           )}
@@ -192,17 +216,75 @@ function ShoppingPage() {
             </div>
           )}
           {!loading && !error && products.length > 0 && (
-            <div className={clsx(
-              "grid gap-4 md:gap-6",
-              activeFilters[FILTER_TYPE_LAYOUT] === 'grilla'
-                ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-                : "grid-cols-1"
-            )}>
-              {products.map((p) => (
-                <ShopItem key={p.id} product={p} 
-                // layout={activeFilters[FILTER_TYPE_LAYOUT]} 
-                />
-              ))}
+            <div className="flex flex-col h-full"> {/* Envuelve la lista y la paginación */}
+              <div className={clsx(
+                "grid gap-4 md:gap-6  flex-1",
+                activeFilters[FILTER_TYPE_LAYOUT] === LAYOUT_STYLE_ITEM_GRID
+                  ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+                  : "grid-cols-1"
+              )}>
+                {products.map((p) => (
+                  <ShopItem 
+                  key={p.id} 
+                  product={p} 
+                  layout={activeFilters[FILTER_TYPE_LAYOUT]} 
+                  />
+                ))}
+              </div>
+                <div className="flex flex-1 "> </div>
+              {/* ---------- CONTROLES DE PAGINACIÓN ---------- */}
+              {totalPages > 1 && (
+                <div className="mt-8 flex justify-center items-center space-x-1 sm:space-x-2 py-4">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1 || loading}
+                    className="px-3 py-2 sm:px-4 border rounded-md bg-white text-xs sm:text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Anterior
+                  </button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(pageNumber => {
+                      if (totalPages <= 7) return true; 
+                      return (
+                        pageNumber === 1 ||
+                        pageNumber === totalPages ||
+                        (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                      );
+                    })
+                    .map((pageNumber, index, array) => (
+                      <React.Fragment key={pageNumber}>
+                        {/* Añadir "..." si hay saltos */}
+                        {index > 0 && pageNumber - array[index-1] > 1 && (
+                           <span className="px-3 py-2 sm:px-4 text-xs sm:text-sm text-gray-700">...</span>
+                        )}
+                        <button
+                          onClick={() => handlePageChange(pageNumber)}
+                          disabled={loading}
+                          className={clsx(
+                            "px-3 py-2 sm:px-4 border rounded-md text-xs sm:text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed",
+                            currentPage === pageNumber
+                              ? "bg-primary text-white border-primary"
+                              : "bg-white text-gray-700"
+                          )}
+                        >
+                          {pageNumber}
+                        </button>
+                      </React.Fragment>
+                    ))}
+
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages || loading}
+                    className="px-3 py-2 sm:px-4 border rounded-md bg-white text-xs sm:text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Siguiente
+                  </button>
+                </div>
+              )}
+              <div className="mt-4 text-center text-xs sm:text-sm text-gray-600">
+                {totalCount > 0 && `Página ${currentPage} de ${totalPages} (Total: ${totalCount} productos)`}
+              </div>
             </div>
           )}
         </main>

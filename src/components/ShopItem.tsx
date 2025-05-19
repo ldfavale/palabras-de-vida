@@ -1,13 +1,16 @@
 import Slider from './Slider';
 import { useEffect } from 'react';
 import type { ProductFromSearch } from '../services/dataService';
+import { LAYOUT_STYLE_ITEM_GRID } from '../constants/filters';
+import clsx from 'clsx';
 
 
 interface ShopItemProps {
     product: ProductFromSearch;
+    layout: string; 
   }
   
-function ShopItem({product}:ShopItemProps) {
+function ShopItem({product, layout}:ShopItemProps) {
     const images = product.images ? product.images.filter(Boolean) as string[] : [];
     const displayTitle = product.highlight?.title?.length
         ? product.highlight.title.join(' ... ') // Si hay múltiples fragmentos, únelos o toma el primero
@@ -33,19 +36,34 @@ function ShopItem({product}:ShopItemProps) {
     },[])
 
   return (
-    <div className=" bg-white w-full rounded-md overflow-hidden mx-auto  sm:hover:[box-shadow:0_0_12px_rgba(0,0,0,.15)]  ">
+    <div className={clsx(
+      "flex bg-white w-full rounded-md overflow-hidden mx-auto  sm:hover:[box-shadow:0_0_12px_rgba(0,0,0,.15)]",
+      layout === LAYOUT_STYLE_ITEM_GRID
+        ? "flex-col"
+        : "flex-row"
+    )}>
         <div className="flex flex-col">
             <div className=' flex h-[231px]  items-center justify-center'>
                     {product.images && <Slider
                         key={product.code}
                         paths={images}
-                        containerClassName=" h-full w-full flex" 
+                        containerClassName={clsx(
+                          "",
+                          layout === LAYOUT_STYLE_ITEM_GRID
+                            ? "h-full w-full flex"
+                            : "flex-row w-[250px]"
+                        )} 
                         imageClassName="h-full w-full object-cover"
                     />}
             </div>
             {/* Add to cart button*/}
-            <div className=' -mt-6 flex items-end justify-end pr-4'>
-                <div className='rounded-full bg-primary border  border-white p-2 z-10'>
+            <div className={clsx(
+                          "flex items-end justify-end pr-4",
+                          layout === LAYOUT_STYLE_ITEM_GRID
+                            ? "-mt-6 "
+                            : "relative -mt-10 -top-10 -right-4  "
+                        )}>
+                <div className='rounded-full bg-primary border  border-white p-2 z-10 hover:[box-shadow:0_4px_0_rgba(0,0,0,0.15)] transition-all duration-150 ease-in-out'>
                     <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5"/>
                     </svg>

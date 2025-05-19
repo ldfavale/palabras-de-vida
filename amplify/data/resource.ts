@@ -58,15 +58,21 @@ const schema = a.schema({
     highlight: a.ref('HighlightDetail')
    }),
 
+   PaginatedProductSearchResults: a.customType({
+    items: a.ref("ProductSearchResultItem").array().required(), 
+    totalCount: a.integer().required()                       
+  }),
+
   searchProducts: a
     .query()
     .arguments({
       searchTerm: a.string(),
       categoryIds: a.string().array(), 
+      sortBy: a.string(),
       from: a.integer(),    
       size: a.integer()
     })
-    .returns(a.ref("ProductSearchResultItem").array())
+    .returns(a.ref("PaginatedProductSearchResults"))
     .authorization((allow) => [allow.publicApiKey()])
     .handler(
       a.handler.custom({

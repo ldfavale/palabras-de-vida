@@ -20,9 +20,9 @@ const ProductSkeletonItem = () => (
     const skeletonItems = Array.from({ length: count });
   
     return (
-      <div className="container w-full mx-auto px-4 py-8 pt-32">
+      <div className=" w-full mx-auto px-4 py-8">
         {/* Cuadrícula responsiva para mostrar los esqueletos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6">
+        <div className="grid gap-4 md:gap-6 flex-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {/* Mapea el array y renderiza un ProductSkeletonItem por cada elemento */}
           {skeletonItems.map((_, index) => (
             <ProductSkeletonItem key={index} />

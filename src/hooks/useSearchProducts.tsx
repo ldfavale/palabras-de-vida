@@ -1,47 +1,104 @@
-import { useEffect, useState } from "react";
-import { ProductFromSearch, searchProducts } from "../services/dataService";
+import { useCallback, useEffect, useState } from "react";
+import { ProductFromSearch, searchProducts } from "../services/dataService"; // Asegúrate que la ruta sea correcta
 
+// Interfaces UseProductsResult y UseSearchProductsParams (como las tenías, parecen bien)
 interface UseProductsResult {
   products: ProductFromSearch[];
   loading: boolean;
   error: Error | null;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  totalCount: number;
+  totalPages: number;
+  pageSize: number; // Exponer pageSize también puede ser útil
 }
 
 export interface UseSearchProductsParams {
-  searchTerm: string,
-  categoryIds: string[]
+  searchTerm: string;
+  categoryIds: string[]; // Asumiendo que esto viene memoizado del padre (ShoppingPage)
+  sortBy?: string;
+  pageSize?: number;
 }
 
-function useSearchProducts({searchTerm, categoryIds}:UseSearchProductsParams): UseProductsResult {
+const DEFAULT_PAGE_SIZE = 9; // O el valor que prefieras
+
+function useSearchProducts({
+  searchTerm,
+  categoryIds,
+  sortBy,
+  pageSize = DEFAULT_PAGE_SIZE,
+}: UseSearchProductsParams): UseProductsResult {
   const [products, setProducts] = useState<ProductFromSearch[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
   const [error, setError] = useState<Error | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPageInternal] = useState(1); 
+
+  useEffect(() => {
+    setCurrentPageInternal(1);
+  }, [searchTerm, categoryIds, sortBy]); 
 
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const { data: fetchedProducts, errors } = await searchProducts({ searchTerm, categoryIds}); // Captura también los errores si los hay
+        const { data: resultData, errors } = await searchProducts({
+          searchTerm,
+          categoryIds,
+          sortBy,
+          page: currentPage,
+          limit: pageSize,
+        });
 
         if (errors) {
-           console.error("Error reported by fetchProducts service:", errors);
-           setError(new Error('Failed to fetch products due to service error.'));
-           setProducts([]); 
+          console.error("useSearchProducts: Error reportado por searchProducts service:", errors);
+          setError(new Error('Fallo al obtener productos debido a error del servicio.'));
+          setProducts([]);
+          setTotalCount(0);
+        } else if (resultData && resultData.items) {
+          const validItems = resultData.items.filter(
+            (item): item is ProductFromSearch => item != null
+          );
+          setProducts(validItems);
+          setTotalCount(resultData.totalCount || 0);
         } else {
-          setProducts(fetchedProducts || []); 
+          setProducts([]);
+          setTotalCount(0);
         }
-
       } catch (err) {
+        console.error("useSearchProducts: Error en bloque catch:", err);
         setError(err as Error);
+        setProducts([]);
+        setTotalCount(0);
       } finally {
         setLoading(false);
       }
     };
 
     getProducts();
-  }, [searchTerm,categoryIds]);
+  }, [searchTerm, categoryIds, sortBy, currentPage, pageSize]); 
 
-  return { products, loading, error };
+  const totalPages = Math.ceil(totalCount / pageSize);
+
+  const setCurrentPage = useCallback(
+    (page: number) => {
+      const newPage = Math.max(1, Math.min(page, totalPages || 1)); 
+      setCurrentPageInternal(newPage);
+    },
+    [totalPages] 
+  );
+
+  return {
+    products,
+    loading,
+    error,
+    currentPage,
+    setCurrentPage,
+    totalCount,
+    totalPages,
+    pageSize, 
+  };
 }
 
 export default useSearchProducts;

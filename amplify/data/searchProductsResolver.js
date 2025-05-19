@@ -6,7 +6,7 @@ import { util } from '@aws-appsync/utils';
  * @returns {*} the request
  */
 export function request(ctx) {
-  const { searchTerm, categoryIds } = ctx.args;
+  const { searchTerm, categoryIds, sortBy} = ctx.args;
 
   const queries = []; 
   const filters = []; 
@@ -16,7 +16,7 @@ export function request(ctx) {
     queries.push({
       multi_match: {
         query: searchTerm,
-        fields: ["title", "description","code"],
+        fields: ["title", "description"],
         type: "phrase_prefix" 
       }
     });
@@ -36,7 +36,7 @@ export function request(ctx) {
   // Construir la query final de OpenSearch
   const requestBody = {
     from: ctx.args.from || 0, 
-    size: ctx.args.size || 50,
+    size: ctx.args.size || 12,
     query: {
       bool: {}
     },
@@ -55,31 +55,45 @@ export function request(ctx) {
     }
   };
 
-  // Solo añadir 'must' si hay queries (searchTerm)
   if (queries.length > 0) {
     requestBody.query.bool.must = queries;
-  } else {
-    // Si no hay término de búsqueda pero sí filtros, necesitamos un 'match_all' para que los filtros apliquen.
-    // O si no hay ni término ni filtros, un 'match_all' para devolver todo (considera el rendimiento).
-    if (filters.length === 0) { // Sin término y sin filtros
-        requestBody.query.bool.must = { match_all: {} }; // Opcional: devuelve todo, considera implicaciones
-    }
-    // Si hay filtros pero no término, los filtros solos en la cláusula 'filter' funcionarán.
+  } else if (filters.length === 0) {
+    requestBody.query.bool.must = [{ match_all: {} }];
   }
 
-
-  // Solo añadir 'filter' si hay filtros (categoryIds)
   if (filters.length > 0) {
     requestBody.query.bool.filter = filters;
   }
 
-  // Si no hay 'must' (ni searchterm ni match_all) y no hay 'filter',
-  // la query bool vacía podría ser un error o devolver todo dependiendo de OpenSearch.
-  // Es más seguro asegurar que siempre haya al menos un match_all si no hay otras condiciones.
   if (queries.length === 0 && filters.length === 0) {
       requestBody.query.bool.must = { match_all: {} };
   }
 
+  // 3. Lógica para la Cláusula Sort 
+  if (sortBy) {
+    const sortOptions = [];
+    if (sortBy === 'relevance') {
+        if (searchTerm && searchTerm.trim() !== '') {
+        sortOptions.push({ "_score": "desc" });
+      } 
+    } else if (sortBy === 'lowest-price') {
+      sortOptions.push({ "price": "asc" }); 
+    } else if (sortBy === 'highest-price') {
+      sortOptions.push({ "price": "desc" });
+    } else if (sortBy === 'a-z') {
+      sortOptions.push({ "title.keyword": "asc" });
+    } else if (sortBy === 'z-a') {
+      sortOptions.push({ "title.keyword": "desc" });
+    }
+    else if (sortBy === 'newest') {
+      sortOptions.push({ "createdAt": "desc" }); 
+    } else if (sortBy === 'oldest') {
+      sortOptions.push({ "createdAt": "asc" });
+    }
+    if (sortOptions.length > 0) {
+      requestBody.sort = sortOptions;
+    }
+  }
 
   console.log('OpenSearch request body:', JSON.stringify(requestBody, null, 2));
 
@@ -103,19 +117,22 @@ export function response(ctx) {
     util.error(ctx.error.message, ctx.error.type);
   }
   console.log('OpenSearch response:', JSON.stringify(ctx.result, null, 2));
-  // return ctx.result.hits.hits.map((hit) => hit._source);
-  return ctx.result.hits.hits.map((hit) => {
-    const source = hit._source; // Los datos principales del producto
-    const highlight = hit.highlight; // Los fragmentos resaltados (si los hay)
+ 
+    const items = ctx.result.hits.hits.map((hit) => {
+      const source = hit._source;
+      const highlight = hit.highlight;
+      const id = source.id || hit._id;
+      return {
+          ...source,
+          id,
+          highlight
+        };
+    });
+    const totalCount = ctx.result.hits.total.value || 0; // Total de documentos que coinciden
 
-    // Aseguramos que el producto tenga un ID. OpenSearch _id es un fallback si no está en _source.
-    // Es importante que tu _source (datos de DynamoDB) contenga el 'id' que usas en el frontend.
-    const id = source.id || hit._id;
-
-    return {
-      ...source, // Mantenemos todos los campos originales del producto
-      id,        // Aseguramos que el id esté presente
-      highlight  // Añadimos el objeto de resaltado
+    return { 
+      items: items,
+      totalCount: totalCount
     };
-  });
+ 
 }
