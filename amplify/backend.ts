@@ -292,14 +292,45 @@ dynamodb-pipeline:
 
 
 
-// Create a CloudWatch log group
-const logGroup = new logs.LogGroup(backend.data.stack, "LogGroup", {
-  logGroupName: "/aws/vendedlogs/OpenSearchService/pipelines/1",
-  removalPolicy: RemovalPolicy.DESTROY,
-});
+const branchName = process.env.AWS_BRANCH || 'local';
 
+if (!branchName) {
+  throw new Error(
+    "La variable de entorno AWS_BRANCH no está definida. " +
+    "Es necesaria para crear nombres de recursos únicos. " +
+    "Asegúrate de estar desplegando a través de la consola de Amplify o la CLI de Amplify."
+  );
+}
 
-// Create an OpenSearch Integration Service pipeline
+// Sanitizar el nombre de la rama para que cumpla con las restricciones de OSIS: [a-z][a-z0-9-]+
+// y longitud (3-28 caracteres para el nombre completo de la pipeline)
+
+let sanitizedSuffix = branchName.toLowerCase();
+sanitizedSuffix = sanitizedSuffix.replace(/[^a-z0-9-]/g, '-');
+sanitizedSuffix = sanitizedSuffix.replace(/-+/g, '-');
+sanitizedSuffix = sanitizedSuffix.replace(/^-+|-+$/g, '');
+
+if (sanitizedSuffix.length === 0) {
+  sanitizedSuffix = 'default';
+}
+
+const prefix = 'dynamodb-integration-';
+const maxSuffixLength = 28 - prefix.length;
+
+if (sanitizedSuffix.length > maxSuffixLength) {
+  sanitizedSuffix = sanitizedSuffix.substring(0, maxSuffixLength);
+  sanitizedSuffix = sanitizedSuffix.replace(/-+$/g, '');
+}
+
+let uniquePipelineName = `${prefix}${sanitizedSuffix}`;
+
+if (!/^[a-z]/.test(uniquePipelineName)) {
+  if (uniquePipelineName.length < 3) {
+    uniquePipelineName = `${uniquePipelineName}pipeline`; 
+  }
+}
+uniquePipelineName = uniquePipelineName.substring(0, 28); 
+
 const cfnPipeline = new osis.CfnPipeline(
   backend.data.stack,
   "OpenSearchIntegrationPipeline",
@@ -307,15 +338,13 @@ const cfnPipeline = new osis.CfnPipeline(
     maxUnits: 4,
     minUnits: 1,
     pipelineConfigurationBody: openSearchTemplate,
-    pipelineName: "dynamodb-integration-2",
+    pipelineName: uniquePipelineName, // <-- Nombre de pipeline ahora único
     logPublishingOptions: {
       isLoggingEnabled: true,
-      cloudWatchLogDestination: {
-        logGroup: logGroup.logGroupName,
-      },
     },
   }
 );
+
 
 // Add OpenSearch data source 
 const osDataSource = backend.data.addOpenSearchDataSource(
