@@ -57,7 +57,7 @@ export interface ActiveFilters {
   [FILTER_TYPE_LAYOUT]: string;
 }
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 9;
 
 
 function ShoppingPage() {

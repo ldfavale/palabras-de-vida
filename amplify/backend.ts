@@ -231,6 +231,12 @@ const indexMapping = {
       },
       title: {
         type: "text",
+        fields: {
+          keyword: {
+            type: "keyword",
+            ignore_above: 256
+          }
+        }
       },
       description: {
         type: "text",
