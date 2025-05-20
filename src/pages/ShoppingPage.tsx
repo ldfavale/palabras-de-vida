@@ -216,7 +216,7 @@ function ShoppingPage() {
             </div>
           )}
           {!loading && !error && products.length > 0 && (
-            <div className="flex flex-col h-full"> {/* Envuelve la lista y la paginación */}
+            <div className="flex flex-col "> {/* Envuelve la lista y la paginación */}
               <div className={clsx(
                 "grid gap-4 md:gap-6  flex-1",
                 activeFilters[FILTER_TYPE_LAYOUT] === LAYOUT_STYLE_ITEM_GRID
