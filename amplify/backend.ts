@@ -331,9 +331,11 @@ if (!/^[a-z]/.test(uniquePipelineName)) {
 }
 uniquePipelineName = uniquePipelineName.substring(0, 28); 
 
-const osisPipelineLogGroup = new logs.LogGroup(backend.data.stack, "OsisPipelineLogGroup", {
-  logGroupName: `/aws/osis-pipeline/${uniquePipelineName}`, 
-  removalPolicy: RemovalPolicy.DESTROY, 
+const osisDedicatedLogGroupName = `${uniquePipelineName}-pipeline-logs`; 
+
+const osisPipelineLogGroup = new logs.LogGroup(backend.data.stack, "OsisPipelineDedicatedLogGroup", {
+  logGroupName: osisDedicatedLogGroupName, 
+  removalPolicy: RemovalPolicy.DESTROY,
 });
 
 const cfnPipeline = new osis.CfnPipeline(
