@@ -59,8 +59,8 @@ const denormalizeLambdaRole = new iam.Role(backend.data.stack, 'DenormalizeLambd
   assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
   managedPolicies: [
     iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
-    // Esta política da más permisos de los necesarios para el stream.
-    // En producción, restringirla más.
+    //  Esta política da más permisos de los necesarios para el stream.
+    // TODO => En producción, restringirla más.
     iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaDynamoDBExecutionRole'),
   ],
   inlinePolicies: {
@@ -331,6 +331,11 @@ if (!/^[a-z]/.test(uniquePipelineName)) {
 }
 uniquePipelineName = uniquePipelineName.substring(0, 28); 
 
+const osisPipelineLogGroup = new logs.LogGroup(backend.data.stack, "OsisPipelineLogGroup", {
+  logGroupName: `/aws/osis-pipeline/${uniquePipelineName}`, 
+  removalPolicy: RemovalPolicy.DESTROY, 
+});
+
 const cfnPipeline = new osis.CfnPipeline(
   backend.data.stack,
   "OpenSearchIntegrationPipeline",
@@ -338,9 +343,12 @@ const cfnPipeline = new osis.CfnPipeline(
     maxUnits: 4,
     minUnits: 1,
     pipelineConfigurationBody: openSearchTemplate,
-    pipelineName: uniquePipelineName, // <-- Nombre de pipeline ahora único
+    pipelineName: uniquePipelineName, 
     logPublishingOptions: {
       isLoggingEnabled: true,
+      cloudWatchLogDestination: {
+        logGroup: osisPipelineLogGroup.logGroupName,
+      },
     },
   }
 );
