@@ -209,3 +209,35 @@ const formatLabel = (text: string): string => {
   return text.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Normaliza y quita acentos
 };
 
+export interface DeleteProductResponse {
+  success: boolean;
+  productId?: string;
+  errors?: any[];
+}
+
+export const removeProduct = async (productId: string): Promise<DeleteProductResponse> => {
+  try {
+    console.log(`dataService: Deleting product with ID: ${productId}`);
+    const response = await client.models.Product.delete({ id: productId });
+    console.log("dataService: Response from deleteProduct mutation", response);
+
+    // Verificar si la respuesta tiene data null pero no tiene errores (caso común cuando el producto no existe)
+    if (response.data === null && !response.errors) {
+      console.warn(`Product with ID ${productId} might not exist or was already deleted`);
+      // Podemos considerar esto como éxito ya que el producto no existe (que era el objetivo)
+      return { success: true, productId, errors: undefined };
+    }
+
+    if (response.errors) {
+      console.error("GraphQL errors during product deletion:", response.errors);
+      return { success: false, productId, errors: response.errors };
+    }
+    
+    return { success: true, productId, errors: undefined };
+
+  } catch (error) {
+    console.error(`Catch block: Error deleting product ${productId} in dataService:`, error);
+    return { success: false, productId, errors: [error as any] };
+  }
+};
+

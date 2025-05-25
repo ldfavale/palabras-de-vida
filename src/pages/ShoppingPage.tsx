@@ -8,7 +8,7 @@ import clsx from "clsx";
 import SearchInput from "../components/SearchInput";
 import { CheckIcon, ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import useGetCategories from "../hooks/useGetCategories";
-
+import useDeleteProduct from "../hooks/useDeleteProduct";
 interface SidebarItem {
     label: string;
     value: string;
@@ -90,6 +90,8 @@ function ShoppingPage() {
     pageSize: ITEMS_PER_PAGE,
   });
   const { categories, loading: loadingCategories, error: errorCategories } = useGetCategories();
+  const { deleteProduct, isDeleting, error: errorDeleting} = useDeleteProduct();
+
 
   const handleSearch = useCallback((newSearchTerm: string) => {
     setSearchTerm(newSearchTerm);
@@ -154,6 +156,23 @@ function ShoppingPage() {
     if (iconName === ICON_LIST_BULLET) return <ListBulletIcon className="w-4 h-4" />;
     return undefined;
   };
+
+  const afterDeleteSuccess = (deletedProductId: string) => {
+    console.log(`Producto ${deletedProductId} eliminado, actualizando UI...`);
+    if (products.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    } else {
+      setCurrentPage(currentPage);
+    }
+  };
+
+  const handleDeleteRequest = async (productId: string, productTitle: string) => {
+    const deleted = await deleteProduct(productId, productTitle);
+    if (deleted) {
+      toast.success(`Producto "${productTitle}" eliminado correctamente.`);
+      afterDeleteSuccess(productId);
+    }
+  }
 
   return (
     <div className="flex justify-center w-full">
@@ -227,7 +246,9 @@ function ShoppingPage() {
                   <ShopItem 
                   key={p.id} 
                   product={p} 
-                  layout={activeFilters[FILTER_TYPE_LAYOUT]} 
+                  layout={activeFilters[FILTER_TYPE_LAYOUT]}
+                  onDeleteRequest={handleDeleteRequest} 
+                  deleteDisabled={isDeleting}
                   />
                 ))}
               </div>

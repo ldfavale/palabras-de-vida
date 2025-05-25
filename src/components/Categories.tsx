@@ -3,7 +3,7 @@
 function Categories() {
   return (
     <section id='categories' className="flex flex-col justify-center items-center   py-28">
-      <h3 className='text-4xl mb-8 font-medium font-gayathri font-graphik '>Categorias</h3>
+      <h3 className='text-4xl mb-8 font-medium font-gayathri font-graphik text-gray-500'>Nuestros Productos</h3>
       <div className=' flex flex-col space-y-10 sm:space-y-0 sm:space-x-10 sm:flex-row w-full p-10 items-center justify-around  bg-white  '>
           <div className="rounded-full   h-64 w-64 bg-[#AEBF8A]  flex flex-col items-center justify-center">
               <h3 className='text-2xl mt-4 text-white font-bold  text-center flex  font-graphik uppercase' >Biblias</h3>

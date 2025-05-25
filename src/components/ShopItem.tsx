@@ -3,14 +3,17 @@ import { useEffect } from 'react';
 import type { ProductFromSearch } from '../services/dataService';
 import { LAYOUT_STYLE_ITEM_GRID } from '../constants/filters';
 import clsx from 'clsx';
-
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 interface ShopItemProps {
     product: ProductFromSearch;
     layout: string; 
+    onDeleteRequest: (productId: string, productTitle: string) => void;
+    deleteDisabled: boolean; 
+
   }
   
-function ShopItem({product, layout}:ShopItemProps) {
+function ShopItem({product, layout,onDeleteRequest, deleteDisabled}:ShopItemProps) {
     const images = product.images ? product.images.filter(Boolean) as string[] : [];
     const displayTitle = product.highlight?.title?.length
         ? product.highlight.title.join(' ... ') // Si hay múltiples fragmentos, únelos o toma el primero
@@ -31,9 +34,9 @@ function ShopItem({product, layout}:ShopItemProps) {
             product.description // O product.description?.substring(0, 200) + '...'
           )
 
-    useEffect(() => {
-
-    },[])
+    const handleDeleteClick = () => {
+      onDeleteRequest(product.id, product.title);
+    };
 
   return (
     <div className={clsx(
@@ -58,17 +61,24 @@ function ShopItem({product, layout}:ShopItemProps) {
             </div>
             {/* Add to cart button*/}
             <div className={clsx(
-                          "flex items-end justify-end pr-4",
+                          "flex items-end justify-end pr-4 gap-1",
                           layout === LAYOUT_STYLE_ITEM_GRID
                             ? "-mt-6 "
                             : "relative -mt-10 -top-10 -right-4  "
                         )}>
+                <button 
+                 disabled={deleteDisabled}
+                 onClick={handleDeleteClick}
+                className='rounded-full bg-red-400 border  border-white p-2 z-10 hover:[box-shadow:0_4px_0_rgba(0,0,0,0.15)] transition-all duration-150 ease-in-out'>
+                    <TrashIcon className='w-6 h-6 text-white'/>
+                </button>
                 <div className='rounded-full bg-primary border  border-white p-2 z-10 hover:[box-shadow:0_4px_0_rgba(0,0,0,0.15)] transition-all duration-150 ease-in-out'>
                     <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5"/>
                     </svg>
                 </div>
             </div>
+           
         </div>
          {/* Product Information */}
 
