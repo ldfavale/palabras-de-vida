@@ -331,13 +331,7 @@ if (!/^[a-z]/.test(uniquePipelineName)) {
 }
 uniquePipelineName = uniquePipelineName.substring(0, 28); 
 
-const osisDedicatedLogGroupName = `${uniquePipelineName}-pipeline-logs`; 
-
-const osisPipelineLogGroup = new logs.LogGroup(backend.data.stack, "OsisPipelineDedicatedLogGroup", {
-  logGroupName: osisDedicatedLogGroupName, 
-  removalPolicy: RemovalPolicy.DESTROY,
-});
-
+// En lugar de crear un grupo de logs personalizado, vamos a dejar que AWS OSIS cree uno automáticamente
 const cfnPipeline = new osis.CfnPipeline(
   backend.data.stack,
   "OpenSearchIntegrationPipeline",
@@ -346,12 +340,8 @@ const cfnPipeline = new osis.CfnPipeline(
     minUnits: 1,
     pipelineConfigurationBody: openSearchTemplate,
     pipelineName: uniquePipelineName, 
-    logPublishingOptions: {
-      isLoggingEnabled: true,
-      cloudWatchLogDestination: {
-        logGroup: osisPipelineLogGroup.logGroupName,
-      },
-    },
+    // Eliminamos la configuración de logs personalizada para que AWS cree un grupo de logs automáticamente
+    // con el formato correcto
   }
 );
 
