@@ -83,6 +83,7 @@ function ShoppingPage() {
     totalCount,
     totalPages,
     setCurrentPage,
+    refetch
   } = useSearchProducts({
     searchTerm,
     categoryIds: categoryFilterForHook,
@@ -159,11 +160,11 @@ function ShoppingPage() {
 
   const afterDeleteSuccess = (deletedProductId: string) => {
     console.log(`Producto ${deletedProductId} eliminado, actualizando UI...`);
+    console.log(`CurrentPage ${currentPage}`);
     if (products.length === 1 && currentPage > 1) {
       setCurrentPage(currentPage - 1);
-    } else {
-      setCurrentPage(currentPage);
     }
+    refetch();
   };
 
   const handleDeleteRequest = async (productId: string, productTitle: string) => {
