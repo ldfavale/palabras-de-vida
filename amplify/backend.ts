@@ -6,11 +6,14 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as opensearch from 'aws-cdk-lib/aws-opensearchservice';
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as osis from "aws-cdk-lib/aws-osis";
-import * as logs from "aws-cdk-lib/aws-logs";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'; // Importa DynamoEventSource
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { RemovalPolicy, Duration } from "aws-cdk-lib";
+import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import { execSync } from 'child_process';
 
 
 /**
@@ -73,8 +76,12 @@ const denormalizeLambdaRole = new iam.Role(backend.data.stack, 'DenormalizeLambd
             `${productCategoryTableResource.tableArn}/index/*` // Permiso para todos los GSIs de la tabla
           ],
         }),
-        new iam.PolicyStatement({ // Permiso para actualizar la tabla Product
-          actions: ['dynamodb:UpdateItem', 'dynamodb:PutItem'],
+        new iam.PolicyStatement({ 
+          actions: [
+            'dynamodb:UpdateItem', 
+            'dynamodb:PutItem',
+            'dynamodb:Query'
+          ],
           resources: [productTableResource.tableArn],
         }),
       ],
@@ -351,3 +358,125 @@ const osDataSource = backend.data.addOpenSearchDataSource(
   "osDataSource",
   openSearchDomain
 );
+
+
+// --- Rol IAM para la Lambda de Limpieza de Productos Eliminados ---
+const cleanupLambdaRole = new iam.Role(backend.data.stack, 'CleanupDeletedProductLambdaRole', {
+  assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+  managedPolicies: [
+    iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+    iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaDynamoDBExecutionRole'),
+  ],
+  inlinePolicies: {
+    CleanupPermissions: new iam.PolicyDocument({
+      statements: [
+        new iam.PolicyStatement({
+          actions: ['dynamodb:Query', 'dynamodb:BatchWriteItem', 'dynamodb:DeleteItem'],
+          resources: [
+            productCategoryTableResource.tableArn,
+            `${productCategoryTableResource.tableArn}/index/*`,
+          ],
+        }),
+        new iam.PolicyStatement({
+          actions: ['dynamodb:GetItem'],
+          resources: [productTableResource.tableArn],
+        }),
+        new iam.PolicyStatement({
+          actions: ['s3:DeleteObject', 's3:DeleteObjects'],
+          resources: [`arn:aws:s3:::${s3BucketName}/*`],
+        }),
+        new iam.PolicyStatement({
+          actions: ['s3:ListBucket'],
+          resources: [`arn:aws:s3:::${s3BucketName}`],
+        }),
+      ],
+    }),
+  },
+});
+
+// --- Función Lambda para Limpieza de Productos Eliminados ---
+const cleanupDeletedProductFunction = new lambda.Function(backend.data.stack, 'CleanupDeletedProductFunction', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromAsset('amplify/functions/cleanup-deleted-product', {
+    bundling: {
+      local: {
+        tryBundle(outputDir: string) {
+          execSync(
+            [
+              'npm install',
+              `npx esbuild index.js --bundle --platform=node --target=node18 --outfile=${outputDir}/index.js`
+            ].join(' && '),
+            { stdio: 'inherit', cwd: 'amplify/functions/cleanup-deleted-product' }
+          );
+          return true;
+        }
+      },
+      image: lambda.Runtime.NODEJS_18_X.bundlingImage,
+    },
+  }),
+  role: cleanupLambdaRole,
+  timeout: Duration.seconds(60),
+  environment: {
+    PRODUCT_CATEGORY_TABLE_NAME: productCategoryTableResource.tableName,
+    PRODUCT_CATEGORY_GSI_NAME: 'productCategoriesByProductId',
+    S3_BUCKET_NAME: s3BucketName,
+  },
+});
+
+// Crear una cola SQS para los reintentos
+const cleanupQueue = new sqs.Queue(backend.data.stack, 'ProductCleanupQueue', {
+  visibilityTimeout: Duration.seconds(120),
+  retentionPeriod: Duration.days(14),
+  deadLetterQueue: {
+    queue: new sqs.Queue(backend.data.stack, 'ProductCleanupDLQ'),
+    maxReceiveCount: 5,
+  },
+});
+
+// Actualizar los permisos para incluir SQS
+cleanupLambdaRole.addToPolicy(
+  new iam.PolicyStatement({
+    actions: ['sqs:SendMessage', 'sqs:ReceiveMessage', 'sqs:DeleteMessage', 'sqs:GetQueueAttributes'],
+    resources: [cleanupQueue.queueArn],
+  })
+);
+
+// Actualizar la función Lambda para incluir la URL de la cola
+cleanupDeletedProductFunction.addEnvironment('CLEANUP_QUEUE_URL', cleanupQueue.queueUrl);
+
+// Conectar la Lambda a la cola SQS
+cleanupDeletedProductFunction.addEventSource(new SqsEventSource(cleanupQueue, {
+  batchSize: 1,
+}));
+
+// Crear la función Lambda para iniciar el proceso de limpieza
+const triggerCleanupFunction = new lambda.Function(backend.data.stack, 'TriggerCleanupFunction', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromAsset('amplify/functions/trigger-cleanup'),
+  role: cleanupLambdaRole,
+  environment: {
+    CLEANUP_QUEUE_URL: cleanupQueue.queueUrl,
+  },
+});
+
+// Crear una API REST
+const api = new apigateway.RestApi(backend.data.stack, 'CleanupApi', {
+  deployOptions: {
+    stageName: 'api',
+  },
+  defaultCorsPreflightOptions: {
+    allowOrigins: apigateway.Cors.ALL_ORIGINS,
+    allowMethods: apigateway.Cors.ALL_METHODS,
+  },
+});
+
+// Crear el recurso y método para la API
+const productResource = api.root.addResource('cleanup-product');
+const productIdResource = productResource.addResource('{productId}');
+productIdResource.addMethod('DELETE', new apigateway.LambdaIntegration(triggerCleanupFunction));
+
+// Actualizar la función Lambda para incluir la URL de la cola y el nombre de la tabla de productos
+triggerCleanupFunction.addEnvironment('CLEANUP_QUEUE_URL', cleanupQueue.queueUrl);
+triggerCleanupFunction.addEnvironment('PRODUCT_TABLE_NAME', productTableResource.tableName);

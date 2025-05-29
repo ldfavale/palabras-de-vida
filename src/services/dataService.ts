@@ -232,7 +232,11 @@ export const removeProduct = async (productId: string): Promise<DeleteProductRes
       console.error("GraphQL errors during product deletion:", response.errors);
       return { success: false, productId, errors: response.errors };
     }
-    
+    console.log(`dataService: Successfully deleted product with ID: ${productId}`);
+    await fetch(`${import.meta.env.VITE_CLEANUP_API_URL}/cleanup-product/${productId}`, {
+      method: 'DELETE',
+    });
+    console.log(`dataService: Cleanup API called for product with ID: ${productId}`);
     return { success: true, productId, errors: undefined };
 
   } catch (error) {

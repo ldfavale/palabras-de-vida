@@ -60,8 +60,20 @@ export const handler = async (event) => { // Quitamos DynamoDBStreamEvent y Prom
 
   for (const productId of affectedProductIds) {
     try {
-      console.log(`Processing productId: ${productId}`);
+        console.log(`Processing productId: ${productId}`);
+        const getProduct = await docClient.send(new QueryCommand({
+        TableName: PRODUCT_TABLE_NAME,
+        KeyConditionExpression: 'id = :pid',
+        ExpressionAttributeValues: { ':pid': productId },
+        ProjectionExpression: 'id'
+      }));
 
+
+      if (!getProduct.Items || getProduct.Items.length === 0) {
+        console.log(`Product ${productId} does not exist. Skipping update.`);
+        continue;
+      }
+      
       const queryParams = {
         TableName: PRODUCT_CATEGORY_TABLE_NAME,
         IndexName: PRODUCT_CATEGORY_GSI_NAME,
