@@ -8,12 +8,9 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as osis from "aws-cdk-lib/aws-osis";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
-import * as apigateway from 'aws-cdk-lib/aws-apigateway';
-import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'; // Importa DynamoEventSource
+import { DynamoEventSource, SqsDlq } from 'aws-cdk-lib/aws-lambda-event-sources'; // Importa DynamoEventSource
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { RemovalPolicy, Duration } from "aws-cdk-lib";
-import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
-import { execSync } from 'child_process';
 
 
 /**
@@ -29,6 +26,11 @@ const backend = defineBackend({
 // --- Referencias a las Tablas ---
 const productTableResource = backend.data.resources.tables['Product'];
 const productCategoryTableResource = backend.data.resources.tables['ProductCategory'];
+
+// Obtener el ARN de la tabla DynamoDB
+const tableArn = productTableResource.tableArn;
+// Obtener el nombre de la tabla DynamoDB
+const tableName = productTableResource.tableName;
 
 // --- Referencias a las Tablas (accediendo directamente a los recursos CfnTable L1) ---
 const cfnProductTable = backend.data.resources.cfnResources.amplifyDynamoDbTables['Product'];
@@ -113,24 +115,7 @@ denormalizeProductCategoriesFunction.addEventSource(new DynamoEventSource(produc
 
 
 
-const productTable =
-  backend.data.resources.cfnResources.amplifyDynamoDbTables['Product'];
-
-// Actualizar configuración de la tabla
-productTable.pointInTimeRecoveryEnabled = true;
-
-productTable.streamSpecification = {
-  streamViewType: dynamodb.StreamViewType.NEW_IMAGE,
-};
-
-// Obtener el ARN de la tabla DynamoDB
-const tableArn = backend.data.resources.tables['Product'].tableArn;
-// Obtener el nombre de la tabla DynamoDB
-const tableName = backend.data.resources.tables['Product'].tableName;
-
-
-
-
+// --- Configuración de OpenSearch ---
 
 // Create the OpenSearch domain
 const openSearchDomain = new opensearch.Domain(
@@ -139,7 +124,7 @@ const openSearchDomain = new opensearch.Domain(
   {
     version: opensearch.EngineVersion.OPENSEARCH_2_11,
     capacity: {
-      // upgrade instance types for production use
+      // TODO upgrade instance types for production use
       masterNodeInstanceType: "t3.small.search",
       masterNodes: 0,
       dataNodeInstanceType: "t3.small.search",
@@ -160,6 +145,11 @@ const openSearchDomain = new opensearch.Domain(
 const s3BucketArn = backend.storage.resources.bucket.bucketArn;
 // Get the S3Bucket Name
 const s3BucketName = backend.storage.resources.bucket.bucketName;
+
+const productCleanupDLQ = new sqs.Queue(backend.data.stack, 'ProductCleanupDLQ', {
+  retentionPeriod: Duration.days(14),
+});
+
 
 
 // Create an IAM role for OpenSearch integration
@@ -343,12 +333,10 @@ const cfnPipeline = new osis.CfnPipeline(
   backend.data.stack,
   "OpenSearchIntegrationPipeline",
   {
-    maxUnits: 4,
+    maxUnits: 5,
     minUnits: 1,
     pipelineConfigurationBody: openSearchTemplate,
     pipelineName: uniquePipelineName, 
-    // Eliminamos la configuración de logs personalizada para que AWS cree un grupo de logs automáticamente
-    // con el formato correcto
   }
 );
 
@@ -398,25 +386,9 @@ const cleanupLambdaRole = new iam.Role(backend.data.stack, 'CleanupDeletedProduc
 const cleanupDeletedProductFunction = new lambda.Function(backend.data.stack, 'CleanupDeletedProductFunction', {
   runtime: lambda.Runtime.NODEJS_18_X,
   handler: 'index.handler',
-  code: lambda.Code.fromAsset('amplify/functions/cleanup-deleted-product', {
-    bundling: {
-      local: {
-        tryBundle(outputDir: string) {
-          execSync(
-            [
-              'npm install',
-              `npx esbuild index.js --bundle --platform=node --target=node18 --outfile=${outputDir}/index.js`
-            ].join(' && '),
-            { stdio: 'inherit', cwd: 'amplify/functions/cleanup-deleted-product' }
-          );
-          return true;
-        }
-      },
-      image: lambda.Runtime.NODEJS_18_X.bundlingImage,
-    },
-  }),
+  code: lambda.Code.fromAsset('amplify/functions/cleanup-deleted-product'), 
   role: cleanupLambdaRole,
-  timeout: Duration.seconds(60),
+  timeout: Duration.seconds(90),
   environment: {
     PRODUCT_CATEGORY_TABLE_NAME: productCategoryTableResource.tableName,
     PRODUCT_CATEGORY_GSI_NAME: 'productCategoriesByProductId',
@@ -424,59 +396,12 @@ const cleanupDeletedProductFunction = new lambda.Function(backend.data.stack, 'C
   },
 });
 
-// Crear una cola SQS para los reintentos
-const cleanupQueue = new sqs.Queue(backend.data.stack, 'ProductCleanupQueue', {
-  visibilityTimeout: Duration.seconds(120),
-  retentionPeriod: Duration.days(14),
-  deadLetterQueue: {
-    queue: new sqs.Queue(backend.data.stack, 'ProductCleanupDLQ'),
-    maxReceiveCount: 5,
-  },
-});
-
-// Actualizar los permisos para incluir SQS
-cleanupLambdaRole.addToPolicy(
-  new iam.PolicyStatement({
-    actions: ['sqs:SendMessage', 'sqs:ReceiveMessage', 'sqs:DeleteMessage', 'sqs:GetQueueAttributes'],
-    resources: [cleanupQueue.queueArn],
-  })
-);
-
-// Actualizar la función Lambda para incluir la URL de la cola
-cleanupDeletedProductFunction.addEnvironment('CLEANUP_QUEUE_URL', cleanupQueue.queueUrl);
 
 // Conectar la Lambda a la cola SQS
-cleanupDeletedProductFunction.addEventSource(new SqsEventSource(cleanupQueue, {
-  batchSize: 1,
+cleanupDeletedProductFunction.addEventSource(new DynamoEventSource(productTableResource, { // productTableResource es tu tabla Product
+  startingPosition: StartingPosition.LATEST,
+  batchSize: 12, 
+  bisectBatchOnError: true,
+  onFailure: new SqsDlq(productCleanupDLQ), 
+  retryAttempts: 5, 
 }));
-
-// Crear la función Lambda para iniciar el proceso de limpieza
-const triggerCleanupFunction = new lambda.Function(backend.data.stack, 'TriggerCleanupFunction', {
-  runtime: lambda.Runtime.NODEJS_18_X,
-  handler: 'index.handler',
-  code: lambda.Code.fromAsset('amplify/functions/trigger-cleanup'),
-  role: cleanupLambdaRole,
-  environment: {
-    CLEANUP_QUEUE_URL: cleanupQueue.queueUrl,
-  },
-});
-
-// Crear una API REST
-const api = new apigateway.RestApi(backend.data.stack, 'CleanupApi', {
-  deployOptions: {
-    stageName: 'api',
-  },
-  defaultCorsPreflightOptions: {
-    allowOrigins: apigateway.Cors.ALL_ORIGINS,
-    allowMethods: apigateway.Cors.ALL_METHODS,
-  },
-});
-
-// Crear el recurso y método para la API
-const productResource = api.root.addResource('cleanup-product');
-const productIdResource = productResource.addResource('{productId}');
-productIdResource.addMethod('DELETE', new apigateway.LambdaIntegration(triggerCleanupFunction));
-
-// Actualizar la función Lambda para incluir la URL de la cola y el nombre de la tabla de productos
-triggerCleanupFunction.addEnvironment('CLEANUP_QUEUE_URL', cleanupQueue.queueUrl);
-triggerCleanupFunction.addEnvironment('PRODUCT_TABLE_NAME', productTableResource.tableName);

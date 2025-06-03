@@ -1,21 +1,19 @@
 {
-  "name": "cleanup-deleted-product",
+  "name": "cleanup-deleted-product-lambda",
   "version": "1.0.0",
-  "description": "Lambda function to clean up related resources when a product is deleted",
-  "main": "index.js", 
-  "type": "module",   
+  "description": "Lambda function to clean up related data when a product is deleted.",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.812.0",
+    "@aws-sdk/lib-dynamodb": "^3.812.0",
+    "@aws-sdk/client-s3": "^3.812.0",
+    "@aws-sdk/util-dynamodb": "^3.812.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.812.0",
-    "@aws-sdk/client-s3": "^3.812.0",
-    "@aws-sdk/lib-dynamodb": "^3.812.0",
-    "@aws-sdk/util-dynamodb": "^3.812.0",
-    "@aws-sdk/client-sqs": "^3.812.0"
-  }
+  "license": "ISC"
 }
-  
