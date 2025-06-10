@@ -7,7 +7,7 @@ import * as opensearch from 'aws-cdk-lib/aws-opensearchservice';
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as osis from "aws-cdk-lib/aws-osis";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import { DynamoEventSource, SqsDlq } from 'aws-cdk-lib/aws-lambda-event-sources'; // Importa DynamoEventSource
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { RemovalPolicy, Duration } from "aws-cdk-lib";
@@ -39,7 +39,7 @@ const cfnProductCategoryTable = backend.data.resources.cfnResources.amplifyDynam
 // --- Habilitar Streams ---
 
 if (cfnProductTable) {
-  cfnProductTable.pointInTimeRecoveryEnabled = true; 
+  cfnProductTable.pointInTimeRecoveryEnabled = true;   // Esto es importante en Produccion para proteger los datos pero lo comento en desarrollo porque gernera costos 
   cfnProductTable.streamSpecification = {
     streamViewType: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES, 
   };
@@ -49,7 +49,7 @@ if (cfnProductTable) {
 }
 
 if (cfnProductCategoryTable) {
-  // cfnProductCategoryTable.pointInTimeRecoveryEnabled = true; 
+  // cfnProductCategoryTable.pointInTimeRecoveryEnabled = true;  // Esto es importante en Produccion para proteger los datos pero lo comento en desarrollo porque gernera costos 
   cfnProductCategoryTable.streamSpecification = {
     streamViewType: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES, 
   };
@@ -97,7 +97,7 @@ const denormalizeProductCategoriesFunction = new lambda.Function(backend.data.st
   handler: 'index.handler',
   code: lambda.Code.fromAsset('amplify/functions/denormalize-product-categories'), 
   role: denormalizeLambdaRole,
-  timeout: Duration.seconds(60), 
+  timeout: Duration.seconds(5), 
   environment: {
     PRODUCT_TABLE_NAME: productTableResource.tableName,
     PRODUCT_CATEGORY_TABLE_NAME: productCategoryTableResource.tableName,
@@ -108,11 +108,13 @@ const denormalizeProductCategoriesFunction = new lambda.Function(backend.data.st
 // --- Trigger: Conectar el Stream de ProductCategory a la Lambda ---
 denormalizeProductCategoriesFunction.addEventSource(new DynamoEventSource(productCategoryTableResource, {
   startingPosition: StartingPosition.LATEST, // Procesar solo eventos nuevos
-  batchSize: 100, // Ajusta según el volumen esperado
-  bisectBatchOnError: true, // Si un batch falla, reintentar con batches más pequeños
-  retryAttempts: 3, // Reintentos
+  batchSize: 6,
+  maxBatchingWindow: Duration.seconds(2),
+  bisectBatchOnError: true, 
+  retryAttempts: 2, 
 }));
-
+ 
+  
 
 
 // --- Configuración de OpenSearch ---
@@ -146,9 +148,10 @@ const s3BucketArn = backend.storage.resources.bucket.bucketArn;
 // Get the S3Bucket Name
 const s3BucketName = backend.storage.resources.bucket.bucketName;
 
-const productCleanupDLQ = new sqs.Queue(backend.data.stack, 'ProductCleanupDLQ', {
-  retentionPeriod: Duration.days(14),
-});
+// TODO: Descomentar para Prod y generar mecanismo para leer los mensajes fallidos de la DQL
+// const productCleanupDLQ = new sqs.Queue(backend.data.stack, 'ProductCleanupDLQ', {
+//   retentionPeriod: Duration.days(14),
+// });
 
 
 
@@ -328,18 +331,36 @@ if (!/^[a-z]/.test(uniquePipelineName)) {
 }
 uniquePipelineName = uniquePipelineName.substring(0, 28); 
 
-// En lugar de crear un grupo de logs personalizado, vamos a dejar que AWS OSIS cree uno automáticamente
+
+const pipelineLogGroup = new logs.LogGroup(
+    backend.data.stack,
+    'OpenSearchIntegrationPipelineLogGroup',
+    {
+        logGroupName: `/aws/vendedlogs/OpenSearchIngestion/${uniquePipelineName}`,
+        removalPolicy: RemovalPolicy.DESTROY, // Se elimina al destruir el stack (ideal para desarrollo)
+    }
+);
+
+
 const cfnPipeline = new osis.CfnPipeline(
   backend.data.stack,
   "OpenSearchIntegrationPipeline",
   {
-    maxUnits: 5,
+    maxUnits: 1, // Aumentar a 5 para produccion 
     minUnits: 1,
     pipelineConfigurationBody: openSearchTemplate,
     pipelineName: uniquePipelineName, 
+    logPublishingOptions: {
+      cloudWatchLogDestination: {
+        logGroup: pipelineLogGroup.logGroupName,
+      },
+      isLoggingEnabled: true,
+    },
   }
 );
 
+cfnPipeline.addDependency(openSearchIntegrationPipelineRole.node.defaultChild as iam.CfnRole);
+cfnPipeline.addDependency(pipelineLogGroup.node.defaultChild as logs.CfnLogGroup);
 
 // Add OpenSearch data source 
 const osDataSource = backend.data.addOpenSearchDataSource(
@@ -388,7 +409,7 @@ const cleanupDeletedProductFunction = new lambda.Function(backend.data.stack, 'C
   handler: 'index.handler',
   code: lambda.Code.fromAsset('amplify/functions/cleanup-deleted-product'), 
   role: cleanupLambdaRole,
-  timeout: Duration.seconds(90),
+  timeout: Duration.seconds(5),
   environment: {
     PRODUCT_CATEGORY_TABLE_NAME: productCategoryTableResource.tableName,
     PRODUCT_CATEGORY_GSI_NAME: 'productCategoriesByProductId',
@@ -400,8 +421,16 @@ const cleanupDeletedProductFunction = new lambda.Function(backend.data.stack, 'C
 // Conectar la Lambda a la cola SQS
 cleanupDeletedProductFunction.addEventSource(new DynamoEventSource(productTableResource, { // productTableResource es tu tabla Product
   startingPosition: StartingPosition.LATEST,
-  batchSize: 12, 
+  batchSize: 5, 
   bisectBatchOnError: true,
-  onFailure: new SqsDlq(productCleanupDLQ), 
-  retryAttempts: 5, 
+  // onFailure: new SqsDlq(productCleanupDLQ), // TODO: Descomentar para Prod y generar mecanismo para leer los mensajes fallidos de la DQL
+  retryAttempts: 2, 
+  maxBatchingWindow: Duration.seconds(2),
+  filters: [
+  {
+    pattern: JSON.stringify({
+      eventName: ["REMOVE"]
+    })
+  }
+]
 }));
