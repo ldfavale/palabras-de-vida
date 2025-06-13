@@ -16,7 +16,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, placeholder, error, regi
   return (
     <div>
       <label className="block text-gray-700 font-semibold font-gilroy">{label}</label>
-      {type === "text" &&
+      {type !== "textarea" &&
         <input
             {...register}
             placeholder={placeholder}

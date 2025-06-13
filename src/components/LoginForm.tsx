@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { StyledInput } from './StyledInput';  
 
 const loginSchema = yup.object().shape({
@@ -67,7 +67,6 @@ export const LoginForm: React.FC = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} toastOptions={{ duration: 5000 }} />
       <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden border-t-4 border-[#E4C97A] md:max-w-lg">
         <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
           <h2 className="text-center text-3xl font-semibold text-gray-800">
@@ -124,7 +123,8 @@ export const LoginForm: React.FC = () => {
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
-            <p className="text-gray-600">
+            {/* TODO: Implementar registro de usuarios compradores  */}
+            {/* <p className="text-gray-600">
               ¿No tienes cuenta?{' '}
               <Link // Usar Link para navegación interna
                 to="/signup" 
@@ -132,7 +132,7 @@ export const LoginForm: React.FC = () => {
               >
                 Regístrate Aquí
               </Link>
-            </p>
+            </p> */}
           </div>
         </form>
       </div>

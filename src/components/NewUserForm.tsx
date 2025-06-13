@@ -1,12 +1,11 @@
 import React from 'react'; // No necesitamos useState para apiError si usamos toast
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import type { SignUpInput } from 'aws-amplify/auth';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import toast from 'react-hot-toast';
-import { StyledInput } from './StyledInput';
+import InputField from './InputField';
 
 const signUpSchema = yup.object().shape({
   username: yup.string()
@@ -26,9 +25,9 @@ type SignUpFormData = yup.InferType<typeof signUpSchema>;
 
 
 
-export const SignUpForm: React.FC = () => {
+export const NewUserForm: React.FC = () => {
   const { signUpUser } = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const {
     register,
@@ -51,7 +50,7 @@ export const SignUpForm: React.FC = () => {
     try {
       await signUpUser(signUpInput);
       toast.success('¡Cuenta creada! Revisa tu email para confirmar.');
-      navigate(`/confirm-signup?username=${encodeURIComponent(data.username)}`);
+      // navigate(`/users/confirm-new-user?username=${encodeURIComponent(data.username)}`);
       reset();
     } catch (err: any) {
       console.error("Error en SignUp:", err);
@@ -72,31 +71,32 @@ export const SignUpForm: React.FC = () => {
 
   return (
     <>
-      {/* Contenedor del formulario (Card) */}
-      <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden border-t-4 border-[#E4C97A] md:max-w-lg">
         <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
-          <h2 className="text-center text-3xl font-semibold text-gray-800">
-            Crear Nueva Cuenta
-          </h2>
+         
+          
+           <InputField 
+                type="email" 
+                label="Email" 
+                placeholder="Tu nombre de usuario único"
+                register={register("username")}
+                error={errors.username?.message}
+              />
 
-          <StyledInput
-            id="signup-username"
-            label="Email"
-            registration={register("username")}
-            error={errors.username?.message}
-            placeholder="tu@dominio.com"
-            autoComplete="username"
-          />
+          {/* <InputField
+            label="Correo Electrónico"
+            type="email"
+            register={register("email")}
+            error={errors.email?.message}
+            placeholder="tu@email.com"
+          /> */}
           
           <div>
-            <StyledInput
-              id="signup-password"
+            <InputField
               label="Contraseña"
               type="password"
-              registration={register("password")}
+              register={register("password")}
               error={errors.password?.message}
               placeholder="Crea una contraseña segura"
-              autoComplete="new-password"
               aria-describedby="password-requirements"
             />
             {/* Información sobre los requisitos de la contraseña */}
@@ -124,25 +124,12 @@ export const SignUpForm: React.FC = () => {
                   Registrando...
                 </>
               ) : (
-                'Crear Cuenta'
+                'Crear Usuario'
               )}
             </button>
           </div>
-
-          {/* Enlace a Login */}
-          <div className="text-sm text-center">
-            <p className="text-gray-600">
-              ¿Ya tienes una cuenta?{' '}
-              <a 
-                href="/login" // Considerar usar Link de react-router-dom si es navegación interna
-                className="font-medium text-[#C0A961] hover:text-[#E4C97A] hover:underline focus:outline-none focus:underline"
-              >
-                Inicia Sesión Aquí
-              </a>
-            </p>
-          </div>
         </form>
-      </div>
+      
     </>
   );
 };

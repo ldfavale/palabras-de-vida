@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/images/icon.png'; // Asumiendo que tu configuración de TS/Vite maneja imágenes
-import { SignOutButton } from '../components/SignOutButton';
+import { useAuth } from '../hooks/useAuth';
+import { UserDropdownMenu } from '../components/UserDropdownMenu';
+import { ArrowLeftEndOnRectangleIcon, ArrowLeftStartOnRectangleIcon, ArrowRightOnRectangleIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'
 
 // import TabMenu from '../components/TabMenu';
 
@@ -52,6 +54,7 @@ const checkScrollPosition =  () => {
 window.addEventListener("scroll", checkScrollPosition);
 
 //  TODO: Create component for burger menu 
+const { isAuthenticated } = useAuth();
 
 const dismissMenu = () => {
   setMenuButtonClicked(false)
@@ -107,7 +110,19 @@ const onClickSearchButton = () => {
               </li>
            </ul>
           </nav>
-          <SignOutButton  />
+           {isAuthenticated && (
+          <UserDropdownMenu className="ml-4" />
+           )}
+      
+      {!isAuthenticated && (
+        <Link 
+          to="/login" 
+          className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-primary   hover:bg-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#E4C97A] focus:ring-offset-2 "
+          aria-label="Iniciar Sesión"
+        >
+          <ArrowLeftEndOnRectangleIcon className="w-5 h-5 text-primary hover:text-white font-bold" />
+      </Link>
+      )}
         </div>
 
           {/* MOBILE MENU */}

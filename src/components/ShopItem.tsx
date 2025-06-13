@@ -4,6 +4,7 @@ import type { ProductFromSearch } from '../services/dataService';
 import { LAYOUT_STYLE_ITEM_GRID } from '../constants/filters';
 import clsx from 'clsx';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { useAuth } from '../hooks/useAuth';
 
 interface ShopItemProps {
     product: ProductFromSearch;
@@ -14,6 +15,7 @@ interface ShopItemProps {
   }
   
 function ShopItem({product, layout,onDeleteRequest, deleteDisabled}:ShopItemProps) {
+    const { isAuthenticated } = useAuth();
     const images = product.images ? product.images.filter(Boolean) as string[] : [];
     const displayTitle = product.highlight?.title?.length
         ? product.highlight.title.join(' ... ') // Si hay múltiples fragmentos, únelos o toma el primero
@@ -66,12 +68,15 @@ function ShopItem({product, layout,onDeleteRequest, deleteDisabled}:ShopItemProp
                             ? "-mt-6 "
                             : "relative -mt-10 -top-10 -right-4  "
                         )}>
-                <button 
-                 disabled={deleteDisabled}
-                 onClick={handleDeleteClick}
-                className='rounded-full bg-red-400 border  border-white p-2 z-10 hover:[box-shadow:0_4px_0_rgba(0,0,0,0.15)] transition-all duration-150 ease-in-out'>
-                    <TrashIcon className='w-6 h-6 text-white'/>
-                </button>
+                           {isAuthenticated && (
+                              <button 
+                                disabled={deleteDisabled}
+                                onClick={handleDeleteClick}
+                                className='rounded-full bg-red-400 border  border-white p-2 z-10 hover:[box-shadow:0_4px_0_rgba(0,0,0,0.15)] transition-all duration-150 ease-in-out'>
+                                    <TrashIcon className='w-6 h-6 text-white'/>
+                              </button>
+                                     )}
+                
                 <div className='rounded-full bg-primary border  border-white p-2 z-10 hover:[box-shadow:0_4px_0_rgba(0,0,0,0.15)] transition-all duration-150 ease-in-out'>
                     <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5"/>

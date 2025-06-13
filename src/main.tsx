@@ -28,6 +28,8 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 // --- COMPONENTE PROTECTEDROUTE ---
 import { ProtectedRoute } from './components/ProtectedRoute'; // Asegúrate que la ruta es correcta
 import { Toaster } from 'react-hot-toast';
+import NewUserPage from './pages/NewUserPage';
+import { ConfirmNewUserPage } from './pages/ConfirmNewUserPage';
 
 // Configura Amplify
 Amplify.configure(outputs);
@@ -91,7 +93,6 @@ const router = createBrowserRouter([
       },
       {
         // --- ¡RUTA PROTEGIDA! ---
-        // Envolvemos el elemento de la página con ProtectedRoute
         path: "products/new",
         element: (
           <ProtectedRoute>
@@ -99,34 +100,54 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      // Puedes añadir aquí otras rutas que necesiten el Layout principal
+      {
+    path: "/users/new",
+    element: <ProtectedRoute>
+                 <NewUserPage />
+            </ProtectedRoute>,
+  },
+      {
+    path: "/users/confirm-new-user",
+    element: <ProtectedRoute>
+                 <ConfirmNewUserPage />
+            </ProtectedRoute>,
+  },{
+    path: "/users/forgot-password",
+    element: <ProtectedRoute><ForgotPasswordPage /></ProtectedRoute>,
+  },
+  {
+    // Esta ruta maneja la confirmación del reseteo
+    path: "/users/reset-password",
+    element: <ProtectedRoute>
+          <ResetPasswordPage />
+      </ProtectedRoute>,
+  },
     ]
   },
   // --- RUTAS DE AUTENTICACIÓN (SIN Layout Principal) ---
-  // Estas rutas se definen fuera del objeto de Layout para que no
-  // tengan el Header/Footer estándar, lo cual es común para páginas de auth.
   {
     path: "/login",
     element: <LoginPage />,
   },
-  {
-    path: "/signup",
-    element: <SignUpPage />,
-  },
-  {
-    // Esta ruta recibe el código de confirmación
-    path: "/confirm-signup",
-    element: <ConfirmSignUpPage />,
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPasswordPage />,
-  },
-  {
-    // Esta ruta maneja la confirmación del reseteo
-    path: "/reset-password",
-    element: <ResetPasswordPage />,
-  },
+  // TODO: Implementar cuando los usuarios puedan registrarse ellos mismos 
+  // {
+  //   path: "/signup",
+  //   element: <SignUpPage />,
+  // },
+  // {
+  //   // Esta ruta recibe el código de confirmación
+  //   path: "/confirm-signup",
+  //   element: <ConfirmSignUpPage />,
+  // },
+  // {
+  //   path: "/forgot-password",
+  //   element: <ForgotPasswordPage />,
+  // },
+  // {
+  //   // Esta ruta maneja la confirmación del reseteo
+  //   path: "/reset-password",
+  //   element: <ResetPasswordPage />,
+  // },
   // Considera añadir una ruta comodín para páginas no encontradas (404)
   // { path: "*", element: <NotFoundPage /> }
 ]);

@@ -1,13 +1,15 @@
+// amplify/auth/resource.ts
+import { defineAuth, defineFunction } from '@aws-amplify/backend';
 
-import { defineAuth } from '@aws-amplify/backend';
+const customMessageTrigger = defineFunction({
+  entry: './handler.ts',
+});
 
-
-/**
- * Define and configure your auth resource
- * @see https://docs.amplify.aws/gen2/build-a-backend/auth
- */
 export const auth = defineAuth({
   loginWith: {
     email: true,
+  },
+  triggers: {
+    customMessage: customMessageTrigger,
   },
 });
