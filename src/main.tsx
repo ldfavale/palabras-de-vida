@@ -30,6 +30,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'; // Asegúrate que 
 import { Toaster } from 'react-hot-toast';
 import NewUserPage from './pages/NewUserPage';
 import { ConfirmNewUserPage } from './pages/ConfirmNewUserPage';
+import  ProductPage  from './pages/ProductPage';
 
 // Configura Amplify
 Amplify.configure(outputs);
@@ -97,6 +98,15 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CreateProductPage/>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        // --- ¡RUTA PROTEGIDA! ---
+        path: "product/:id",
+        element: (
+          <ProtectedRoute>
+            <ProductPage/>
           </ProtectedRoute>
         ),
       },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import fetchProducts, { type ProductWithCategories } from "../services/dataService";
+import { fetchProducts, type ProductWithCategories } from "../services/dataService";
 
 interface UseProductsResult {
   products: ProductWithCategories[];

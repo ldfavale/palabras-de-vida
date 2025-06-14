@@ -99,6 +99,30 @@ export const fetchProducts = async (): Promise<FetchProductsResponse> => {
   }
 };
 
+interface GetProductResponse {
+  data: ProductWithCategories | null;
+  errors?: any;
+}
+
+export async function fetchProductById(productId: string): Promise<GetProductResponse> {
+  try {
+    // Reemplaza esta URL con tu endpoint real
+    const response = await client.models.Product.get({id: productId},{ selectionSet});
+    console.log("Response from fetchProductById:", response)
+
+   
+    return { data: response.data };
+  
+
+  } catch (error) {
+    console.error('Error fetching product by ID:', error);
+    return {
+      data: null,
+      errors: [error instanceof Error ? error.message : 'Unknown error occurred']
+    };
+  }
+}
+
 export const searchProducts = async ({
   searchTerm,
   categoryIds,
