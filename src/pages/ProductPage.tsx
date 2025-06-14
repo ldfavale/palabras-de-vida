@@ -101,7 +101,7 @@ function ProductPage() {
   return (
     <div>
       {/* Navigation breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4 py-4 pt-32">
+      <div className="max-w-7xl mx-auto px-4 py-4 pt-36 ">
         <Link 
           to="/tienda" 
           className="inline-flex items-center gap-2 text-primary hover:text-primary_light transition-colors"

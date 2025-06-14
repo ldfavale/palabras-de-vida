@@ -46,7 +46,7 @@ function ProductDetail({ product }: ProductDetailProps) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 mb-10">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         
         {/* Left Column - Images (3/5 of the width) */}
