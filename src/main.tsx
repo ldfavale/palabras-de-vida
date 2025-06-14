@@ -105,9 +105,7 @@ const router = createBrowserRouter([
         // --- ¡RUTA PROTEGIDA! ---
         path: "product/:id",
         element: (
-          <ProtectedRoute>
             <ProductPage/>
-          </ProtectedRoute>
         ),
       },
       {
