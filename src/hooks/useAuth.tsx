@@ -9,9 +9,9 @@ import {
   confirmResetPassword,
   getCurrentUser,
   fetchUserAttributes,
+  confirmSignIn, // Agregamos confirmSignIn para el challenge
   
-  // Importa los tipos necesarios de Amplify
-  type AuthUser as AmplifyAuthUser, // Renombrado para evitar colisión
+  type AuthUser as AmplifyAuthUser,
   type SignUpInput,
   type ConfirmSignUpInput,
   type ResetPasswordInput,
@@ -19,8 +19,6 @@ import {
   resendSignUpCode,
 } from 'aws-amplify/auth';
 
-// Tipo específico para el usuario que manejaremos en nuestro estado
-// Puedes ajustar esto según los atributos que realmente necesites
 type AppUser = {
   userId: string;
   username: string;
@@ -31,17 +29,31 @@ interface AuthState {
   user: AppUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  authChallenge: AuthChallenge | null;
+  challengeUsername: string | null;
 }
 
-// Interfaz para lo que retorna nuestro hook, ahora más completa
+// Tipos para manejar diferentes estados de autenticación
+type AuthChallenge = 'NEW_PASSWORD_REQUIRED' | 'MFA_REQUIRED' | 'SOFTWARE_TOKEN_MFA';
+
+interface SignInResult {
+  success: boolean;
+  challenge?: AuthChallenge;
+  username?: string;
+}
+
 interface UseAuthReturn extends AuthState {
-  signInUser: (username: string, password: string) => Promise<void>; // Retorna el usuario de Amplify
+  signInUser: (username: string, password: string) => Promise<SignInResult>;
   signOutUser: () => Promise<void>;
-  signUpUser: (input: SignUpInput) => Promise<void>; // Recibe el objeto de input de Amplify
+  signUpUser: (input: SignUpInput) => Promise<void>;
   confirmSignUpUser: (input: ConfirmSignUpInput) => Promise<void>;
   requestPasswordReset: (username: string) => Promise<void>;
   confirmPasswordReset: (input: ConfirmResetPasswordInput) => Promise<void>;
   resendConfirmationCode: (username: string) => Promise<void>;
+  completeNewPasswordChallenge: (newPassword: string) => Promise<SignInResult>;
+  // Estados adicionales para mejor UX
+  authChallenge: AuthChallenge | null;
+  challengeUsername: string | null;
 }
 
 export const useAuth = (): UseAuthReturn => {
@@ -49,44 +61,62 @@ export const useAuth = (): UseAuthReturn => {
     user: null,
     isAuthenticated: false,
     isLoading: true,
+    authChallenge: null,
+    challengeUsername: null,
   });
 
-  const checkUser = useCallback(async (): Promise<AppUser | null> => { // Hacemos que retorne el usuario o null
-    console.log("Checking user..."); // Log para depuración
+  const checkUser = useCallback(async (): Promise<AppUser | null> => {
+    console.log("Checking user...");
     setAuthState(prev => ({ ...prev, isLoading: true }));
     try {
       const cognitoUser = await getCurrentUser();
       const attributes = await fetchUserAttributes();
-      const appUser: AppUser = { userId: cognitoUser.userId, username: cognitoUser.username, attributes };
+      const appUser: AppUser = { 
+        userId: cognitoUser.userId, 
+        username: cognitoUser.username, 
+        attributes 
+      };
       setAuthState({
         user: appUser,
         isAuthenticated: true,
         isLoading: false,
+        authChallenge: null,
+        challengeUsername: null,
       });
       console.log("User found:", appUser);
       return appUser;
     } catch (error) {
       console.log("No user found or error:", error);
-      setAuthState({ user: null, isAuthenticated: false, isLoading: false });
+      setAuthState({ 
+        user: null, 
+        isAuthenticated: false, 
+        isLoading: false, 
+        authChallenge: null, 
+        challengeUsername: null 
+      });
       return null;
     }
   }, []);
 
   useEffect(() => {
     const hubListenerCancel = Hub.listen('auth', ({ payload }) => {
-      console.log("Auth Hub event:", payload.event); // Log para depuración
+      console.log("Auth Hub event:", payload.event);
       switch (payload.event) {
         case 'signedIn':
           checkUser();
           break;
         case 'signedOut':
-          setAuthState({ user: null, isAuthenticated: false, isLoading: false });
+          setAuthState({ 
+            user: null, 
+            isAuthenticated: false, 
+            isLoading: false, 
+            authChallenge: null, 
+            challengeUsername: null 
+          });
           break;
-        // Podrías añadir manejo para otros eventos si es necesario
       }
     });
 
-    // Verificar estado inicial
     checkUser();
 
     return () => {
@@ -94,22 +124,69 @@ export const useAuth = (): UseAuthReturn => {
     };
   }, [checkUser]);
 
-  // --- Funciones de Autenticación ---
-
-  const signInUser = useCallback(async (username: string, password: string) => {
+  // Función de signIn mejorada con mejor manejo de challenges
+  const signInUser = useCallback(async (username: string, password: string): Promise<SignInResult> => {
     try {
-      await signIn({ username, password });
-      // El Hub se encargará de actualizar el estado
+      const result = await signIn({ username, password });
+      
+      // Verificar si hay un challenge pendiente
+      if (result.nextStep) {
+        const { signInStep } = result.nextStep;
+        
+        if (signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
+          // Actualizar estado del challenge
+          setAuthState(prev => ({
+            ...prev,
+            authChallenge: 'NEW_PASSWORD_REQUIRED',
+            challengeUsername: username,
+          }));
+          
+          return {
+            success: false,
+            challenge: 'NEW_PASSWORD_REQUIRED',
+            username
+          };
+        }
+        
+        // Agregar otros challenges futuros aquí
+        console.log("Unhandled challenge:", signInStep);
+        throw new Error(`Challenge no soportado: ${signInStep}`);
+      }
+      
+      // Login exitoso sin challenges
+      return { success: true };
     } catch (error) {
       console.error("Error signing in:", error);
-      throw error; // Re-lanzamos para manejar en el componente
+      throw error;
+    }
+  }, []);
+
+  // Función mejorada para completar el challenge
+  const completeNewPasswordChallenge = useCallback(async (newPassword: string): Promise<SignInResult> => {
+    try {
+      const result = await confirmSignIn({
+        challengeResponse: newPassword
+      });
+      
+      // Limpiar el estado del challenge
+      setAuthState(prev => ({
+        ...prev,
+        authChallenge: null,
+        challengeUsername: null,
+      }));
+      
+      console.log("Password challenge completed successfully");
+      return { success: true };
+      
+    } catch (error) {
+      console.error("Error completing new password challenge:", error);
+      throw error;
     }
   }, []);
 
   const signOutUser = useCallback(async () => {
     try {
       await signOut();
-      // El Hub actualizará el estado
     } catch (error) {
       console.error("Error signing out:", error);
       throw error;
@@ -118,10 +195,8 @@ export const useAuth = (): UseAuthReturn => {
 
   const signUpUser = useCallback(async (input: SignUpInput) => {
     try {
-      // No necesitamos devolver nada explícitamente, pero podrías si Amplify lo hace
       await signUp(input);
       console.log("Sign up successful, verification needed.");
-      // Aquí no actualizamos el estado 'isAuthenticated', el usuario debe confirmar
     } catch (error) {
       console.error("Error signing up:", error);
       throw error;
@@ -132,7 +207,6 @@ export const useAuth = (): UseAuthReturn => {
     try {
       await confirmSignUp(input);
       console.log("Sign up confirmed successfully.");
-      // Podrías intentar hacer signIn automáticamente aquí o redirigir a login
     } catch (error) {
       console.error("Error confirming sign up:", error);
       throw error;
@@ -153,7 +227,6 @@ export const useAuth = (): UseAuthReturn => {
     try {
       await confirmResetPassword(input);
       console.log("Password reset successfully.");
-      // Aquí podrías redirigir al login
     } catch (error) {
       console.error("Error confirming password reset:", error);
       throw error;
@@ -162,15 +235,13 @@ export const useAuth = (): UseAuthReturn => {
 
   const resendConfirmationCode = useCallback(async (username: string) => {
     try {
-      await resendSignUpCode({ username }); // Llama a la función de Amplify
+      await resendSignUpCode({ username });
       console.log("Resend sign up code successful.");
-      // No retornamos nada, el componente manejará el mensaje de éxito
     } catch (error) {
       console.error("Error resending sign up code:", error);
-      throw error; // Re-lanzar para que el componente lo maneje
+      throw error;
     }
   }, []);
-
 
   return {
     ...authState,
@@ -180,6 +251,10 @@ export const useAuth = (): UseAuthReturn => {
     confirmSignUpUser,
     requestPasswordReset,
     confirmPasswordReset,
-    resendConfirmationCode
+    resendConfirmationCode,
+    completeNewPasswordChallenge,
+    // Exposer estados de challenge para mejor UX
+    authChallenge: authState.authChallenge,
+    challengeUsername: authState.challengeUsername,
   };
 };

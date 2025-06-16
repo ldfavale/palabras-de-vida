@@ -59,7 +59,7 @@ export const ConfirmNewUserForm: React.FC = () => {
     try {
       await confirmSignUpUser({ username: data.username, confirmationCode: data.confirmationCode });
       toast.success('¡Cuenta confirmada exitosamente!');
-      // navigate('/login?confirmed=true', { replace: true });
+      navigate('/login?confirmed=true', { replace: true });
     } catch (err: any) {
       console.error("Error al confirmar:", err);
       if (err.name === 'CodeMismatchException') {

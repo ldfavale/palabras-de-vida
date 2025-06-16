@@ -18,12 +18,12 @@ const signUpSchema = yup.object().shape({
     .matches(/[A-Z]/, "Debe incluir al menos una letra mayúscula.")
     .matches(/[0-9]/, "Debe incluir al menos un número.")
     .matches(/[\^$*.$$$${}()?\-"!@#%&/\\,><':;|_~`+=]/, "Debe incluir al menos un símbolo (ej: @, #, $)."),
+  confirmPassword: yup.string()
+    .required("La confirmación de contraseña es obligatoria.")
+    .oneOf([yup.ref('password')], "Las contraseñas no coinciden.")
 });
 
 type SignUpFormData = yup.InferType<typeof signUpSchema>;
-
-
-
 
 export const NewUserForm: React.FC = () => {
   const { signUpUser } = useAuth();
@@ -34,11 +34,15 @@ export const NewUserForm: React.FC = () => {
     handleSubmit,
     setError: setFormError,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>({
     resolver: yupResolver(signUpSchema),
     mode: "onTouched", 
   });
+
+  // Observar el valor de la contraseña para mostrar información relevante
+  const passwordValue = watch("password");
 
   const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
     const signUpInput: SignUpInput = {
@@ -103,6 +107,24 @@ export const NewUserForm: React.FC = () => {
             {!errors.password && ( 
                  <p id="password-requirements" className="mt-2 text-xs text-gray-500">
                     Debe tener 8+ caracteres, incluir mayúsculas, minúsculas, números y símbolos.
+                 </p>
+            )}
+          </div>
+
+          {/* Campo de confirmación de contraseña */}
+          <div>
+            <InputField
+              label="Confirmar Contraseña"
+              type="password"
+              register={register("confirmPassword")}
+              error={errors.confirmPassword?.message}
+              placeholder="Confirma tu contraseña"
+              aria-describedby="confirm-password-help"
+            />
+            {/* Mostrar ayuda visual cuando hay una contraseña ingresada pero no hay error */}
+            {passwordValue && !errors.confirmPassword && ( 
+                 <p id="confirm-password-help" className="mt-2 text-xs text-gray-500">
+                    Ingresa la misma contraseña para confirmar.
                  </p>
             )}
           </div>

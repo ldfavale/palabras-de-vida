@@ -11,6 +11,8 @@ import { ProductRequestData } from "../services/dataService";
 import useCreateCategory from "../hooks/useCreateCategory";
 import LoadingIndicator  from "./LoadingIndicator";
 import toast from "react-hot-toast";
+import TextareaField from "./TextAreaField";
+import SimpleInputField from "./SimpleInputField";
 
 export const productSchema = yup.object().shape({
   title: yup.string().required("El título es obligatorio"),
@@ -96,6 +98,24 @@ export default function ProductForm() {
       setPreviewImages(previews);
     }
   };
+
+  const handleCreateCategory = async () => {
+    if (newCategory.trim()) {
+      try {
+        await createCategory({name: newCategory});
+        console.log("New category created:", newCategory);
+        toast.success("Categoría creada exitosamente");
+        setNewCategory("");
+        
+      } catch (error) {
+        console.error("Error creating category:", error);
+        toast.error("Error al crear la categoría");
+        return;
+      }
+    }
+  }
+
+
   return (
 <>
       <form
@@ -135,8 +155,9 @@ export default function ProductForm() {
         />
 
         {/* Description */}
-        <InputField 
-          type="textarea" 
+        <TextareaField 
+          rows={4}
+          resize="vertical"
           label="Descripción" 
           placeholder="Ingrese la descripción del producto..." 
           register={register("description")}
@@ -160,27 +181,19 @@ export default function ProductForm() {
         {/* Nueva categoría */}
         <div className="flex items-center gap-2">
           <div className="flex-1">
-            <InputField
+            <SimpleInputField
               type="text"
               label="Nueva categoría"
               placeholder="Ingrese una nueva categoría..."
-              register={{
-                value: newCategory,
-                onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-                  setNewCategory(e.target.value),
-              }}
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
               error={undefined}
             />
           </div>
           <button
             type="button"
-            onClick={async () => {
-              if (newCategory.trim()) {
-                await createCategory({name: newCategory});
-                console.log("New category created:", newCategory);
-                setNewCategory("");
-              }
-            }}
+            onClick={handleCreateCategory}
+            disabled={loadingCategory}
             className="p-[14px] mb-[2px] bg-primary text-white rounded flex self-end "
           >
             <PlusIcon className="w-5 h-5" />

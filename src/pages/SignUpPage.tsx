@@ -1,5 +1,5 @@
 import React from 'react';
-import { SignUpForm } from '../components/SignUpForm'; // Ajusta la ruta si es necesario
+import SignUpForm  from '../components/SignUpForm'; // Ajusta la ruta si es necesario
 
 const SignUpPage: React.FC = () => {
   return (

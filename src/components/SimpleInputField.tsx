@@ -1,10 +1,8 @@
 import React from "react";
-import { UseFormRegisterReturn } from "react-hook-form";
 
-interface InputFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'required'> {
+interface SimpleInputFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'required'> {
   label: string;
   error?: string;
-  register: UseFormRegisterReturn;
   type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local';
   containerClassName?: string;
   labelClassName?: string;
@@ -19,24 +17,26 @@ const styles = {
   error: "text-sm text-red-500 mt-1"
 } as const;
 
-const InputField: React.FC<InputFieldProps> = ({ 
+const SimpleInputField: React.FC<SimpleInputFieldProps> = ({ 
   label, 
   error, 
-  register, 
   type = "text",
   containerClassName = "",
   labelClassName = "",
   errorClassName = "",
   className = "",
   required = false,
+  id,
   ...inputProps 
 }) => {
+  // Generar ID único si no se proporciona
+  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
   const inputClassName = `${styles.input} ${className}`.trim();
 
   return (
     <div className={`${styles.container} ${containerClassName}`.trim()}>
       <label 
-        htmlFor={register.name}
+        htmlFor={inputId}
         className={`${styles.label} ${labelClassName}`.trim()}
       >
         {label}
@@ -44,19 +44,18 @@ const InputField: React.FC<InputFieldProps> = ({
       </label>
       
       <input
-        {...register}
         {...inputProps}
         type={type}
-        id={register.name}
+        id={inputId}
         className={inputClassName}
         aria-invalid={!!error}
-        aria-describedby={error ? `${register.name}-error` : undefined}
+        aria-describedby={error ? `${inputId}-error` : undefined}
         required={required}
       />
       
       {error && (
         <span 
-          id={`${register.name}-error`}
+          id={`${inputId}-error`}
           className={`${styles.error} ${errorClassName}`.trim()}
           role="alert"
         >
@@ -67,4 +66,4 @@ const InputField: React.FC<InputFieldProps> = ({
   );
 };
 
-export default InputField;
+export default SimpleInputField;
