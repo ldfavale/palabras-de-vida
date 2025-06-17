@@ -8,6 +8,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as osis from "aws-cdk-lib/aws-osis";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
+import * as custom_resources from 'aws-cdk-lib/custom-resources';
 import { DynamoEventSource, SqsDlq } from 'aws-cdk-lib/aws-lambda-event-sources'; // Importa DynamoEventSource
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { RemovalPolicy, Duration } from "aws-cdk-lib";
@@ -39,7 +40,7 @@ const cfnProductCategoryTable = backend.data.resources.cfnResources.amplifyDynam
 // --- Habilitar Streams ---
 
 if (cfnProductTable) {
-  cfnProductTable.pointInTimeRecoveryEnabled = true;   // Esto es importante en Produccion para proteger los datos pero lo comento en desarrollo porque gernera costos 
+  //cfnProductTable.pointInTimeRecoveryEnabled = true;  
   cfnProductTable.streamSpecification = {
     streamViewType: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES, 
   };
@@ -47,6 +48,33 @@ if (cfnProductTable) {
 } else {
   console.error("ERROR: No se encontró CfnTable para 'Product'. El Stream no se pudo habilitar.");
 }
+
+// --- Custom Resource para habilitar PITR después de la creación ---
+const enablePITR = new custom_resources.AwsCustomResource(
+  backend.data.stack,
+  'EnablePITRForProductTable',
+  {
+    policy: custom_resources.AwsCustomResourcePolicy.fromSdkCalls({
+      resources: [productTableResource.tableArn],
+    }),
+    onCreate: {
+      service: 'DynamoDB',
+      action: 'updateContinuousBackups',
+      parameters: {
+        TableName: productTableResource.tableName,
+        PointInTimeRecoverySpecification: {
+          PointInTimeRecoveryEnabled: true,
+        },
+      },
+      physicalResourceId: custom_resources.PhysicalResourceId.of(
+        `EnablePITR-${productTableResource.tableName}`
+      ),
+    },
+  }
+);
+
+enablePITR.node.addDependency(productTableResource);
+
 
 if (cfnProductCategoryTable) {
   // cfnProductCategoryTable.pointInTimeRecoveryEnabled = true;  // Esto es importante en Produccion para proteger los datos pero lo comento en desarrollo porque gernera costos 
