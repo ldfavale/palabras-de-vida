@@ -31,7 +31,7 @@ export default function ProductForm() {
 
   const { loading, error, success, create} = useCreateProduct();
   const { loading: loadingCategory, error: errorCategory, success: successCategory, create: createCategory } = useCreateCategory();
-  const { loading: categoriesLoading, error: categoriesError, categories } = useGetCategories();
+  const { loading: categoriesLoading, error: categoriesError, categories, refetch: refetchCategories } = useGetCategories();
   const [selectedCategories, setSelectedCategories] = useState<{ value: string; label: string }[]>([]);
   const [newCategory, setNewCategory] = useState<string>("");
   const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -106,6 +106,7 @@ export default function ProductForm() {
         console.log("New category created:", newCategory);
         toast.success("Categoría creada exitosamente");
         setNewCategory("");
+        refetchCategories();
         
       } catch (error) {
         console.error("Error creating category:", error);
