@@ -146,14 +146,21 @@ export const useAuth = (): UseAuthReturn => {
             challenge: 'NEW_PASSWORD_REQUIRED',
             username
           };
+          
         }
         
-        // Agregar otros challenges futuros aquí
+        if (signInStep === 'DONE') {
+          return {
+            success: true,
+            username
+          };
+        }
+
         console.log("Unhandled challenge:", signInStep);
         throw new Error(`Challenge no soportado: ${signInStep}`);
       }
       
-      // Login exitoso sin challenges
+      
       return { success: true };
     } catch (error) {
       console.error("Error signing in:", error);
