@@ -82,6 +82,9 @@ export const LoginForm: React.FC = () => {
       />
     );
   }
+  if (authChallenge === 'MFA_REQUIRED' && challengeUsername) {
+    navigate(`/confirm-signup?username=${challengeUsername}`);
+  }
 
   return (
     <>

@@ -128,10 +128,9 @@ export const useAuth = (): UseAuthReturn => {
   const signInUser = useCallback(async (username: string, password: string): Promise<SignInResult> => {
     try {
       const result = await signIn({ username, password });
-      
       // Verificar si hay un challenge pendiente
       if (result.nextStep) {
-        const { signInStep } = result.nextStep;
+        const { signInStep } = result.nextStep; 
         
         if (signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
           // Actualizar estado del challenge
@@ -148,6 +147,22 @@ export const useAuth = (): UseAuthReturn => {
           };
           
         }
+        if (signInStep === 'CONFIRM_SIGN_UP') {
+          // Actualizar estado del challenge
+          setAuthState(prev => ({
+            ...prev,
+            authChallenge: 'MFA_REQUIRED',
+            challengeUsername: username,
+          }));
+
+          return {
+            success: false,
+            challenge: 'MFA_REQUIRED',
+            username
+          };
+
+        }
+       
         
         if (signInStep === 'DONE') {
           return {

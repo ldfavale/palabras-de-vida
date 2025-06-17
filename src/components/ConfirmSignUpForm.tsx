@@ -63,7 +63,6 @@ export const ConfirmSignUpForm: React.FC = () => {
         confirmationCode: data.confirmationCode 
       });
       
-      toast.success('¡Cuenta confirmada exitosamente!');
       navigate('/login?confirmed=true');
     } catch (err: any) {
       console.error("Error confirmando cuenta:", err);
@@ -198,12 +197,18 @@ export const ConfirmSignUpForm: React.FC = () => {
           </button>
 
           {/* Link para volver al registro */}
-          <div className="pt-2 border-t border-gray-100">
+          <div className="pt-2 border-t border-gray-100 flex flex-col justify-center gap-4">
             <Link
-              to="/register"
+              to="/signup"
               className="text-sm font-medium text-gray-600 hover:text-[#C0A961] hover:underline focus:outline-none focus:underline"
             >
               ← Volver al registro
+            </Link>
+            <Link
+              to="/"
+              className="text-sm font-medium text-gray-600 hover:text-[#C0A961] hover:underline focus:outline-none focus:underline"
+            >
+              Inicio
             </Link>
           </div>
         </div>
