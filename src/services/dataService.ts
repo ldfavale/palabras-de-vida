@@ -3,6 +3,7 @@ import { generateClient, SelectionSet } from 'aws-amplify/data';
 import { uploadData } from 'aws-amplify/storage';
 
 const client = generateClient<Schema>();
+const USE_OPENSEARCH = import.meta.env.VITE_USE_OPENSEARCH === 'true';
 
 // --- Tipos Generales y para Operaciones CRUD ---
 type Category = Schema['Category']['type'];
@@ -72,6 +73,7 @@ export type ProductFromSearch = {
 interface PaginatedProductsData {
   items: (ProductFromSearch | null | undefined)[];
   totalCount: number;
+  nextToken?: string | null;
 }
 
 interface SearchProductsResponse {
@@ -85,6 +87,8 @@ interface SearchParams {
   sortBy?: string;
   page?: number;
   limit?: number;
+  nextToken?: string | null;
+
 }
 
 // --- Funciones del Servicio ---
@@ -123,29 +127,44 @@ export async function fetchProductById(productId: string): Promise<GetProductRes
   }
 }
 
-export const searchProducts = async ({
-  searchTerm,
-  categoryIds,
-  sortBy,
-  page = 1,
-  limit = 12,
-}: SearchParams): Promise<SearchProductsResponse> => {
+export const searchProducts = async (params: SearchParams): Promise<SearchProductsResponse> => {
+  console.log(`Modo de búsqueda: ${USE_OPENSEARCH ? 'OpenSearch' : 'DynamoDB'}`);
+
   try {
-    const from = (page - 1) * limit;
-    const size = limit;
+    // Definimos el tipo para los argumentos de la query.
+    // 'Parameters<...>[0]' es una utilidad de TypeScript para obtener los argumentos de una función.
+    type QueryArgs = Parameters<typeof client.queries.searchProducts>[0];
+    
+    // Aquí está la clave: construimos el objeto de argumentos condicionalmente.
+    let queryArgs: QueryArgs;
 
-    const gqlResponse = await client.queries.searchProducts({
-      searchTerm: searchTerm || undefined,
-      categoryIds: categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
-      sortBy: sortBy || undefined,
-      from: from,
-      size: size,
-    });
+    if (USE_OPENSEARCH) {
+      // --- Construimos los argumentos para OpenSearch ---
+      const from = params.page && params.limit ? (params.page - 1) * params.limit : 0;
+      queryArgs = {
+        searchTerm: params.searchTerm || undefined,
+        categoryIds: params.categoryIds && params.categoryIds.length > 0 ? params.categoryIds : undefined,
+        sortBy: params.sortBy || undefined,
+        from: from,
+        size: params.limit,
+      };
+    } else {
+      // --- Construimos los argumentos para DynamoDB ---
+      queryArgs = {
+        searchTerm: params.searchTerm || undefined,
+        categoryIds: params.categoryIds && params.categoryIds.length > 0 ? params.categoryIds : undefined,
+        limit: params.limit,
+        nextToken: params.nextToken || undefined, // Pasamos null o undefined 
+      };
+    }
 
-    console.log("response en dataService (searchProducts)", gqlResponse);
+    // Ahora hacemos una única llamada con el objeto de argumentos construido correctamente.
+    const gqlResponse = await client.queries.searchProducts(queryArgs);
+
     return { data: gqlResponse.data ?? null, errors: gqlResponse.errors };
+
   } catch (error) {
-    console.error("Error searching products:", error);
+    console.error("Error en searchProducts:", error);
     return { data: null, errors: error as any };
   }
 };

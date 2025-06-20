@@ -11,6 +11,7 @@ interface UseProductsResult {
   totalCount: number;
   totalPages: number;
   pageSize: number; // Exponer pageSize también puede ser útil
+  nextToken?: string | null; 
   refetch: () => void;
 }
 
@@ -34,12 +35,20 @@ function useSearchProducts({
   const [error, setError] = useState<Error | null>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPageInternal] = useState(1); 
+  const [pageTokens, setPageTokens] = useState<(string | null | undefined)[]>([null]);
   const refetchIndex = useRef(0);
 
+
   // Función estable para buscar productos
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = useCallback(async (pageToFetch: number) => {
     setLoading(true);
     setError(null);
+
+    
+
+    const tokenForRequest = pageTokens[pageToFetch - 1];
+
+
     try {
       const { data: resultData, errors } = await searchProducts({
         searchTerm,
@@ -47,6 +56,7 @@ function useSearchProducts({
         sortBy,
         page: currentPage,
         limit: pageSize,
+        nextToken: tokenForRequest,
       });
 
       if (errors) {
@@ -60,6 +70,14 @@ function useSearchProducts({
         );
         setProducts(validItems);
         setTotalCount(resultData.totalCount || 0);
+
+        if (resultData.nextToken) {
+          setPageTokens(currentTokens => {
+            const newTokens = [...currentTokens];
+            newTokens[pageToFetch] = resultData.nextToken;
+            return newTokens;
+          });
+        }
       } else {
         setProducts([]);
         setTotalCount(0);
@@ -72,14 +90,16 @@ function useSearchProducts({
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, categoryIds, sortBy, currentPage, pageSize]);
+  }, [searchTerm, categoryIds, sortBy, currentPage, pageSize,pageTokens]);
 
   useEffect(() => {
     setCurrentPageInternal(1);
-  }, [searchTerm, categoryIds, sortBy]); 
+    setPageTokens([null]);
+    fetchProducts(1);
+  }, [searchTerm, categoryIds, sortBy,refetchIndex.current]); 
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(1);
     // refetchIndex.current se usa solo para forzar el refetch
   }, [fetchProducts, refetchIndex.current]);
 
