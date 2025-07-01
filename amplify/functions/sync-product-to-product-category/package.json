@@ -1,0 +1,13 @@
+{
+  "name": "sync-product-to-product-category",
+  "version": "1.0.0",
+  "description": "Lambda function to sync product data to ProductCategory table",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/util-dynamodb": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

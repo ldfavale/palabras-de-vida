@@ -1,113 +1,81 @@
 import { util } from '@aws-appsync/utils';
 
+const SPANISH_STOPWORDS = [
+  "a", "al", "como", "con", "de", "del", "desde", "donde", "e", "el", "en", "entre", "es", "esta", "la", "las", "los", "para", "por", "que", "se", "sin", "un", "una", "y"
+];
+
 export function request(ctx) {
-  const { searchTerm, fallbackTerm, categoryIds, limit = 12, nextToken } = ctx.args;
+  const { searchTerm, categoryIds, sortBy, limit = 20, nextToken } = ctx.args;
   
-  const cleanSearchTerm = searchTerm?.toLowerCase().trim();
-  const hasSearchTerm = cleanSearchTerm && cleanSearchTerm.length > 0;
-  const hasCategoryFilter = categoryIds?.length > 0;
+  ctx.stash.sortBy = sortBy;
+  ctx.stash.limit = limit;
+  ctx.stash.nextToken = nextToken;
   
-  let requestObject;
+  if (!searchTerm) {
+    return {
+      operation: 'Scan',
+      limit: limit
+    };
+  }
+
+  // Tokenizar y evitar stopwords
+  const tokens = searchTerm.toLowerCase().split(' ');
+  let firstToken = tokens[0];
   
-  // Caso 1: Hay searchTerm - usa Query en el índice
-  if (hasSearchTerm) {
-    const query = {
-      expression: '#status = :status AND begins_with(#title, :title)',
+  // Verificar si el primer token es stopword y usar el segundo si existe
+  if (tokens.length > 1 && SPANISH_STOPWORDS.includes(tokens[0]) && tokens[1].length > 2) {
+    firstToken = tokens[1];
+  }
+  
+  const query = {
+    operation: 'Query',
+    query: {
+      expression: '#token = :token',
       expressionNames: {
-        '#status': 'searchableStatus',
-        '#title': 'normalizedTitle',
+        '#token': 'token'
       },
       expressionValues: {
-        ':status': util.dynamodb.toDynamoDB('ACTIVE'),
-        ':title': util.dynamodb.toDynamoDB(cleanSearchTerm),
-      },
-    };
-    
-    requestObject = {
-      operation: 'Query',
-      index: 'productsBySearchableStatusAndNormalizedTitle',
-      query: query,
-      limit: Math.min(limit, 15),
-      scanIndexForward: false,
-    };
-  } 
-  // Caso 2: No hay searchTerm pero hay filtros de categoría - usa Scan con filtro
-  else if (hasCategoryFilter) {
-    requestObject = {
-      operation: 'Scan',
-      filter: {
-        expression: '#status = :status AND contains(#categoryIds, :categoryId)',
-        expressionNames: { 
-          '#status': 'searchableStatus',
-          '#categoryIds': 'categoryIds' 
-        },
-        expressionValues: { 
-          ':status': util.dynamodb.toDynamoDB('ACTIVE'),
-          ':categoryId': util.dynamodb.toDynamoDB(categoryIds[0]) 
-        }
-      },
-      limit: Math.min(limit, 15),
+        ':token': util.dynamodb.toDynamoDB(firstToken)
+      }
+    },
+    limit: limit
+  };
+
+  // Filtro simple por categoría
+  if (categoryIds && categoryIds.length > 0) {
+    query.filter = {
+      expression: 'contains(categoryIds, :catId)',
+      expressionValues: {
+        ':token': util.dynamodb.toDynamoDB(firstToken),
+        ':catId': util.dynamodb.toDynamoDB(categoryIds[0])
+      }
     };
   }
-  // Caso 3: No hay searchTerm ni filtros - trae todo (solo ACTIVE)
-  else {
-    requestObject = {
-      operation: 'Scan',
-      filter: {
-        expression: '#status = :status',
-        expressionNames: { '#status': 'searchableStatus' },
-        expressionValues: { ':status': util.dynamodb.toDynamoDB('ACTIVE') }
-      },
-      limit: Math.min(limit, 15),
-    };
-  }
-  
-  // Agregar nextToken si existe
-  if (nextToken) {
-    requestObject.nextToken = nextToken;
-  }
-  
-  // Si hay searchTerm Y filtro de categoría, agregar el filtro adicional
-  if (hasSearchTerm && hasCategoryFilter) {
-    requestObject.filter = {
-      expression: 'contains(#categoryIds, :categoryId)',
-      expressionNames: { '#categoryIds': 'categoryIds' },
-      expressionValues: { ':categoryId': util.dynamodb.toDynamoDB(categoryIds[0]) }
-    };
-  }
-  
-  return requestObject;
+
+  return query;
 }
 
 export function response(ctx) {
   if (ctx.error) {
     util.error(ctx.error.message, ctx.error.type);
   }
+
+  const items = ctx.result.items || [];
   
-  const items = ctx.result?.items || [];
+  // Aplicar límite simple
+  const limit = ctx.stash.limit || 20;
+  const limitedItems = items.slice(0, limit);
   
-  const resultItems = items
-    .filter(item => item?.id)
-    .map(item => ({
-      id: item.id,
-      title: item.title || '',
-      description: item.description || '',
-      images: item.images || [],
-      code: item.code || '',
-      price: item.price || 0,
-      categoryIds: item.categoryIds || [],
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    }));
-  
-  const hasSearchTerm = ctx.args.searchTerm?.trim();
-  const strategy = hasSearchTerm ? 'begins_with' : 'scan';
-  
+  const finalItems = limitedItems.map(item => ({
+    id: item.productId,
+    title: item.normalizedTitle || '',
+    price: item.price || 0,
+    categoryIds: item.categoryIds || [],
+    createdAt: item.createdAt
+  }));
+
   return {
-    items: resultItems,
-    totalCount: resultItems.length,
-    nextToken: ctx.result?.nextToken,
-    hasMore: resultItems.length >= (ctx.args.limit || 12),
-    searchStrategy: strategy
+    items: finalItems,
+    totalCount: finalItems.length
   };
 }

@@ -1,62 +1,63 @@
-import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { type ClientSchema, a, defineData, defineFunction } from '@aws-amplify/backend';
 
 const useOpenSearch = process.env.USE_OPENSEARCH === 'true';
 
-interface Queries {
-  searchProducts?: any; 
-}
-
-const queries: Queries = {};
-
-if (useOpenSearch) {
-  queries.searchProducts = a
-    .query()
-    .arguments({  
-      searchTerm: a.string(),
-      categoryIds: a.string().array(), 
-      sortBy: a.string(),
-      from: a.integer(),    
-      size: a.integer()
-     })
-    .returns(a.ref("PaginatedProductSearchResults"))
-    .handler(a.handler.custom({
-        entry: "./searchProductsResolver.js", // El de OpenSearch
-        dataSource: "osDataSource",
-    }));
-} else {
-  queries.searchProducts = a
-    .query()
-    .arguments({  
-      searchTerm: a.string(),
-      categoryIds: a.string().array(), 
-      sortBy: a.string(),
-      nextToken: a.string(), // Para paginación
-     }) 
-    .returns(a.ref("PaginatedProductSearchResults"))
-    .handler(a.handler.custom({
-        entry: "./searchProductsDynamoResolver.js",
-    }));
-}
-
-
+// Define the schema object separately to be able to reference it in function definitions
 const schema = a.schema({
+  searchProducts: useOpenSearch
+    ? a
+        .query()
+        .arguments({
+          searchTerm: a.string(),
+          categoryIds: a.string().array(),
+          sortBy: a.string(),
+          from: a.integer(),
+          size: a.integer(),
+        })
+        .returns(a.ref('PaginatedProductSearchResults'))
+        .authorization((allow) => [allow.publicApiKey()])
+        .handler(
+          a.handler.custom({
+            entry: './searchProductsResolver.js',
+            dataSource: 'osDataSource',
+          })
+        )
+    : a
+        .query()
+        .arguments({
+          searchTerm: a.string(),
+          categoryIds: a.string().array(),
+          sortBy: a.string(),
+          nextToken: a.string(),
+        })
+        .returns(a.ref('PaginatedProductSearchResults'))
+        .authorization((allow) => [allow.publicApiKey()])
+        .handler(
+          a.handler.custom({
+            entry: './searchProductsDynamoResolver.js',
+            dataSource: a.ref('ProductSearchToken')
+          })
+        ),
+
   Product: a
     .model({
       title: a.string().required(),
-      normalizedTitle: a.string(), 
+      normalizedTitle: a.string(),
       description: a.string(),
-      images: a.string().array(), // Puedes mantenerlo si son rutas relativas o IDs O usar a.url() si son URLs completas
+      images: a.string().array(),
       code: a.string(),
       price: a.float(),
       categoryIds: a.string().array(),
       categories: a.hasMany('ProductCategory', 'productId'),
+      searchTokens: a.hasMany('ProductSearchToken', 'productId'),
       searchableStatus: a.string(),
+      // The 'triggers' property was removed from here as it was incorrect.
+      // The trigger is now correctly defined on the function itself.
     })
     .authorization(allow => [allow.publicApiKey()])
-    .secondaryIndexes(index => [
+    .secondaryIndexes((index: any) => [
       index('searchableStatus')
         .sortKeys(['normalizedTitle'])
-        .queryField('searchProductsByTitle')
     ]),
 
   Category: a
@@ -67,106 +68,106 @@ const schema = a.schema({
     })
     .authorization(allow => [allow.publicApiKey()]),
 
-    ProductCategory: a
+  ProductCategory: a
     .model({
       productId: a.id().required(),
-      categoryId: a.id().required(), 
+      categoryId: a.id().required(),
       product: a.belongsTo('Product', 'productId'),
       category: a.belongsTo('Category', 'categoryId'),
+      productStatus: a.string(),
+      productTitle: a.string(),
+      productPrice: a.float(),
+      productCreatedAt: a.datetime(),
     })
     .authorization(allow => [allow.publicApiKey()])
-    .secondaryIndexes(index => [ 
-      index('productId').queryField('productCategoriesByProductId') 
+    .secondaryIndexes((index: any) => [
+      index('productId').queryField('productCategoriesByProductId'),
+      index('categoryId').sortKeys(['productTitle']).queryField('productsByCategoryIdAndTitle'),
+      index('categoryId').sortKeys(['productPrice']).queryField('productsByCategoryIdAndPrice'),
+      index('categoryId').sortKeys(['productCreatedAt']).queryField('productsByCategoryIdAndCreatedAt')
     ]),
 
-        
-   // --- Tipo para los fragmentos de resaltado ---
+  ProductSearchToken: a
+    .model({
+      token: a.string().required(),
+      productId: a.id().required(),
+      product: a.belongsTo('Product', 'productId'),
+      
+      // Denormalized fields for search optimization
+      categoryIds: a.string().array(),
+      price: a.float(),
+      normalizedTitle: a.string(),
+      createdAt: a.datetime(),
+    })
+    .identifier(['token', 'productId'])
+    .authorization(allow => [allow.publicApiKey()])
+    .secondaryIndexes((index: any) => [
+      index('productId').queryField('tokensByProductId'),
+    ]),
+
   HighlightDetail: a.customType({
-    title: a.string().array(), // Array de strings HTML resaltados
+    title: a.string().array(),
     description: a.string().array(),
-    code: a.string().array(), 
+    code: a.string().array(),
   }),
 
-  // --- Tipo para los ítems de resultado de búsqueda ---
   ProductSearchResultItem: a.customType({
-    // Campos del modelo Product que queremos que se devuelvan en la búsqueda
     id: a.id().required(),
-    title: a.string().required(), 
+    title: a.string().required(),
     description: a.string(),
     images: a.string().array(),
     code: a.string(),
     price: a.float(),
-    categoryIds: a.string().array(), 
-    createdAt: a.datetime(), 
+    categoryIds: a.string().array(),
+    createdAt: a.datetime(),
     updatedAt: a.datetime(),
     highlight: a.ref('HighlightDetail')
    }),
 
    PaginatedProductSearchResults: a.customType({
-    items: a.ref("ProductSearchResultItem").array().required(), 
-    totalCount: a.integer().required()                       
+    items: a.ref("ProductSearchResultItem").array().required(),
+    totalCount: a.integer().required()
   }),
 
-  // searchProducts: a
-  //   .query()
-  //   .arguments({
-  //     searchTerm: a.string(),
-  //     categoryIds: a.string().array(), 
-  //     sortBy: a.string(),
-  //     from: a.integer(),    
-  //     size: a.integer()
-  //   })
-  //   .returns(a.ref("PaginatedProductSearchResults"))
-  //   .authorization((allow) => [allow.publicApiKey()])
-  //   .handler(
-  //     a.handler.custom({
-  //       entry: "./searchProductsResolver.js",        dataSource: "osDataSource",
-  //     })
-  //   ),
-    searchProducts: useOpenSearch
-    ? // --- Rama VERDADERA: Usa OpenSearch ---
-      a.query()
-        .arguments({
-          searchTerm: a.string(),
-          categoryIds: a.string().array(),
-          sortBy: a.string(),
-          from: a.integer(),
-          size: a.integer()
+  searchProductsByTitle: a.query()
+      .arguments({
+        searchTerm: a.string().required(),
+        categoryIds: a.string().array(),
+        nextToken: a.string(),
+        limit: a.integer(),
+      })
+      .returns(a.ref("PaginatedProductSearchResults"))
+      .authorization((allow) => [allow.publicApiKey()])
+      .handler(
+        a.handler.custom({
+          entry: "./searchProductsByTitleResolver.js",
+          dataSource: a.ref('Product')
         })
-        .returns(a.ref("PaginatedProductSearchResults"))
-        .authorization((allow) => [allow.publicApiKey()])
-        .handler(
-          a.handler.custom({
-            entry: "./searchProductsResolver.js",
-            dataSource: "osDataSource",
-          })
-        )
-    : // --- Rama FALSA: Usa DynamoDB ---
-      a.query()
-        .arguments({
-          searchTerm: a.string(),
-          categoryIds: a.string().array(),
-          nextToken: a.string(),
-          limit: a.integer(),
+      ),
+
+  searchProductsByCategory: a.query()
+      .arguments({
+        categoryId: a.id().required(),
+        sortBy: a.string(),
+        nextToken: a.string(),
+        limit: a.integer(),
+      })
+      .returns(a.ref("PaginatedProductSearchResults"))
+      .authorization((allow) => [allow.publicApiKey()])
+      .handler(
+        a.handler.custom({
+          entry: "./searchProductsByCategoryResolver.js",
+          dataSource: a.ref('ProductCategory')
         })
-        .returns(a.ref("PaginatedProductSearchResults"))
-        .authorization((allow) => [allow.publicApiKey()])
-        .handler(
-          a.handler.custom({ // <-- Handler EXPLÍCITO, atado a DynamoDB
-            entry: "./searchProductsDynamoResolver.js",
-            dataSource: a.ref('Product') // <-- ¡AQUÍ ESTÁ LA MAGIA!
-          })
-    ),
+      ),
 });
 
-
 export const data = defineData({
-  schema,
+  schema: schema, // Pass the schema object here
   authorizationModes: {
     defaultAuthorizationMode: 'apiKey',
     apiKeyAuthorizationMode: { expiresInDays: 30 }
   }
 });
 
-export type Schema = ClientSchema<typeof schema>;
-
+export type Schema = ClientSchema<typeof schema>; // Reference the new schema constant

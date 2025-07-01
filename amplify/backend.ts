@@ -301,6 +301,114 @@ cleanupDeletedProductFunction.addEventSource(new DynamoEventSource(productTableR
 }));
 
 
+/**
+ * * Configuración de la Lambda de Tokenización para Búsqueda
+ */
+
+// --- Referencias a las Tablas ---
+const productSearchTokenTableResource = backend.data.resources.tables['ProductSearchToken'];
+
+// --- Rol IAM para la Lambda de Tokenización ---
+const tokenizeProductLambdaRole = new iam.Role(backend.data.stack, 'TokenizeProductLambdaRole', {
+  assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+  managedPolicies: [
+    iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+    iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaDynamoDBExecutionRole'),
+  ],
+  inlinePolicies: {
+    TokenizePermissions: new iam.PolicyDocument({
+      statements: [
+        new iam.PolicyStatement({
+          actions: ['dynamodb:BatchWriteItem', 'dynamodb:PutItem'],
+          resources: [productSearchTokenTableResource.tableArn],
+        }),
+        new iam.PolicyStatement({
+          actions: ['dynamodb:GetItem'],
+          resources: [productTableResource.tableArn],
+        }),
+      ],
+    }),
+  },
+});
+
+// --- Función Lambda para Tokenizar Productos ---
+const tokenizeProductForSearchFunction = new lambda.Function(backend.data.stack, 'TokenizeProductForSearchFunction', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromAsset('amplify/functions/tokenize-product-for-search'),
+  role: tokenizeProductLambdaRole,
+  timeout: Duration.seconds(10),
+  environment: {
+    AMPLIFY_DATA_PRODUCTSEARCHTOKEN_TABLE_NAME: productSearchTokenTableResource.tableName,
+  },
+});
+
+// --- Trigger: Conectar el Stream de Product a la Lambda de Tokenización ---
+tokenizeProductForSearchFunction.addEventSource(new DynamoEventSource(productTableResource, {
+  startingPosition: StartingPosition.LATEST,
+  batchSize: 5,
+  bisectBatchOnError: true,
+  retryAttempts: 2,
+  filters: [
+    lambda.FilterCriteria.filter({
+      eventName: lambda.FilterRule.or('INSERT', 'MODIFY'),
+    }),
+  ],
+}));
+
+/**
+ * * Configuración de la Lambda de Sincronización de Product a ProductCategory
+ */
+
+// --- Rol IAM para la Lambda de Sincronización ---
+const syncProductDataLambdaRole = new iam.Role(backend.data.stack, 'SyncProductDataLambdaRole', {
+  assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+  managedPolicies: [
+    iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+    iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaDynamoDBExecutionRole'),
+  ],
+  inlinePolicies: {
+    CustomSyncPermissions: new iam.PolicyDocument({
+      statements: [
+        new iam.PolicyStatement({
+          actions: ['dynamodb:Query', 'dynamodb:BatchWriteItem'],
+          resources: [
+            productCategoryTableResource.tableArn,
+            `${productCategoryTableResource.tableArn}/index/*`, // Permiso para el GSI
+          ],
+        }),
+      ],
+    }),
+  },
+});
+
+// --- Función Lambda para Sincronizar datos de Product a ProductCategory ---
+const syncProductToProductCategoryFunction = new lambda.Function(backend.data.stack, 'SyncProductToProductCategoryFunction', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromAsset('amplify/functions/sync-product-to-product-category'),
+  role: syncProductDataLambdaRole,
+  timeout: Duration.seconds(10),
+  environment: {
+    PRODUCT_CATEGORY_TABLE_NAME: productCategoryTableResource.tableName,
+    PRODUCT_CATEGORY_GSI_NAME: 'productCategoriesByProductId',
+  },
+});
+
+// --- Trigger: Conectar el Stream de Product a la Lambda de Sincronización ---
+syncProductToProductCategoryFunction.addEventSource(new DynamoEventSource(productTableResource, {
+  startingPosition: StartingPosition.LATEST,
+  batchSize: 5,
+  bisectBatchOnError: true,
+  retryAttempts: 2,
+  filters: [
+    lambda.FilterCriteria.filter({
+      eventName: lambda.FilterRule.or('INSERT', 'MODIFY'),
+    }),
+  ],
+}));
+
+
 /*
 * Configuración de OpenSearch 
 */
