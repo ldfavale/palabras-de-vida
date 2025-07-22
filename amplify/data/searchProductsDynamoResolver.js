@@ -6,57 +6,80 @@ const SPANISH_STOPWORDS = [
 
 export function request(ctx) {
   const { searchTerm, categoryIds, sortBy, limit = 20, nextToken } = ctx.args;
-  
+
+  // Stash variables for the response function
   ctx.stash.sortBy = sortBy;
   ctx.stash.limit = limit;
   ctx.stash.nextToken = nextToken;
-  
-  if (!searchTerm) {
-    return {
-      operation: 'Scan',
-      limit: limit
-    };
-  }
 
-  // Tokenizar y evitar stopwords
-  const tokens = searchTerm.toLowerCase().split(' ');
-  let firstToken = tokens[0];
-  
-  // Verificar si el primer token es stopword y usar el segundo si existe
-  if (tokens.length > 1 && SPANISH_STOPWORDS.includes(tokens[0]) && tokens[1].length > 2) {
-    firstToken = tokens[1];
-  }
-  
-  const query = {
-    operation: 'Query',
-    query: {
-      expression: '#token = :token',
-      expressionNames: {
-        '#token': 'token'
-      },
-      expressionValues: {
-        ':token': util.dynamodb.toDynamoDB(firstToken)
-      }
-    },
-    limit: limit
-  };
-
-  // Add nextToken for pagination if provided
-  if (nextToken) {
-    query.nextToken = nextToken;
-  }
-
-  // Filtro simple por categoría
+  let filter;
+  // --------------------------------------------------------------------------
+  // PASO 1: Construir el filtro de categorías de forma dinámica y aislada.
+  // Esta lógica ahora soporta múltiples categorías.
+  // --------------------------------------------------------------------------
   if (categoryIds && categoryIds.length > 0) {
-    query.filter = {
-      expression: 'contains(categoryIds, :catId)',
-      expressionValues: {
-        ':catId': util.dynamodb.toDynamoDB(categoryIds[0])
-      }
+    const filterParts = [];
+    const expressionValues = {};
+    categoryIds.forEach((id, index) => {
+      const key = `:catId${index}`;
+      filterParts.push(`contains(categoryIds, ${key})`);
+      expressionValues[key] = util.dynamodb.toDynamoDB(id);
+    });
+    
+    filter = {
+      expression: filterParts.join(' or '),
+      expressionValues: expressionValues
     };
   }
 
-  return query;
+  // --------------------------------------------------------------------------
+  // PASO 2: Decidir la operación principal (Query o Scan) según el searchTerm.
+  // --------------------------------------------------------------------------
+  if (searchTerm) {
+    // --- CASO A: Hay término de búsqueda -> Usamos QUERY (más eficiente) ---
+    
+    const tokens = searchTerm.toLowerCase().split(' ');
+    let firstToken = tokens[0];
+    if (tokens.length > 1 && SPANISH_STOPWORDS.includes(tokens[0]) && tokens[1].length > 2) {
+      firstToken = tokens[1];
+    }
+
+    const query = {
+      operation: 'Query',
+      query: {
+        expression: '#token = :token',
+        expressionNames: { '#token': 'token' },
+        expressionValues: {
+          ':token': util.dynamodb.toDynamoDB(firstToken)
+        }
+      },
+      limit: limit,
+      nextToken: nextToken
+    };
+
+    // Si construimos un filtro de categoría, lo AÑADIMOS a la Query.
+    if (filter) {
+      query.filter = filter;
+    }
+    
+    return query;
+
+  } else {
+    // --- CASO B: No hay término de búsqueda -> Usamos SCAN ---
+    
+    const scan = {
+      operation: 'Scan',
+      limit: limit,
+      nextToken: nextToken
+    };
+
+    // Si construimos un filtro de categoría, lo AÑADIMOS al Scan.
+    if (filter) {
+      scan.filter = filter;
+    }
+
+    return scan;
+  }
 }
 
 
