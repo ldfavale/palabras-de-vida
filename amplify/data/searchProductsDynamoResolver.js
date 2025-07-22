@@ -41,12 +41,16 @@ export function request(ctx) {
     limit: limit
   };
 
+  // Add nextToken for pagination if provided
+  if (nextToken) {
+    query.nextToken = nextToken;
+  }
+
   // Filtro simple por categoría
   if (categoryIds && categoryIds.length > 0) {
     query.filter = {
       expression: 'contains(categoryIds, :catId)',
       expressionValues: {
-        ':token': util.dynamodb.toDynamoDB(firstToken),
         ':catId': util.dynamodb.toDynamoDB(categoryIds[0])
       }
     };
@@ -55,6 +59,7 @@ export function request(ctx) {
   return query;
 }
 
+
 export function response(ctx) {
   if (ctx.error) {
     util.error(ctx.error.message, ctx.error.type);
@@ -62,20 +67,27 @@ export function response(ctx) {
 
   const items = ctx.result.items || [];
   
-  // Aplicar límite simple
-  const limit = ctx.stash.limit || 20;
-  const limitedItems = items.slice(0, limit);
-  
-  const finalItems = limitedItems.map(item => ({
+  // Deduplicación usando filter con indexOf
+  const uniqueItems = items.filter((item, index) => {
+    // Encontrar el primer índice donde aparece este productId
+    const firstIndex = items.findIndex(i => i.productId === item.productId);
+    // Solo mantener si este es el primer elemento con este productId
+    return index === firstIndex;
+  }).map(item => ({
     id: item.productId,
     title: item.normalizedTitle || '',
     price: item.price || 0,
     categoryIds: item.categoryIds || [],
-    createdAt: item.createdAt
+    createdAt: item.createdAt || null,
+    images: item.images || [],
+    description: item.description || '',
+    code: item.code || '',
+    updatedAt: item.updatedAt || null,
   }));
 
   return {
-    items: finalItems,
-    totalCount: finalItems.length
+    items: uniqueItems,
+    totalCount: uniqueItems.length,
+    nextToken: ctx.result.nextToken || null,
   };
 }
