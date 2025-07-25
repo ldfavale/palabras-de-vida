@@ -131,15 +131,11 @@ export const searchProducts = async (params: SearchParams): Promise<SearchProduc
   console.log(`Modo de búsqueda: ${USE_OPENSEARCH ? 'OpenSearch' : 'DynamoDB'}`);
 
   try {
-    // Definimos el tipo para los argumentos de la query.
-    // 'Parameters<...>[0]' es una utilidad de TypeScript para obtener los argumentos de una función.
     type QueryArgs = Parameters<typeof client.queries.searchProducts>[0];
     
-    // Aquí está la clave: construimos el objeto de argumentos condicionalmente.
     let queryArgs: QueryArgs;
 
     if (USE_OPENSEARCH) {
-      // --- Construimos los argumentos para OpenSearch ---
       const from = params.page && params.limit ? (params.page - 1) * params.limit : 0;
       queryArgs = {
         searchTerm: params.searchTerm || undefined,
@@ -149,17 +145,39 @@ export const searchProducts = async (params: SearchParams): Promise<SearchProduc
         size: params.limit,
       };
     } else {
-      // --- Construimos los argumentos para DynamoDB ---
       queryArgs = {
         searchTerm: params.searchTerm || undefined,
         categoryIds: params.categoryIds && params.categoryIds.length > 0 ? params.categoryIds : undefined,
         limit: params.limit,
-        nextToken: params.nextToken || undefined, // Pasamos null o undefined 
+        nextToken: params.nextToken || undefined, 
       };
     }
 
-    // Ahora hacemos una única llamada con el objeto de argumentos construido correctamente.
     const gqlResponse = await client.queries.searchProducts(queryArgs);
+
+    // FIX: Unmarshall DynamoDB data format directly in the frontend service
+    if (gqlResponse.data && gqlResponse.data.items) {
+      const processedItems = gqlResponse.data.items.map(item => {
+        console.log("Item original:", item);
+        if (!item) return null;
+
+        // Check if images are in the DynamoDB marshalled format
+        if (item.images && Array.isArray(item.images) && item.images.length > 0 && (item.images[0] as any)?.S) {
+          return {
+            ...item,
+            images: item.images.map(img => (img as any).S)
+          };
+        }
+        return item;
+      });
+
+      const processedData = {
+        ...gqlResponse.data,
+        items: processedItems,
+      };
+
+      return { data: processedData, errors: gqlResponse.errors };
+    }
 
     return { data: gqlResponse.data ?? null, errors: gqlResponse.errors };
 
