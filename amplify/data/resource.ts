@@ -94,8 +94,11 @@ const schema = a.schema({
       product: a.belongsTo('Product', 'productId'),
       
       // Denormalized fields for search optimization
+      title: a.string(), // <-- AÑADIDO
       categoryIds: a.string().array(),
       price: a.float(),
+      images: a.string().array(),
+      description: a.string(),
       normalizedTitle: a.string(),
       createdAt: a.datetime(),
     })

@@ -81,8 +81,11 @@ exports.handler = async (event) => {
       // Extraer los campos a desnormalizar de la imagen del producto
       const categoryIds = newImage.categoryIds?.L?.map(item => item.S) || [];
       const price = newImage.price?.N ? parseFloat(newImage.price.N) : undefined;
+      const title = newImage.title?.S; // <-- AÑADIDO
+      const description = newImage.description?.S; // <-- AÑADIDO
       const normalizedTitle = newImage.normalizedTitle?.S;
       const createdAt = newImage.createdAt?.S;
+      const images = newImage.images?.L?.map(item => item.S) || []; // <-- AÑADIDO
 
       // 2. Crear las operaciones de escritura para la tabla de tokens
       for (const token of allTokens) {
@@ -92,8 +95,11 @@ exports.handler = async (event) => {
           productId: productId,
           categoryIds: categoryIds.length > 0 ? categoryIds : undefined, // No guardar arrays vacíos
           price: price,
+          title: title, 
+          description: description, 
           normalizedTitle: normalizedTitle,
           createdAt: createdAt,
+          images: images.length > 0 ? images : undefined, // <-- AÑADIDO
         };
 
         // Eliminar claves con valores undefined para no escribirlas en DynamoDB

@@ -82,7 +82,6 @@ export function request(ctx) {
   }
 }
 
-
 export function response(ctx) {
   if (ctx.error) {
     util.error(ctx.error.message, ctx.error.type);
@@ -98,7 +97,7 @@ export function response(ctx) {
     return index === firstIndex;
   }).map(item => ({
     id: item.productId,
-    title: item.normalizedTitle || '',
+    title: item.title || '',
     price: item.price || 0,
     categoryIds: item.categoryIds || [],
     createdAt: item.createdAt || null,
