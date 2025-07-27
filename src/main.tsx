@@ -22,7 +22,6 @@ import ConfirmSignUpPage from './pages/ConfirmSignUpPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import NewUserPage from './pages/NewUserPage';
-import { ConfirmNewUserPage } from './pages/ConfirmNewUserPage';
 import ProductPage from './pages/ProductPage';
 import NotFoundPage from './components/NotFoundPage';
 
