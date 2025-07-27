@@ -81,7 +81,7 @@ const onClickSearchButton = () => {
               Inicio
               </Link></li>
             <li className='hover:underline'>
-              <Link to="#">
+              <Link to="/tienda">
                 Tienda
               </Link>
             </li>
@@ -162,7 +162,7 @@ const onClickSearchButton = () => {
               Inicio
               </Link></li>
               <li className='hover:underline'>
-              <Link to="#" onClick={dismissMenu}>
+              <Link to="/tienda" onClick={dismissMenu}>
                 Tienda
               </Link>
             </li>
