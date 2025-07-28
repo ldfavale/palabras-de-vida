@@ -92,7 +92,7 @@ function ShopItem({product, layout, onDeleteRequest, deleteDisabled}: ShopItemPr
                   
                   <button 
                     onClick={handleWhatsAppOrder}
-                    className='rounded-full bg-green-400 border border-white p-2 hover:[box-shadow:0_4px_0_rgba(0,0,0,0.15)] hover:bg-green-500 transition-all duration-150 ease-in-out'
+                    className='rounded-full bg-green-300 border border-white p-2 hover:[box-shadow:0_4px_0_rgba(0,0,0,0.15)] hover:bg-green-400 transition-all duration-150 ease-in-out'
                     aria-label={`Pedir ${product.title} por WhatsApp`}
                   >
                       <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

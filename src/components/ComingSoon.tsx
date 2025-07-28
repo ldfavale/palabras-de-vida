@@ -1,15 +1,14 @@
-import { SparklesIcon } from '@heroicons/react/24/outline';
-
+import { BookOpenIcon, MegaphoneIcon } from '@heroicons/react/24/outline';
 const ComingSoon = ({ section = 'blog' }: { section?: 'blog' | 'actividades' }) => {
   const content = {
     blog: {
-      icon: '📝',
+      icon: <BookOpenIcon className="w-20 h-20 text-white" />,
       title: 'Estamos preparando',
       subtitle: 'Nuevo contenido para ti',
       description: 'Pronto compartiremos reflexiones, artículos inspiradores y recursos que fortalecerán tu relación con Dios. Mantente atento a las novedades.',
     },
     actividades: {
-      icon: '🎯',
+      icon:  <MegaphoneIcon className="w-20 h-20 text-white" />,
       title: 'Próximamente',
       subtitle: '¡Nuevas actividades!',
       description: 'Estamos organizando eventos, talleres y actividades especiales.Pronto anunciaremos todas las novedades.',
@@ -31,7 +30,9 @@ const ComingSoon = ({ section = 'blog' }: { section?: 'blog' | 'actividades' }) 
         {/* Ícono con diseño mejorado y animación */}
         <div className="relative mb-10">
           <div className="w-40 h-40 mx-auto bg-primary rounded-full flex items-center justify-center shadow-lg transform transition-transform duration-700 hover:scale-105 overflow-hidden">
-            <SparklesIcon className="w-24 h-24 text-white" />
+            {/* <SparklesIcon className="w-24 h-24 text-white" /> */}
+            { !!currentContent.icon && currentContent.icon }
+           
             {/* Efecto de brillo/pulso */}
             <div className="absolute inset-0 bg-white rounded-full opacity-30 animate-pulse-slow"></div>
           </div>
