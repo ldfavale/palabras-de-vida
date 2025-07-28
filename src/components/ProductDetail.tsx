@@ -28,7 +28,7 @@ function ProductDetail({ product }: ProductDetailProps) {
   };
 
    const handleWhatsAppOrder = () => {
-    const whatsappNumber = "59892878051";
+    const whatsappNumber = "59899254043";
     const currentUrl = window.location.href;
     const message = `¡Hola! Me interesa este producto:
 
@@ -147,11 +147,11 @@ function ProductDetail({ product }: ProductDetailProps) {
                 {showFullDescription ? (
                   <p>{product.description}</p>
                 ) : (
-                  <p>{product.description.length > 200 ? `${product.description.substring(0, 200)}...` : product.description}</p>
+                  <p>{product.description.length > 760 ? `${product.description.substring(0, 760)}...` : product.description}</p>
                 )}
               </div>
               
-              {product.description.length > 200 && (
+              {product.description.length > 760 && (
                 <button
                   onClick={toggleDescription}
                   className="text-yellow-500 text-sm font-medium mt-2 hover:underline"
@@ -166,13 +166,13 @@ function ProductDetail({ product }: ProductDetailProps) {
           <div className='flex-1'></div>
           
           {/* Action Buttons */}
-          <div className="flex gap-4 mb-6">
+          <div className="flex gap-4 mb-6 justify-end">
             {/* Add to Cart Button */}
-            <button className="w-1/2 bg-yellow-400 hover:bg-yellow-500 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+            {/* <button className="w-1/2 bg-yellow-400 hover:bg-yellow-500 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
               <ShoppingCartIcon className="w-6 h-6" />
               <PlusIcon className="w-4 h-4 relative -left-2 top-0" />
               <span>Agregar al Carrito </span>
-            </button>
+            </button> */}
 
             {/* WhatsApp Order Button */}
             <button 
@@ -190,7 +190,7 @@ function ProductDetail({ product }: ProductDetailProps) {
 
           {/* Additional Info */}
           <div className="text-sm text-gray-500">
-            <p>Disponible para entrega inmediata</p>
+            {/* <p>Disponible para entrega inmediata</p> */}
           </div>
         </div>
       </div>

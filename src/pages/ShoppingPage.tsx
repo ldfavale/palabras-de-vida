@@ -137,12 +137,12 @@ function ShoppingPage() {
         items: categoryItems,
         filterType: FILTER_TYPE_CATEGORY,
       },
-      {
-        key: FILTER_TYPE_SORT,
-        title: SECTION_TITLE_SORT,
-        items: SORT_ORDER_ITEMS,
-        filterType: FILTER_TYPE_SORT,
-      },
+      // {
+      //   key: FILTER_TYPE_SORT,
+      //   title: SECTION_TITLE_SORT,
+      //   items: SORT_ORDER_ITEMS,
+      //   filterType: FILTER_TYPE_SORT,
+      // },
       {
         key: FILTER_TYPE_LAYOUT,
         title: SECTION_TITLE_LAYOUT,

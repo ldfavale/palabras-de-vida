@@ -114,7 +114,7 @@ const onClickSearchButton = () => {
           <UserDropdownMenu className="ml-4" />
            )}
       
-      {!isAuthenticated && (
+      {/* {!isAuthenticated && (
         <Link 
           to="/login" 
           className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-primary   hover:bg-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#E4C97A] focus:ring-offset-2 "
@@ -122,7 +122,7 @@ const onClickSearchButton = () => {
         >
           <ArrowLeftEndOnRectangleIcon className="w-5 h-5 text-primary hover:text-white font-bold" />
       </Link>
-      )}
+      )} */}
         </div>
 
           {/* MOBILE MENU */}
