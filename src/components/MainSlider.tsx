@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'; // Importa React
 import Slider from './Slider';
+import { useInView } from 'react-intersection-observer';
+import clsx from 'clsx';
 
 // Tipa el componente funcional
 const MainSlider: React.FC = () => { // <--- Usa React.FC
@@ -8,6 +10,11 @@ const MainSlider: React.FC = () => { // <--- Usa React.FC
   const [images, setImages] = useState<string[]>([]); // <--- ¡Aquí el cambio!
   const [loading, setLoading] = useState<boolean>(true); // Opcional: loading state
   const [error, setError] = useState<string | null>(null); // Opcional: error state
+
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
   useEffect(() => {
     let isMounted = true; // Para evitar updates en componente desmontado
@@ -65,19 +72,25 @@ const MainSlider: React.FC = () => { // <--- Usa React.FC
 
   // --- Renderizado Condicional (Opcional pero recomendado) ---
   if (loading) {
-    return <div className='md:px-28 pt-[80px] md:pt-[105px] flex justify-center items-center min-h-[50vh]'>Cargando Slider...</div>; // O un spinner
+    return <div className='px-4 md:px-10 lg:px-0 pt-[80px] md:pt-[105px] flex justify-center items-center min-h-[50vh]'>Cargando Slider...</div>; // O un spinner
   }
 
   if (error) {
-     return <div className='md:px-28 pt-[80px] md:pt-[105px] flex justify-center items-center min-h-[50vh] text-red-500'>{error}</div>;
+     return <div className='px-4 md:px-10 lg:px-0 pt-[80px] md:pt-[105px] flex justify-center items-center min-h-[50vh] text-red-500'>{error}</div>;
   }
 
   if (images.length === 0) {
-     return <div className='md:px-28 pt-[80px] md:pt-[105px] flex justify-center items-center min-h-[50vh]'>No hay imágenes para mostrar.</div>;
+     return <div className='px-4 md:px-10 lg:px-0 pt-[80px] md:pt-[105px] flex justify-center items-center min-h-[50vh]'>No hay imágenes para mostrar.</div>;
   }
 
   return (
-    <div className='md:px-28 pt-[80px] md:pt-[105px]'>
+    <div
+      ref={ref}
+      className={clsx(
+        'px-4 md:px-10 lg:px-0 pt-[80px] md:pt-[105px] transition-all duration-1000 ease-out transform',
+        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+      )}
+    >
       {/* Asegúrate que Slider pueda manejar las props correctamente */}
       <Slider
         images={images} // images es ahora string[]

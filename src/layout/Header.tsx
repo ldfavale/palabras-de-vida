@@ -87,7 +87,7 @@ const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
         <div className='flex  w-full'>
 
         <div className={` hidden md:flex justify-between  w-full items-center md:justify-center px-4 sm:px-6 md:px-8 py-3 transition-all`} style={switchingBg}>
-          <nav className='DESKTOP-MENU justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
+          <nav className='DESKTOP-MENU justify-center font-gayathri  font-thin  text-md lg:text-lg hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
               {navItems.slice(0, 3).map((item) => (
                 <li key={item.to} className='hover:underline'>

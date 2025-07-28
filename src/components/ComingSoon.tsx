@@ -38,7 +38,7 @@ const ComingSoon = ({ section = 'blog' }: { section?: 'blog' | 'actividades' }) 
         </div>
 
         {/* Título */}
-        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 mb-3 tracking-tight leading-tight">
+        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-500 mb-3 tracking-tight leading-tight">
           {currentContent.title}
         </h1>
 
@@ -48,7 +48,7 @@ const ComingSoon = ({ section = 'blog' }: { section?: 'blog' | 'actividades' }) 
         </h2>
 
         {/* Descripción */}
-        <p className="text-xl text-gray-600 leading-relaxed mb-12 max-w-2xl mx-auto font-normal">
+        <p className="text-xl text-gray-500 leading-relaxed mb-12 max-w-2xl mx-auto font-normal">
           {currentContent.description}
         </p>
 
