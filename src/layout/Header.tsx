@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/images/icon.png'; // Asumiendo que tu configuración de TS/Vite maneja imágenes
 import { useAuth } from '../hooks/useAuth';
 import { UserDropdownMenu } from '../components/UserDropdownMenu';
 import { ArrowLeftEndOnRectangleIcon, ArrowLeftStartOnRectangleIcon, ArrowRightOnRectangleIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'
+import clsx from 'clsx';
 
 // import TabMenu from '../components/TabMenu';
 
@@ -18,6 +19,15 @@ interface HeaderProps {
 // 2. Tipar el componente funcional usando React.FC<HeaderProps>
 //    React.FC (Functional Component) es un tipo genérico que acepta la interfaz de props.
 const Header: React.FC<HeaderProps> = ({ onScrollToFooter }) => {
+
+  const navItems = [
+    { to: "/", label: "Inicio" },
+    { to: "/tienda", label: "Tienda" },
+    { to: "/actividades", label: "Actividades" },
+    { to: "/blog", label: "Blog" },
+    { to: "/nosotros", label: "Nosotros" },
+    { to: "#footer", label: "Contacto", isSpecial: true }, // isSpecial para el onClick
+  ];
 
    const [menuButtonClicked, setMenuButtonClicked] = useState(false);
    const [switchingBg, setSwitchingBg] = useState({});
@@ -65,9 +75,12 @@ const onClickContactLink = () => {
   onScrollToFooter()
 }
 
-const onClickSearchButton = () => {
-  setSearchFieldShown((v)=> !v);
-}
+const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+  clsx(
+    "block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0",
+    isActive ? "font-bold" : ""
+  );
+
     return (
       
       <div id='header' className=' flex flex-col fixed z-20  w-full bg-white [box-shadow:0_8px_6px_-6px_rgba(0,0,0,0.15)] ' >
@@ -76,38 +89,37 @@ const onClickSearchButton = () => {
         <div className={` hidden md:flex justify-between  w-full items-center md:justify-center px-4 sm:px-6 md:px-8 py-3 transition-all`} style={switchingBg}>
           <nav className='DESKTOP-MENU justify-center font-gayathri  font-thin  text-md  hidden md:flex'>
             <ul className='flex flex-row [&_li]:py-3 [&_li]:md:px-6  [&_li]:lg:px-8 [&_li]:flex [&_li]:items-center font-gayathri  font-medium  '>
-            <li className='hover:underline'>
-              <Link to="/">
-              Inicio
-              </Link></li>
-            <li className='hover:underline'>
-              <Link to="/tienda">
-                Tienda
-              </Link>
-            </li>
-              <li className='hover:underline'>
-              <Link to="#" >
-                Actividades
-              </Link></li>
+              {navItems.slice(0, 3).map((item) => (
+                <li key={item.to} className='hover:underline'>
+                  <NavLink
+                    to={item.to}
+                    className={getNavLinkClass}
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
               
-              <Link to="#">
-              <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
-                </Link>
-                <li className='hover:underline'>
-                <Link to="#" >
-                Blog
-                </Link>
-              </li>
-              <li className='hover:underline'>
-              <Link to="nosotros" >
-              Nosotros
+              <Link to="/">
+                <img src={logo} className='h-20 w-20' alt="Logo" style={switchingSize} />
               </Link>
-              </li>
-              <li className='hover:underline '>
-              <Link to="#footer" onClick={onClickContactLink}>
-                Contacto
-              </Link>
-              </li>
+
+              {navItems.slice(3).map((item) => (
+                <li key={item.to} className='hover:underline'>
+                  {item.isSpecial ? (
+                    <Link to={item.to} onClick={onClickContactLink}>
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <NavLink
+                      to={item.to}
+                      className={getNavLinkClass}
+                    >
+                      {item.label}
+                    </NavLink>
+                  )}
+                </li>
+              ))}
            </ul>
           </nav>
            {isAuthenticated && (
@@ -159,35 +171,23 @@ const onClickSearchButton = () => {
               </svg>
             </div>
             <ul className="flex flex-col items-center justify-between min-h-[250px] space-y-10   font-gayathri text-lg   ">
-              <li className='hover:underline'>
-              <Link to="/" onClick={dismissMenu}>
-              Inicio
-              </Link></li>
-              <li className='hover:underline'>
-              <Link to="/tienda" onClick={dismissMenu}>
-                Tienda
-              </Link>
-            </li>
-              <li className='hover:underline'>
-              <Link to="#" onClick={dismissMenu}>
-                Actividades
-              </Link></li>
-              <li className='hover:underline'>
-                <Link to="#" onClick={dismissMenu}>
-                Blog
-                </Link>
-              </li>
-             
-              <li className='hover:underline'>
-              <Link to="nosotros" onClick={dismissMenu}>
-              Nosotros
-              </Link>
-              </li>
-              <li className='hover:underline '>
-              <Link to="#footer" onClick={onClickContactLink}>
-                Contacto
-              </Link>
-              </li>
+              {navItems.map((item) => (
+                <li key={item.to} className='hover:underline'>
+                  {item.isSpecial ? (
+                    <Link to={item.to} onClick={onClickContactLink}>
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <NavLink
+                      to={item.to}
+                      onClick={dismissMenu}
+                      className={getNavLinkClass}
+                    >
+                      {item.label}
+                    </NavLink>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
         </section>

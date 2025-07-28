@@ -27,7 +27,39 @@ export default withMT({
         white: '#fff',
         black: '#444E5E',
         grey: '#666666',
-        lightgrey: '#A9B1BE'
+        lightgrey: '#A9B1BE',
+        secondary: '#AEBF8A',
+        third: '#897671'
+      },
+      keyframes: {
+        blob: {
+          '0%': {
+            transform: 'translate(0px, 0px) scale(1)',
+          },
+          '33%': {
+            transform: 'translate(30px, -50px) scale(1.1)',
+          },
+          '66%': {
+            transform: 'translate(-20px, 20px) scale(0.9)',
+          },
+          '100%': {
+            transform: 'translate(0px, 0px) scale(1)',
+          },
+        },
+        pulseSlow: {
+          '0%, 100%': {
+            opacity: '0.3',
+            transform: 'scale(0.9)',
+          },
+          '50%': {
+            opacity: '0.6',
+            transform: 'scale(1)',
+          },
+        },
+      },
+      animation: {
+        blob: 'blob 7s infinite',
+        'pulse-slow': 'pulseSlow 3s infinite ease-in-out',
       },
     },
   },

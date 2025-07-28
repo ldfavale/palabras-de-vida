@@ -23,6 +23,8 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import NewUserPage from './pages/NewUserPage';
 import ProductPage from './pages/ProductPage';
+import BlogPage from './pages/BlogPage';
+import ActividadesPage from './pages/ActividadesPage';
 import NotFoundPage from './components/NotFoundPage';
 
 // Auth guards
@@ -98,6 +100,8 @@ const layoutChildRoutes = [
   { path: '/', element: <App /> },
   { path: 'tienda', element: <ShoppingPage /> },
   { path: 'nosotros', element: <AboutUsPage /> },
+  { path: 'actividades', element: <ActividadesPage /> },
+  { path: 'blog', element: <BlogPage /> },
   { path: 'product/:id', element: <ProductPage /> },
   ...protectedRoutes,
 ];
