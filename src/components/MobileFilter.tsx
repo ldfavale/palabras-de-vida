@@ -1,4 +1,5 @@
 import React from 'react';
+import FilterPanel from './FilterPanel';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { SidebarSectionConfig, ActiveFilters, getIconComponent } from '../pages/ShoppingPage';
 import SearchInput from './SearchInput';
@@ -53,46 +54,14 @@ const MobileFilter: React.FC<MobileFilterProps> = ({
           </button>
         </div>
 
-        <div className="mb-4">
-          <SearchInput
-            initialValue={searchTerm}
-            onSearch={onSearch}
-            placeholder="Buscar productos..."
-          />
-        </div>
-
-        {loadingCategories && <div className="p-4 text-sm text-gray-500">Cargando categorías...</div>}
-
-        {sidebarSectionsConfig.map((section) => (
-          <div key={section.key} className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">{section.title}</h3>
-            <ul className='list-none p-0 m-0'>
-              {section.items.map((item) => {
-                const isItemActive = activeFilters[section.filterType] === item.value;
-                const itemIcon = getIconComponent(item.iconName);
-                return (
-                  <li key={item.value} className="py-1">
-                    <button
-                      onClick={() => onFilterChange(section.filterType, item.value)}
-                      className={clsx(
-                        "flex items-center w-full text-left text-sm py-2 px-3 rounded-md",
-                        isItemActive
-                          ? "bg-primary/10 text-black font-semibold"
-                          : "text-gray-600 hover:bg-gray-100 hover:text-black"
-                      )}
-                    >
-                      {isItemActive && <CheckIcon className="mr-2 h-5 w-5 text-primary shrink-0" />}
-                      <div className={clsx(!isItemActive ? "ml-7" : "", "flex items-center flex-grow min-w-0")}>
-                        {itemIcon && <span className={clsx("mr-2 shrink-0", isItemActive ? "text-primary" : "")}>{itemIcon}</span>}
-                        <span className="truncate">{item.label}</span>
-                      </div>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+        <FilterPanel
+          searchTerm={searchTerm}
+          onSearch={onSearch}
+          loadingCategories={loadingCategories}
+          sidebarSectionsConfig={sidebarSectionsConfig}
+          activeFilters={activeFilters}
+          onFilterChange={onFilterChange}
+        />
       </div>
     </div>
   );
