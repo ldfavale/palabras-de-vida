@@ -3,6 +3,7 @@ import { StarIcon  } from '@heroicons/react/24/solid';
 import { ShoppingCartIcon, StarIcon as StarOutlineIcon, PlusIcon } from '@heroicons/react/24/outline';
 import Slider from './Slider';
 import type { ProductFromSearch } from '../services/dataService';
+import { useWhatsAppOrder } from '../hooks/useWhatsAppOrder';
 import { StorageImage } from '@aws-amplify/ui-react-storage';
 
 interface ProductDetailProps {
@@ -12,6 +13,7 @@ interface ProductDetailProps {
 function ProductDetail({ product }: ProductDetailProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const { handleWhatsAppOrder } = useWhatsAppOrder(product);
   
   const images = product.images ? product.images.filter(Boolean) as string[] : [];
   
@@ -27,23 +29,7 @@ function ProductDetail({ product }: ProductDetailProps) {
     setShowFullDescription(!showFullDescription);
   };
 
-   const handleWhatsAppOrder = () => {
-    const whatsappNumber = "59899254043";
-    const currentUrl = window.location.href;
-    const message = `¡Hola! Me interesa este producto:
-
- *${product.title.trim()}*
- Precio: ${product.price?.toLocaleString()}
- Código: ${product.code}
-
- Link del producto: ${currentUrl}
-
-¿Podrías darme más información?`;
-    
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-    window.open(whatsappUrl, '_blank');
-  };
+   
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 mb-10">

@@ -6,9 +6,11 @@ import { ProductListSkeleton } from "../components/ProductListSkeleton";
 import useSearchProducts from "../hooks/useSearchProducts";
 import clsx from "clsx";
 import SearchInput from "../components/SearchInput";
-import { CheckIcon, ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
+import { CheckIcon, ListBulletIcon, Squares2X2Icon, AdjustmentsHorizontalIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import useGetCategories from "../hooks/useGetCategories";
 import useDeleteProduct from "../hooks/useDeleteProduct";
+import MobileFilter from "../components/MobileFilter";
+
 interface SidebarItem {
     label: string;
     value: string;
@@ -44,7 +46,7 @@ interface SidebarItemData {
   iconName?: string; 
 }
 
-interface SidebarSectionConfig {
+export interface SidebarSectionConfig {
   key: string;                 
   title: string;               
   items: SidebarItemData[];    
@@ -59,9 +61,15 @@ export interface ActiveFilters {
 
 const ITEMS_PER_PAGE = 9;
 
+export const getIconComponent = (iconName?: string): React.ReactNode => {
+  if (iconName === ICON_SQUARES) return <Squares2X2Icon className="w-4 h-4" />;
+  if (iconName === ICON_LIST_BULLET) return <ListBulletIcon className="w-4 h-4" />;
+  return undefined;
+};
 
 function ShoppingPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isMobileFilterOpen, setMobileFilterOpen] = useState(false);
   // 1. Estado de filtros centralizado
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     [FILTER_TYPE_CATEGORY]: DEFAULT_CATEGORY,
@@ -152,12 +160,6 @@ function ShoppingPage() {
     ];
   }, [categories]); 
 
-  const getIconComponent = (iconName?: string): React.ReactNode => {
-    if (iconName === ICON_SQUARES) return <Squares2X2Icon className="w-4 h-4" />;
-    if (iconName === ICON_LIST_BULLET) return <ListBulletIcon className="w-4 h-4" />;
-    return undefined;
-  };
-
   const afterDeleteSuccess = (deletedProductId: string) => {
     console.log(`Producto ${deletedProductId} eliminado, actualizando UI...`);
     console.log(`CurrentPage ${currentPage}`);
@@ -226,6 +228,22 @@ function ShoppingPage() {
 
         {/* Sección de Productos */}
         <main id="product-list-container" className=" flex-col p-4 md:pt-6 mt-28 flex-1">
+          {/* Botón Flotante de Filtros para Móvil */}
+          <div className="lg:hidden">
+            <button
+              onClick={() => setMobileFilterOpen(prev => !prev)}
+              className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-primary text-white rounded-full shadow-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              aria-label={isMobileFilterOpen ? "Cerrar filtros" : "Abrir filtros"}
+            >
+              <div className={clsx("transition-transform duration-300 ease-in-out", isMobileFilterOpen && "rotate-90")}>
+                {isMobileFilterOpen ? (
+                  <XMarkIcon className="h-7 w-7" />
+                ) : (
+                  <AdjustmentsHorizontalIcon className="h-7 w-7" />
+                )}
+              </div>
+            </button>
+          </div>
           {loading && (<ProductListSkeleton count={ITEMS_PER_PAGE} />)} {/* Ajusta count si es necesario */}
           {!loading && error && (
             <div className="p-4 text-center text-red-500">Error al cargar productos. Intenta de nuevo.</div>
@@ -310,6 +328,16 @@ function ShoppingPage() {
             </div>
           )}
         </main>
+        <MobileFilter 
+          isOpen={isMobileFilterOpen}
+          onClose={() => setMobileFilterOpen(false)}
+          onFilterChange={handleFilterChange}
+          onSearch={handleSearch}
+          activeFilters={activeFilters}
+          searchTerm={searchTerm}
+          sidebarSectionsConfig={sidebarSectionsConfig}
+          loadingCategories={loadingCategories}
+        />
       </div>
     </div>
   );
